@@ -1,0 +1,1463 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>reveal.js</title>
+
+	<link rel="stylesheet" href="dist/reset.css">
+	<link rel="stylesheet" href="dist/reveal.css">
+	<link rel="stylesheet" href="dist/theme/white-oden.css">
+
+	<!-- Theme used for syntax highlighted code -->
+	<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	<link rel="stylesheet" href="plugin/pointer/pointer.js">
+	<style>
+		.color-emph {
+			color: #bf5700;
+		}
+
+		.fragment.c-fade-out {
+			opacity: 1.0;
+		}
+
+		.fragment.c-fade-out.visible {
+			opacity: 0.3;
+		}
+
+		.fragment.c-blur {
+			filter: opacity(30%);
+			transition: filter 0.25s ease-in-out;
+			/* opacity: 0.3; */
+		}
+
+		.fragment.c-blur.current-fragment {
+			filter: none;
+			transition: filter 0.25s ease-in-out;
+			/* opacity: 1.0; */
+		}
+
+		.fragment.c-blur2 {
+			filter: opacity(50%);
+			transition: filter 0.25s ease-in-out;
+			/* opacity: 0.3; */
+		}
+
+		.fragment.c-blur2.current-fragment {
+			filter: none;
+			transition: filter 0.25s ease-in-out;
+			/* opacity: 1.0; */
+		}
+
+		.footnote {
+			font-size: 0.5em;
+			color: grey;
+		}
+
+		.container {
+			display: flex;
+			justify-content: space-evenly;
+		}
+
+		.col {
+			flex: 1;
+		}
+
+		#header-left {
+			position: absolute;
+			top: 0%;
+			left: 0%;
+		}
+
+		#header-right {
+			position: absolute;
+			top: 0%;
+			right: 0%;
+		}
+
+		#footer-left {
+			position: absolute;
+			bottom: 0%;
+			left: 0%;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<h2>Fast and Scalable FFT-Based GPU-Accelerated Algorithms for
+					Hessian-Vector Products Arising in
+					Inverse Problems Governed by Autonomous Dynamical Systems</h2>
+				<p style="font-size: 0.6em;">Sreeram Venkat, Milinda Fernando, Stefan Henneking, and Omar Ghattas
+				</p>
+				
+				<div class="container">
+					<div class="col1">
+						<img src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute"
+							style="width: 95%; margin: 5%;">
+					</div>
+					<div class="col2">
+						<img src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" style="width: 80%; margin: 5%;">
+					</div>
+				</div>
+			</section>
+			<section>
+				<video data-src="siam_pp_24/tsunami-clip.mp4" id="tsunami-clip" class="r-stretch" data-autoplay
+					loop></video>
+				<p class="footnote"> <a href="https://www.youtube.com/watch?v=e5PJQW_6k6M">Source: Washington State
+						Dept. of
+						Natural Resources</a> </p>
+			</section>
+			<section>
+				<img src="siam_pp_24/sensor-network.png" alt="Proposed Sensor Network" class="r-stretch">
+				<p class="footnote"> <a href="http://cascadiaoffshore.org/story/White_Paper.html">Source: Cascadia
+						Offshore
+						White Paper</a> </p>
+			</section>
+			<section>
+				<section data-auto-animate>
+					<h2>Forward Problem</h2>
+					<p>Coupled <b class="color-emph"> Acoustic-Gravity </b> wave equations:</p>
+					<p><b class="color-emph">Velocity:</b> \(\boldsymbol{u}(\boldsymbol{x}, t)\), <b
+							class="color-emph">Pressure:</b> \(p(\boldsymbol{x}, t)\),
+						<br> <b class="color-emph">Surface Height:</b> \(\eta(\boldsymbol{x}, t)\)
+					</p>
+					<img class="r-stretch" src="siam_pp_24/pde-domain-cropped.svg" alt="PDE Domain">
+					<aside class="notes">
+						absorbing BCs on Gamma_a: 1st order, PML
+					</aside>
+				</section>
+				<section data-auto-animate>
+					<h2>Forward Problem</h2>
+					<p>Coupled <b class="color-emph"> Acoustic-Gravity </b> wave equations:</p>
+					<p>
+						\[\begin{cases}
+						\rho \frac{ \partial\boldsymbol{u}}{\partial t} + \nabla p = \boldsymbol{0},
+						\frac{1}{K} \frac{ \partial p}{\partial t} + \nabla \cdot \boldsymbol{u} = 0, &
+						\Omega \times (0,T)\nonumber\\
+						p = \rho g \eta,
+						\frac{ \partial\eta}{\partial t} = \boldsymbol{u} \cdot \hat{\boldsymbol{n}}, &
+						\Gamma_s \times (0,T) \nonumber\\
+						\boldsymbol{u} \cdot \hat{\boldsymbol{n}} = -\frac{\partial b}{\partial t}, & \Gamma_b
+						\times (0,T) \nonumber\\
+						\boldsymbol{u} \cdot \hat{\boldsymbol{n}} = Z^{-1} p, & \Gamma_a \times (0,T)\nonumber
+						\end{cases}
+						\]
+					</p>
+					<p> bulk modulus \(K\), density \(\rho\), \(Z = \rho c\), \(c = \sqrt{K/\rho}\)
+						<br> bathymetry \(b(\boldsymbol{x}, t)\); Homogeneous ICs
+					</p>
+					<aside class="notes">
+						Z is acoustic wave impedance; c is sound speed in seawater
+						<br>
+						bathymetry related to seafloor motion is the parameter
+					</aside>
+				</section>
+			</section>
+			<section>
+				<h2>Definitions</h2>
+				<p><em class="color-emph">Inverse Problem: </em>given observations, estimate model
+					parameters (with quantified uncertainty)</p>
+			</section>
+			<section>
+				<section>
+					<h2>Bayesian Inverse Problem</h2>
+					<p>
+						<b class="color-emph">Goal:</b> determine posterior measure \(\mu_{\text{post}}\)
+					</p>
+					<p>
+						\(m\): model parameters - spatiotemporal field, <br> \(d\): obs. data - pointwise space,
+						continuous time
+					<p>
+						<b class="color-emph">Bayes Rule:
+						</b>\(\frac{\text{d}\mu_{\text{post}}}{\text{d}\mu_{\text{prior}}} \propto
+						\pi_{\text{like}}(d|m) \)
+						<br>
+						\(=\exp\left(\frac{1}{2}\|\mathcal{F}m - d\|_{\Gamma_{\text{noise}}^{-1}}^2\right)\) (in our case)
+					</p>
+					<p>
+						<b class="color-emph">Parameter-to-Observable (p2o) Map: </b><br> \(\mathcal{F}: m \mapsto
+						d\)
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Linear Inverse Problem, Gaussian Prior</h2>
+					<p>
+						<b class="color-emph">Prior: </b>\(m \sim \mathcal{N}(m_{\text{prior}},
+						\Gamma_{\text{prior}})\)
+					</p>
+					<p>
+						<b class="color-emph">Observations: </b>\(d = \mathcal{F}m + \nu\), \(\nu \sim
+						\mathcal{N}(0,
+						\Gamma_{\text{noise}})\)
+					</p>
+					<p>
+						<b class="color-emph">Posterior: </b>\(\mu_{\text{post}} = \mathcal{N}(m_{\text{map}},
+						\Gamma_{\text{post}})\)
+					</p>
+					<p>
+						\[\begin{gather}
+						\Gamma_{\text{post}}=\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} \mathcal{F} +
+						\Gamma_{\text{prior}}^{-1}\right)^{-1} \nonumber\\
+						m_{\text{map}}=\Gamma_{\text{post}}\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} d +
+						\Gamma_{\text{prior}}^{-1} m_{\text{prior}}\right) \nonumber
+						\end{gather}\]
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Linear Inverse Problem, Gaussian Prior</h2>
+					<p>
+						\[\begin{gather}
+						\Gamma_{\text{post}}=\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} \mathcal{F} +
+						\Gamma_{\text{prior}}^{-1}\right)^{-1} \nonumber\\
+						m_{\text{map}}=\Gamma_{\text{post}}\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} d +
+						\Gamma_{\text{prior}}^{-1} m_{\text{prior}}\right) \nonumber
+						\end{gather}\]
+					</p>
+					<p>
+						Want to find \(m_{\text{map}}\) and \(\Gamma_{\text{post}}\) in <b
+							class="color-emph">real-time</b>
+					</p>
+					<p class="footnote">
+						Stuart, Andrew M. "Inverse problems: a Bayesian perspective." Acta numerica 19 (2010): 451-559.
+					</p>
+					<aside class="notes">
+						Posterior covariance does not depend on data
+					</aside>
+				</section>
+				<section data-auto-animate>
+					<h2>Finding the MAP Point</h2>
+					<p>
+						\(\Gamma_{\text{post}}^{-1} =: \mathcal{H} \) is the <b class="color-emph">Hessian</b> (of
+						negative log-posterior)
+					</p>
+					<p>
+						Each Hessian action \(\mathcal{H}v\) requires <b class="color-emph">1 Forward PDE Solve</b>
+						and
+						<b class="color-emph">1 Adjoint PDE Solve</b> (traditionally)
+					</p>
+					<p>
+						Solving \( \mathcal{H}m_{\text{map}} = \mathcal{F}^* \Gamma_{\text{noise}}^{-1} d +
+						\Gamma_{\text{prior}}^{-1} m_{\text{prior}} \) with CG requires \(\text{rank}(\mathcal{H})\)
+						Hessian actions
+					</p>
+					<p class="footnote">
+						Ghattas, Omar, and Karen Willcox. "Learning physics-based models from data: perspectives from
+						inverse problems and model reduction." Acta Numerica 30 (2021): 445-554.
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Finding the MAP Point</h2>
+					<p class>
+						For hyperbolic systems, \(\mathcal{H}\) can have high rank \(\Rightarrow\) many PDE solves
+					</p>
+					<p class="fragment" data-fragment-index="1">
+						<b class="color-emph"> Cascadia Tsunami Problem: </b> <br>\(\text{dim}(\mathbf{m}) \sim
+						10^{10},
+						\text{dim}(\mathbf{d}) \sim 10^6, N_t \sim 10^4\)
+						<br> \(\Rightarrow\) \(\text{rank}(\mathbf{H}) \sim 10^4\)
+					</p>
+					<p class="fragment" data-fragment-index="1">
+						\(\sim\) 1 hour / Hessian application \(\Rightarrow\) over <b class="color-emph"> 1 year
+						</b>
+						(on thousands of nodes) for CG to converge!
+					</p>
+					<p class="fragment" data-fragment-index="2">
+						Useless. We need to find the MAP point in <b class="color-emph">seconds</b>.
+					</p>
+				</section>
+			</section>
+			<section>
+				<h2>Definitions</h2>
+				<p><em class="color-emph">Inverse Problem: </em>given observations, estimate model
+					parameters (with quantified uncertainty)</p>
+				<p><em class="color-emph">Autonomous Dynamical System: </em>evolution does not depend
+					explicitly on independent variable (e.g. time)</p>
+			</section>
+			<section>
+				<section data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p>
+						Split computations into <b class="color-emph">Offline</b> and <b class="color-emph">Online</b>
+						phases
+					</p>
+					<p>
+						Exploit (time) <em class="color-emph">shift-invariance</em> of autonomous dynamical systems
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p class="fragment custom c-blur2 preload" data-fragment-index="0">
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+					</p>
+					<p class="fragment custom c-blur2">
+						<b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
+						\(\Gamma_{\text{post}}\)
+					</p>
+					<p class="fragment custom c-blur2">
+						<b class="color-emph">Phase 3</b> (Online): Compute MAP point in real-time
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p>
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+					</p>
+					<p>
+						<b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
+						\(\Gamma_{\text{post}}\)
+					</p>
+					<p>
+						<b class="color-emph">Phase 3</b> (Online): Compute MAP point in real-time
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p>
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+					</p>
+					<p>
+						Recall: \( \mathbf{H} = \mathbf{F}^* \Gamma_{\text{noise}}^{-1} \mathbf{F} +
+						\Gamma_{\text{prior}}^{-1}\)
+					</p>
+					<p>
+						shift-invariance \(\Rightarrow\) \(\mathbf{F}\) is <em class="color-emph">block
+							lower-triangular
+							Toeplitz</em>
+					</p>
+					<aside class="notes">
+						causality is the reason for lower-triangularity
+					</aside>
+
+				</section>
+				<section data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p>
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map via adjoint solves
+					</p>
+					<p>
+						shift-invariance \(\Rightarrow\) \(\mathbf{F}\) is <em class="color-emph">block
+							lower-triangular
+							Toeplitz</em>
+					</p>
+					<div class="container" style="background-color: #E1B07E; border-radius: 10px; padding-bottom: 3%;">
+						<div class="r-cstack col1 fragment custom c-blur preload" data-fragment-index="0">
+							<p>\(\mathbf{F}\)</p>
+							<div class="r-hstack">
+								<div data-id="box1"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box2"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box3"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box4"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box5"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box6"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box7"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box8"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box9"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box10"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box11"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box12"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box13"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box14"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box15"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box16"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+
+						</div>
+						<div class="col2 fragment custom c-blur" data-fragment-index="1"
+							style="align-items: center; margin-top: 14%;">
+							<p>&rarr;</p>
+						</div>
+						<div class="r-cstack col3 fragment custom c-blur" data-fragment-index="1">
+							<p>\(\mathbf{F}\)</p>
+							<div class="r-hstack">
+								<div data-id="box1"
+									style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box2"
+									style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box3"
+									style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box4"
+									style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box5"
+									style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box6"
+									style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box7"
+									style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box8"
+									style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box9"
+									style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box10"
+									style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box11"
+									style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box12"
+									style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box13"
+									style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box14"
+									style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box15"
+									style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box16"
+									style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+						</div>
+						<div class="col4 fragment custom c-blur" data-fragment-index="2"
+							style="align-items: center; margin-top: 14%;">
+							<p>&rarr;</p>
+						</div>
+						<div class="r-cstack col5 fragment custom c-blur" data-fragment-index="2">
+							<p>\(\mathbf{F}\)</p>
+							<div class="r-hstack">
+								<div data-id="box1"
+									style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box5"
+									style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box9"
+									style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box13"
+									style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+						</div>
+						<div class="col6 fragment custom c-blur" data-fragment-index="3"
+							style="align-items: center; margin-top: 14%;">
+							<p>&#x219D;</p>
+						</div>
+						<div class="r-cstack col7 fragment custom c-blur" data-fragment-index="3">
+							<p>\(\mathbf{F}^*\)</p>
+							<div class="r-hstack">
+								<div data-id="box1"
+									style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box5"
+									style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box9"
+									style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box13"
+									style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+						</div>
+					</div>
+					<p>
+						<br>
+						<br>
+					</p>
+
+				</section>
+				<section data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p>
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map via adjoint solves
+					</p>
+					<p>
+						shift-invariance \(\Rightarrow\) \(\mathbf{F}\) is <em class="color-emph">block
+							lower-triangular
+							Toeplitz</em>
+					</p>
+					<div class="container" style="background-color: #E1B07E; border-radius: 10px; padding-bottom: 3%;">
+						<div class="r-cstack col1" data-fragment-index="1">
+							<p>\(\mathbf{F}\)</p>
+							<div class="r-hstack">
+								<div data-id="box1"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box2"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box3"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box4"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box5"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box6"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box7"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box8"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box9"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box10"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box11"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box12"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box13"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box14"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box15"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box16"
+									style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+
+						</div>
+						<div class="col2 " data-fragment-index="2" style="align-items: center; margin-top: 14%;">
+							<p>&rarr;</p>
+						</div>
+						<div class="r-cstack col3 " data-fragment-index="2">
+							<p>\(\mathbf{F}\)</p>
+							<div class="r-hstack">
+								<div data-id="box1"
+									style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box2"
+									style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box3"
+									style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box4"
+									style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box5"
+									style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box6"
+									style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box7"
+									style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box8"
+									style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box9"
+									style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box10"
+									style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box11"
+									style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box12"
+									style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box13"
+									style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box14"
+									style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box15"
+									style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box16"
+									style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+						</div>
+						<div class="col4 " data-fragment-index="3" style="align-items: center; margin-top: 14%;">
+							<p>&rarr;</p>
+						</div>
+						<div class="r-cstack col5 " data-fragment-index="3">
+							<p>\(\mathbf{F}\)</p>
+							<div class="r-hstack">
+								<div data-id="box1"
+									style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box5"
+									style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box9"
+									style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+							<div class="r-hstack">
+								<div data-id="box13"
+									style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+						</div>
+						<div class="col6 " data-fragment-index="4" style="align-items: center; margin-top: 14%;">
+							<p>&#x219D;</p>
+						</div>
+						<div class="r-cstack col7 " data-fragment-index="4">
+							<p>\(\mathbf{F}^*\)</p>
+							<div class="r-hstack">
+								<div data-id="box1"
+									style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box5"
+									style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box9"
+									style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+								<div data-id="box13"
+									style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+								</div>
+							</div>
+						</div>
+					</div>
+					<p>Only <b class="color-emph">one</b> block row of \(\mathbf{F}^*\) needs to be computed/stored!
+					</p>
+
+				</section>
+				<section data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p>
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+					</p>
+					<p>
+						shift-invariance \(\Rightarrow\) \(\mathbf{F}\) is <em class="color-emph">block
+							lower-triangular
+							Toeplitz</em>
+					</p>
+
+					<div class="r-cstack">
+						<p>\(\mathbf{F}\)</p>
+						<div class="r-hstack">
+							<div data-id="box1"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box2"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box3"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box4"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+						</div>
+						<div class="r-hstack">
+							<div data-id="box5"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box6"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box7"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box8"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+						</div>
+						<div class="r-hstack">
+							<div data-id="box9"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box10"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box11"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box12"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+						</div>
+						<div class="r-hstack">
+							<div data-id="box13"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box14"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box15"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box16"
+								style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+						</div>
+					</div>
+				</section>
+				<section data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p>
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+					</p>
+					<p>
+						shift-invariance \(\Rightarrow\) \(\mathbf{F}\) is <em class="color-emph">block
+							lower-triangular
+							Toeplitz</em>
+					</p>
+
+					<div class="r-cstack">
+						<p>\(\mathbf{F}\)</p>
+						<div class="r-hstack">
+							<div data-id="box1"
+								style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box2"
+								style="background: #fff; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box3"
+								style="background: #fff; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box4"
+								style="background: #fff; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+						</div>
+						<div class="r-hstack">
+							<div data-id="box5"
+								style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box6"
+								style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box7"
+								style="background: #fff; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box8"
+								style="background: #fff; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+						</div>
+						<div class="r-hstack">
+							<div data-id="box9"
+								style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box10"
+								style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box11"
+								style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box12"
+								style="background: #fff; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+						</div>
+						<div class="r-hstack">
+							<div data-id="box13"
+								style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box14"
+								style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box15"
+								style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box16"
+								style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+						</div>
+					</div>
+				</section>
+				<section data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p>
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+					</p>
+					<p>
+						shift-invariance \(\Rightarrow\) \(\mathbf{F}\) is <em class="color-emph">block
+							lower-triangular
+							Toeplitz</em>
+					</p>
+
+					<div class="r-cstack">
+						<p>\(\mathbf{F}\)</p>
+						<div class="r-hstack">
+							<div data-id="box1"
+								style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+						</div>
+						<div class="r-hstack">
+							<div data-id="box5"
+								style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+						</div>
+						<div class="r-hstack">
+							<div data-id="box9"
+								style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+						</div>
+						<div class="r-hstack">
+							<div data-id="box13"
+								style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+						</div>
+					</div>
+				</section>
+				<section data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p>
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+					</p>
+					<p>
+						shift-invariance \(\Rightarrow\) \(\mathbf{F}\) is <em class="color-emph">block
+							lower-triangular
+							Toeplitz</em>
+					</p>
+
+					<div class="r-cstack">
+						<p>\(\mathbf{F}^*\)</p>
+						<div class="r-hstack">
+							<div data-id="box1"
+								style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box5"
+								style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box9"
+								style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box13"
+								style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+						</div>
+						<p>Only <b class="color-emph">one</b> block row of \(\mathbf{F}^*\) needs to be
+							computed/stored!
+						</p>
+					</div>
+				</section>
+				<section data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p>
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+					</p>
+					<div class="r-cstack">
+						<p>\(\mathbf{F}^*\)</p>
+						<div class="r-hstack">
+							<div data-id="box1"
+								style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box5"
+								style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box9"
+								style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+							<div data-id="box13"
+								style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+							</div>
+						</div>
+						<p>Only <b class="color-emph">one</b> block row of \(\mathbf{F}^*\) needs to be
+							computed/stored!
+						</p>
+					</div>
+					<p>
+						Adjoint PDE solved backwards in time with "source" at each observation point (\(\sim\)100
+						sensors)
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p>
+						<b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
+						\(\Gamma_{\text{post}}\) (through Sherman-Morrison-Woodbury)
+					</p>
+					<p>
+						<b class="color-emph">Phase 3</b> (Online): Compute MAP point in real-time
+					</p>
+					<p>
+						Both rely on <b class="color-emph"> fast applications </b> of \(\mathbf{F}\) and
+						\(\mathbf{F}^*\)
+					</p>
+				</section>
+			</section>
+			<section>
+				<section data-auto-animate>
+					<h2 data-id="head">Matvecs with Block Triangular Toeplitz Matrices</h2>
+					<p>
+						\(\mathbf{F} \) has \(N_t \times N_t\) blocks
+					</p>
+					<p>
+						Each block is \(N_d \times N_m\)
+					</p>
+					<p>
+						This is <em class="color-emph">time-outer, space-inner</em> indexing
+					</p>
+					<p>
+						Preprocessing: Reindex to <em class="color-emph">space-outer, time-inner</em>
+					</p>
+
+				</section>
+				<section data-auto-animate>
+					<h2 data-id="head">Matvecs with Block Triangular Toeplitz Matrices</h2>
+					<p>
+						Preprocessing: Reindex to <em class="color-emph">space-outer, time-inner</em>
+					</p>
+					<p>
+						\(\mathbf{F} \) now has \(N_d \times N_m\) blocks
+					</p>
+					<p>
+						Each block is \(N_t \times N_t\)
+					</p>
+					<p>
+						Cascadia: \(N_d \sim 10^2, N_m \sim 10^{6}, N_t \sim 10^4\)
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2 data-id="head">Matvecs with Block Triangular Toeplitz Matrices</h2>
+					<p>
+						Preprocessing: Reindex to <em class="color-emph">space-outer, time-inner</em>
+					</p>
+					<p>
+						\(\mathbf{F} \) now has \(N_d \times N_m\) blocks
+					</p>
+					<p>
+						Each block is \(N_t \times N_t\)
+					</p>
+					<p>
+						<em class="color-emph">Each block</em> of \(\mathbf{F} \) is now a lower-triangular Toeplitz
+						matrix
+					</p>
+				</section>
+			</section>
+			<section>
+				<section data-auto-animate>
+					<h2>Matvec Algorithm</h2>
+					<p class="fragment custom c-blur2 preload" data-fragment-index="0">
+						Toeplitz matrix \(A\) is represented by its first column \(a_0\)
+					</p>
+					<p class="fragment custom c-blur2">
+						Embed \(A\) in a circulant matrix \(C\)
+					</p>
+					<p class="fragment custom c-blur2">
+						\(a_0\mapsto [a_0 \ \mathbf{0}]^T =: c_0\) (zero padding)
+					</p>
+					<p class="fragment custom c-blur2">
+						Input vector \(v \mapsto [v \ \mathbf{0}]^T =: u\)
+					</p>
+					<p class="fragment custom c-blur2">
+						\(C\) is diagonalized by the Fourier Transform
+					</p>
+					<p class="fragment custom c-blur2">
+						\(Cu = \text{IFFT}\left(\frac{1}{\sqrt{2n}} \text{FFT}(c_0) \odot \text{FFT}(u)\right)\)
+					</p>
+					<p class="fragment custom c-blur2">
+						\(Av\) is the first half of \(Cu\)
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Matvec Algorithm</h2>
+					<p>
+						Toeplitz matrix \(A\) is represented by its first column \(a_0\)
+					</p>
+					<p>
+						Embed \(A\) in a circulant matrix \(C\)
+					</p>
+					<p>
+						\(a_0\mapsto [a_0 \ \mathbf{0}]^T =: c_0\) (zero padding)
+					</p>
+					<p>
+						Input vector \(v \mapsto [v \ \mathbf{0}]^T =: u\)
+					</p>
+					<p>
+						\(C\) is diagonalized by the Fourier Transform
+					</p>
+					<p>
+						\(Cu = \text{IFFT}\left(\frac{1}{\sqrt{2n}} \text{FFT}(c_0) \odot \text{FFT}(u)\right)\)
+					</p>
+					<p>
+						\(Av\) is the first half of \(Cu\)
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Example</h2>
+					<p>\(A = \begin{bmatrix} 1&0&0&0\\2&1&0&0\\3&2&1&0\\4&3&2&1\end{bmatrix}, v =
+						\begin{bmatrix}5\\6\\7\\8\end{bmatrix}\)</p>
+					<p data-id="mat">\(a_0 = [1\ 2 \ 3 \ 4]^T \to [1\ 2\ 3\ 4\ 0\ 0\ 0\ 0]^T = c_0\)</p>
+					<p data-id="vec">\(u = [5\ 6\ 7\ 8\ 0\ 0\ 0\ 0]^T \)</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Example</h2>
+					<p data-id="mat">\(a_0 = [1\ 2 \ 3 \ 4]^T \to [1\ 2\ 3\ 4\ 0\ 0\ 0\ 0]^T = c_0\)</p>
+					<p data-id="vec">\(v = [5\ 6\ 7\ 8]^T \to [5\ 6\ 7\ 8\ 0\ 0\ 0\ 0]^T = u\)</p>
+					<p data-id="fft">\(\hat{c}_0 = [10,-1-9i,-2+2i, 3-3i, -2,\\ 3+3i, -2-2i, -1+9i]^T\)</p>
+					<p data-id="fftvec">\(\hat{u} = [ 26, 3+-21i, -2+2i, 7+-7i, -2,\\ 7+7i, -2+-2i, 3+21i]^T\)</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Example</h2>
+					<p data-id="fft">\(\hat{c}_0 = [10,-1-9i,-2+2i, 3-3i, -2,\\ 3+3i, -2-2i, -1+9i]^T\)</p>
+					<p data-id="fftvec">\(\hat{u} = [ 26, 3-21i, -2+2i, 7-7i, -2,\\ 7+7i, -2-2i, 3+21i]^T\)</p>
+					<p data-id="ewp">\(\hat{c}_0 \odot \hat{u} = [260, -192-6i, -8i, -42i, 4,\\ 42i, 8i, -192+6i]^T\)
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Example</h2>
+					<p data-id="ewp">\(\hat{c}_0 \odot \hat{u} = [260, -192-6i, -8i, -42i, 4,\\ 42i, 8i, -192+6i]^T\)
+					</p>
+					<p data-id="ifft">\[\begin{gather}
+						\text{IFFT}\left(\frac{1}{\sqrt{8}} \hat{c}_0 \odot \hat{u}\right) = [5\ 16 \ 34 \ 60 \ 61 \ 52
+						\ 32 \ 0]^T
+						\nonumber \\
+						\Rightarrow Av = [5\ 16 \ 34 \ 60]^T \nonumber
+						\end{gather}\]
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Example</h2>
+					<p data-id="ifft">FFT Method: \(Av = [5\ 16 \ 34 \ 60]^T \)
+					</p>
+					<p>\[A = \begin{bmatrix} 1&0&0&0\\2&1&0&0\\3&2&1&0\\4&3&2&1\end{bmatrix}, v =
+						\begin{bmatrix}5\\6\\7\\8\end{bmatrix}\]</p>
+					<p>\(\Rightarrow Av = [5\ 16 \ 34 \ 60]^T \checkmark\)</p>
+					<p class="footnote">
+						J. Demmel, P. Koev, and X. Li, “A Brief Survey of Direct Linear Solvers”. In Z. Bai, J. Demmel,
+						J. Dongarra, A. Ruhe, and H. van der Vorst, editors. Templates for the Solution of Algebraic
+						Eigenvalue Problems: A Practical Guide. SIAM, Philadelphia, 2000.
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Matvec Algorithm</h2>
+					<p class="fragment custom c-blur2 preload" data-fragment-index="0" data-id="step0">
+						Recall: \(\mathbf{F} \) (reindexed) has \(N_d \times N_m\) Toeplitz blocks
+					</p>
+					<p class="fragment custom c-blur2" data-id="step1">
+						<b class="color-emph ">Precompute</b> (padded) FFTs of each block
+					</p>
+					<p class="fragment custom c-blur2" data-id="step2">
+						Input vectors (reindexed): \(N_m\) blocks of \(N_t\) entries
+					</p>
+					<p class="fragment custom c-blur2" data-id="step3">
+						<b class="color-emph">FFTs</b> (padded/batched) of input vectors
+					</p>
+					<p class="fragment custom c-blur2" data-id="step4">
+						<b class="color-emph">Elementwise multiply</b> corresp. matrix/vector blocks
+					</p>
+					<p class="fragment custom c-blur2" data-id="step5">
+						<b class="color-emph">Sum</b> results of each block row (local reduction)
+					</p>
+					<p class="fragment custom c-blur2" data-id="step6">
+						<b class="color-emph">IFFTs</b> (batched) of results
+					</p>
+					<p class="fragment custom c-blur2" data-id="step7">
+						<b class="color-emph">Sum</b> processor results (global reduction)
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Matvec Algorithm</h2>
+					<p data-id="step1">
+						<b class="color-emph">Precompute</b> (padded) FFTs of each block
+					</p>
+					<p data-id="step2">
+						Input vectors (reindexed): \(N_m\) blocks of \(N_t\) entries
+					</p>
+					<p data-id="step3">
+						<b class="color-emph">FFTs</b> (padded/batched) of input vectors
+					</p>
+					<p data-id="step4">
+						<b class="color-emph">Elementwise multiply</b> corresp. matrix/vector blocks
+					</p>
+					<p data-id="step5">
+						<b class="color-emph">Sum</b> results of each block row (local reduction)
+					</p>
+					<p data-id="step6">
+						<b class="color-emph">IFFTs</b> (batched) of results
+					</p>
+					<p data-id="step7">
+						<b class="color-emph">Sum</b> processor results (global reduction)
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Matvec Algorithm</h2>
+					<p>FFT \(\to\) EWP \(\to\) L. Red. \(\to\) IFFT \(\to\) G. Red.</p>
+					<p>
+						Same algorithm for \(\mathbf{F}^*\) &#8212; just complex conjugate the matrix FFT before the
+						EWP
+					</p>
+					<p>
+						<b class="color-emph">No extra storage or communication!</b>
+					</p>
+				</section>
+			</section>
+			<section>
+				<h2>Computational Cost</h2>
+				<p>
+					Most expensive computation: <b class="color-emph">EWP</b> and <b class="color-emph">L. Red.</b>
+				</p>
+				<p>
+					Many processors \(\Rightarrow\) <b class="color-emph">communication dominated</b>
+				</p>
+				<p>
+					<b class="color-emph">Communication-Aware Partitioning</b> can mitigate this
+				</p>
+			</section>
+			<section>
+				<h2>Implementation</h2>
+				<p>
+					<b class="color-emph">Multi-GPU</b> framework with custom CUDA kernels
+				</p>
+				<p>
+					<a href="https://developer.nvidia.com/nccl">NCCL</a> for inter-GPU communication
+				</p>
+				<p>
+					Single-GPU profiling on <b class="color-emph">NVIDIA A100 80GB</b>
+				</p>
+				<p>
+					Multi-GPU on <a href="https://tacc.utexas.edu/systems/lonestar6/">TACC Lonestar6</a> (<b
+						class="color-emph">NVIDIA A100 40GB</b>)
+				</p>
+				<aside class="notes">
+					Can also use MVAPICH2-GDR.
+				</aside>
+			</section>
+			<section>
+				<section>
+					<h2>Roofline Analysis</h2>
+					<img src="siam_pp_24/roofline.svg" alt="Roofline Analysis" class="r-stretch">
+					<p> 85-95% memory bandwidth utilization on all kernels<sup class="footnote">1</sup></p>
+					<p class="footnote"> <sup>1</sup>Kernels below roofline are caused by small input size and
+						correspond to &lt; 1% of runtime. Profiled with <a
+							href="https://developer.nvidia.com/nsight-compute">NSight Compute</a>.</p>
+				</section>
+				<section data-auto-animate>
+					<h2>Single-GPU Performance</h2>
+					<img src="siam_pp_24/single-gpu-bars.svg" alt="Single-GPU Performance Bars" class="r-stretch">
+				</section>
+				<section data-auto-animate>
+					<h2>Single-GPU Performance</h2>
+					<img src="siam_pp_24/single-gpu-lines.svg" alt="Single-GPU Performance Lines" class="r-stretch">
+				</section>
+				<section data-auto-animate>
+					<h2>Single-GPU Performance</h2>
+					<img src="siam_pp_24/single-gpu-time.svg" alt="Single-GPU Performance Lines" class="r-stretch">
+				</section>
+				<section data-auto-animate>
+					<h2>Weak Scaling</h2>
+					<img src="siam_pp_24/weak-bars.svg" alt="Weak Scaling Performace Bars" class="r-stretch">
+					<aside class="notes">
+						Main comm in F is reduction. Main comm in F* is broadcast.
+						Allude to communication-aware partitioning.
+					</aside>
+				</section>
+				<section data-auto-animate>
+					<h2>Weak and Strong Scaling</h2>
+					<img src="siam_pp_24/weak-strong-lines.svg" alt="Weak and Strong Scaling Performace Lines"
+						class="r-stretch">
+					<p></p>
+				</section>
+			</section>
+			<section>
+				<h2>Conclusions</h2>
+				<p>
+					Fast matvecs with \(\mathbf{F}\) and \(\mathbf{F}^*\) enable real-time inference
+				</p>
+				<p>
+					Timeframe goes from <b class="color-emph">hours</b> to <b class="color-emph">&lt; 1 second</b>!
+				</p>
+				<p>
+					Other applications: treaty-verification, CO2 monitoring, contaminant transport
+				</p>
+			</section>
+			<section>
+				<h2>Thank You!</h2>
+				<div class="container">
+					<div class="col1">
+						<img src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute"
+							style="width: 95%; margin: 5%;">
+					</div>
+					<div class="col2">
+						<img src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" style="width: 80%; margin: 5%;">
+					</div>
+				</div>
+			</section>
+			<section>
+				<section data-visibility="uncounted" data-auto-animate>
+					<h2>Communication-Aware Partitioning</h2>
+					<p><b class="color-emph"> 2D Partitioning:</b> \(p = r\times c\) grid of GPUs</p>
+					<p><b class="color-emph"> Goal:</b> Minimize communication costs</p>
+					<p><b class="color-emph"> Data-to-Parameter Ratio </b> \(N_d/N_m\) is key</p>
+					<p><b class="color-emph"> Cost Function:</b> <br>\(C(r;p,N_d/N_m) =
+						\)\(\frac{N_d}{N_m}\frac{1}{r}\log\frac{p}{r} + \frac{r}{p}\log r\)</p>
+				</section>
+				<section data-visibility="uncounted" data-auto-animate>
+					<h2>Communication-Aware Partitioning</h2>
+					<p><b class="color-emph"> Cost Function:</b> <br>\(C(r;p,N_d/N_m) =
+						\)\(\frac{N_d}{N_m}\frac{1}{r}\log\frac{p}{r} + \frac{r}{p}\log r\)</p>
+					<p><b class="color-emph"> Algorithm</b> (\(k\) GPUs/node)</p>
+					<ol>
+						<li>Compute \(\tilde{r} = \arg\min_r C(r;p,N_d/N_m)\)</li>
+						<li>If \(\tilde{r} = 1\text{ or } p,\) use \(r = \tilde{r}\)</li>
+						<li>Else, choose \(r\in \mathbb{Z}\) close to \(\tilde{r}\) so that \(r,\frac{p}{r} \in
+							\mathbb{Z}\)
+						</li>
+						<li>Try to ensure \(k|r\) and \(k|\frac{p}{r}\) (on-node vs. off-node)</li>
+					</ol>
+				</section>
+				<section data-visibility="uncounted" data-auto-animate>
+					<h2>Communication-Aware Partitioning</h2>
+					<image src="siam_pp_24/grid-test.svg" alt="Communication-Aware Partitioning" style="width: 60%;">
+				</section>
+			</section>
+			<section>
+				<section data-visibility="uncounted" data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p><b class="color-emph">Sherman-Morrison-Woodbury</b> applied to \(\Gamma_{\text{post}}\):</p>
+					<p>
+						\[
+						\begin{gather}
+						\Gamma_{\text{post}}=\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} \mathcal{F} +
+						\Gamma_{\text{prior}}^{-1}\right)^{-1} \nonumber\\
+						=\Gamma_{\text{prior}}\left(I - \mathcal{F}^*\textcolor{BF5700}{\left(\Gamma_{\text{noise}} +
+						\mathcal{F}\Gamma_{\text{prior}}\mathcal{F}^*\right)}^{-1}\mathcal{F}\Gamma_{\text{prior}}\right)
+						\nonumber
+						\end{gather}
+						\]
+					</p>
+					<p>\(\textcolor{BF5700}{\mathcal{K} = \Gamma_{\text{noise}} +
+						\mathcal{F}\Gamma_{\text{prior}}\mathcal{F}^*}\)</p>
+					<p>Dense Matrix of size \(\sim 10^6\times 10^6\)</p>
+					<p>\(\Rightarrow\) Compress</p>
+				</section>
+				<section data-visibility="uncounted" data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p>\[
+						\begin{gather}
+						\mathbf{m}_{\text{MAP}}=\Gamma_{\text{prior}}\left(\mathbf{I} -
+						\mathbf{F}^*\textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\Gamma_{\text{prior}}\right)\mathbf{F}^*\Gamma_{\text{noise}}^{-1}\mathbf{d}
+						\nonumber
+						\end{gather}
+						\]</p>
+					<p>
+						<b class="color-emph">Operations</b> <br>\(\left(N_m \sim 10^6, N_d \sim 10^2, N_t \sim
+						10^4\right)\)
+					</p>
+					<ul>
+						<li>\(2 \ \mathbf{F}^*\) matvecs &#8212; \(\mathcal{O}(N_dN_mN_t)\)</li>
+						<li> \(1 \ \mathbf{F}\) matvec &#8212; \(\mathcal{O}(N_dN_mN_t)\)</li>
+						<li> \(1 \ \textcolor{BF5700}{\mathbf{K}}\) solve &#8212; \(\mathcal{O}\left(N_d^2N_t^2\right)\)
+							worst
+							case
+						</li>
+						<li> \(2 \ \Gamma_{\text{prior}}\) solve &#8212; \(\mathcal{O}(N_mN_t)\)</li>
+					</ul>
+				</section>
+				<section data-visibility="uncounted" data-auto-animate>
+					<h2>Real-Time Inference</h2>
+					<p>\[
+						\begin{gather}
+						\mathbf{m}_{\text{MAP}}=\Gamma_{\text{prior}}\left(\mathbf{I} -
+						\mathbf{F}^*\textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\Gamma_{\text{prior}}\right)\mathbf{F}^*\Gamma_{\text{noise}}^{-1}\mathbf{d}
+						\nonumber
+						\end{gather}
+						\]</p>
+					<p> <b class="color-emph">Pointwise Variance</b> \((\text{diag}(\Gamma_{\text{post}}))\) can be
+						precomputed with stochastic estimators</p>
+					<p class="footnote">Villa, Umberto, Noemi Petra, and Omar Ghattas. "HIPPYlib: an extensible software
+						framework for large-scale inverse problems governed by PDEs: part I: deterministic inversion and
+						linearized Bayesian inference." ACM Transactions on Mathematical Software (TOMS) 47.2 (2021):
+						1-34. </p>
+				</section>
+			</section>
+		</div>
+	</div>
+
+	<!-- <div id="hidden" style="display:none;">
+		<div id="header">
+			<div id="header-left" style="display: block;">
+				<img src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" style="width: 75%; margin: 5%;">
+			</div>
+			<div id="header-right" style="display: block;">
+			</div>
+			<div id="footer-left">
+				<img src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" style="width: 60%; margin: 5%;">
+			</div>
+		</div>
+	</div> -->
+
+	<script src="dist/reveal.js"></script>
+	<script src="plugin/notes/notes.js"></script>
+	<script src="plugin/markdown/markdown.js"></script>
+	<script src="plugin/highlight/highlight.js"></script>
+	<script src="plugin/math/math.js"></script>
+	<script src="plugin/search/search.js"></script>
+	<script src="plugin/zoom/zoom.js"></script>
+	<script src="plugin/pointer/pointer.js"></script>
+	<!-- <script src="node_modules/reveal.js-notes-pointer/notes-pointer.js" async defer></script> -->
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+	<script>
+		// More info about initialization & config:
+		// - https://revealjs.com/initialization/
+		// - https://revealjs.com/config/
+		Reveal.initialize({
+			hash: true,
+
+			// Learn about plugins: https://revealjs.com/plugins/
+			plugins: [RevealMarkdown, RevealHighlight, RevealMath.KaTeX, RevealNotes, RevealSearch, RevealZoom],
+			slideNumber: true,
+			totalTime: 1500,
+
+			// 'pointer': {"key": "q", "color": "#32cd32", "pointerSize": 18, "alwaysVisible": false},
+
+			notes_pointer: {
+				pointer: {
+					size: 15,  // in pixels (scaled like the rest of reveal.js)
+					color: 'rgba(255, 0, 0, 0.8)',  // something valid for css background-color
+					key: 'A'
+				},
+				notes: {
+					key: 'S'
+				}
+			},
+
+			// katex: {
+			// 	version: 'latest',
+			// 	delimiters: [
+			// 		{left: '$$', right: '$$', display: true},
+			// 		{left: '$', right: '$', display: false},
+			// 		{left: '\\(', right: '\\)', display: false},
+			// 		{left: '\\[', right: '\\]', display: true}
+			// 	],
+			// 	ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+			// },
+
+
+			dependencies: [
+				// ...
+
+				{src: 'node_modules/reveal.js-notes-pointer/notes-pointer.js', async: true},
+				// async is optional
+			]
+
+
+		});
+
+		// automatically load the initial fragment on a slide if the fragment
+		// has been defined with the 'preload' class
+		Reveal.addEventListener('slidechanged', function (event) {
+			if (event.currentSlide.querySelectorAll('.preload[data-fragment-index="0"]').length > 0) {
+				Reveal.nextFragment();
+			}
+		});
+
+		// if the initial fragment on a slide has been defined with a 'preload' class
+		// then transition to the previous slide if the fragment is hidden
+		Reveal.addEventListener('fragmenthidden', function (event) {
+			if (event.fragment.hasAttribute('data-fragment-index') && event.fragment.classList.contains('preload')) {
+				if (event.fragment.attributes['data-fragment-index'].value == "0") {
+					Reveal.prev();
+				}
+			}
+		});
+
+		/* var header = $('#header').html();
+		if (window.location.search.match(/print-pdf/gi)) {
+			Reveal.addEventListener('ready', function (event) {
+				$('.slide-background').append(header);
+			});
+		}
+		else {
+			$('div.reveal').append(header);
+		}
+		*/
+
+	</script>
+	<script>
+		let vid = document.getElementById('tsunami-clip');
+		vid.playbackRate = 7.5;
+	</script>
+
+
+</body>
+
+</html>
