@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -82,6 +82,20 @@
 			bottom: 0%;
 			left: 0%;
 		}
+
+		.authors {
+			font-size: 0.6em;
+		}
+
+		.myimg95 {
+			width: 95%;
+			margin: 5%;
+		}
+
+		.myimg80 {
+			width: 80%;
+			margin: 5%;
+		}
 	</style>
 </head>
 
@@ -92,16 +106,16 @@
 				<h2>Fast and Scalable FFT-Based GPU-Accelerated Algorithms for
 					Hessian-Vector Products Arising in
 					Inverse Problems Governed by Autonomous Dynamical Systems</h2>
-				<p style="font-size: 0.6em;">Sreeram Venkat, Milinda Fernando, Stefan Henneking, and Omar Ghattas
+				<p class="authors">Sreeram Venkat, Milinda Fernando, Stefan Henneking, and Omar Ghattas
 				</p>
 				
 				<div class="container">
 					<div class="col1">
 						<img src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute"
-							style="width: 95%; margin: 5%;">
+							class="myimg95">
 					</div>
 					<div class="col2">
-						<img src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" style="width: 80%; margin: 5%;">
+						<img src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
 					</div>
 				</div>
 			</section>
@@ -127,7 +141,7 @@
 						<br> <b class="color-emph">Surface Height:</b> \(\eta(\boldsymbol{x}, t)\)
 					</p>
 					<img class="r-stretch" src="siam_pp_24/pde-domain-cropped.svg" alt="PDE Domain">
-					<aside class="notes">
+					<aside class="notes" aria-label="bcs">
 						absorbing BCs on Gamma_a: 1st order, PML
 					</aside>
 				</section>
@@ -151,7 +165,7 @@
 					<p> bulk modulus \(K\), density \(\rho\), \(Z = \rho c\), \(c = \sqrt{K/\rho}\)
 						<br> bathymetry \(b(\boldsymbol{x}, t)\); Homogeneous ICs
 					</p>
-					<aside class="notes">
+					<aside class="notes" aria-label="physparams">
 						Z is acoustic wave impedance; c is sound speed in seawater
 						<br>
 						bathymetry related to seafloor motion is the parameter
@@ -172,12 +186,13 @@
 					<p>
 						\(m\): model parameters - spatiotemporal field, <br> \(d\): obs. data - pointwise space,
 						continuous time
+					</p>
 					<p>
 						<b class="color-emph">Bayes Rule:
 						</b>\(\frac{\text{d}\mu_{\text{post}}}{\text{d}\mu_{\text{prior}}} \propto
 						\pi_{\text{like}}(d|m) \)
 						<br>
-						\(=\exp\left(\frac{1}{2}\|\mathcal{F}m - d\|_{\Gamma_{\text{noise}}^{-1}}^2\right)\) (in our case)
+						\(=\exp\left(-\frac{1}{2}\|\mathcal{F}m - d\|_{\Gamma_{\text{noise}}^{-1}}^2\right)\) (in our case)
 					</p>
 					<p>
 						<b class="color-emph">Parameter-to-Observable (p2o) Map: </b><br> \(\mathcal{F}: m \mapsto
@@ -225,7 +240,7 @@
 					<p class="footnote">
 						Stuart, Andrew M. "Inverse problems: a Bayesian perspective." Acta numerica 19 (2010): 451-559.
 					</p>
-					<aside class="notes">
+					<aside class="notes" aria-label="postcov">
 						Posterior covariance does not depend on data
 					</aside>
 				</section>
@@ -329,7 +344,7 @@
 							lower-triangular
 							Toeplitz</em>
 					</p>
-					<aside class="notes">
+					<aside class="notes" aria-label="causality">
 						causality is the reason for lower-triangularity
 					</aside>
 
@@ -1284,7 +1299,7 @@
 				</section>
 				<section data-visibility="uncounted" data-auto-animate>
 					<h2>Communication-Aware Partitioning</h2>
-					<image src="siam_pp_24/grid-test.svg" alt="Communication-Aware Partitioning" style="width: 60%;">
+					<img src="siam_pp_24/grid-test.svg" alt="Communication-Aware Partitioning" style="width: 60%;">
 				</section>
 			</section>
 			<section>
