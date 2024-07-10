@@ -117,6 +117,12 @@
 		.leftalign {
 			text-align: left;
 		}
+
+		/* .reveal table td,
+		.reveal table th {
+			text-align: center;
+			vertical-align: center;
+		} */
 	</style>
 </head>
 
@@ -128,7 +134,7 @@
 					Extreme-Scale Bayesian Inverse Problems
 					Involving Shift-Invariant Systems
 				</h2>
-				<p class="authors">Sreeram Venkat, Milinda Fernando, Stefan Henneking, and Omar Ghattas
+				<p class="authors">Sreeram Venkat, Stefan Henneking, Milinda Fernando, and Omar Ghattas
 				</p>
 
 				<div class="container">
@@ -239,25 +245,25 @@
 						\Gamma_{\text{noise}})\)
 					</p>
 					<p class="leftalign">
-						<b class="color-emph">Posterior: </b>\(\mu_{\text{post}} = \mathcal{N}(m_{\text{map}},
-						\Gamma_{\text{post}})\)
-
-						\[\begin{gather}
-						\Gamma_{\text{post}}=\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} \mathcal{F} +
-						\Gamma_{\text{prior}}^{-1}\right)^{-1} \nonumber\\
-						m_{\text{map}}=\Gamma_{\text{post}}\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} d +
-						\Gamma_{\text{prior}}^{-1} m_{\text{prior}}\right) \nonumber
-						\end{gather}\]
+						<b class="color-emph">Posterior: </b>
+						\[\begin{align*}
+						\mu_{\text{post}} &= \mathcal{N}(m_{\text{map}},
+						\Gamma_{\text{post}}) \\
+						\Gamma_{\text{post}}&=\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} \mathcal{F} +
+						\Gamma_{\text{prior}}^{-1}\right)^{-1}\\
+						m_{\text{map}}&=\Gamma_{\text{post}}\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} d +
+						\Gamma_{\text{prior}}^{-1} m_{\text{prior}}\right)
+						\end{align*}\]
 					</p>
 				</section>
 				<section data-auto-animate>
 					<h2>Linear Inverse Problem, Gaussian Prior</h2>
-					\[\begin{gather}
-					\Gamma_{\text{post}}=\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} \mathcal{F} +
-					\Gamma_{\text{prior}}^{-1}\right)^{-1} \nonumber\\
-					m_{\text{map}}=\Gamma_{\text{post}}\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} d +
-					\Gamma_{\text{prior}}^{-1} m_{\text{prior}}\right) \nonumber
-					\end{gather}\]
+					\[\begin{align*}
+					\Gamma_{\text{post}}&=\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} \mathcal{F} +
+					\Gamma_{\text{prior}}^{-1}\right)^{-1}\\
+					m_{\text{map}}&=\Gamma_{\text{post}}\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} d +
+					\Gamma_{\text{prior}}^{-1} m_{\text{prior}}\right)
+					\end{align*}\]
 					<p>
 						Want to find \(m_{\text{map}}\) and \(\Gamma_{\text{post}}\) in <b
 							class="color-emph">real-time</b>
@@ -309,12 +315,12 @@
 						<br> \(\Rightarrow\) \(\text{rank}(\mathbf{H}) \gtrsim 10^4\)
 					</p>
 					<ul>
-						<li class="fragment" data-fragment-index="1">
+						<li data-fragment-index="1">
 							\(\sim\) 1 hour / Hessian application \(\Rightarrow\) over <b class="color-emph"> 1 year
 							</b>
 							(on thousands of nodes) for CG to converge!
 						</li>
-						<li class="fragment" data-fragment-index="2">
+						<li data-fragment-index="2">
 							Useless. We need to find the MAP point in <b class="color-emph">seconds</b>.
 						</li>
 					</ul>
@@ -343,35 +349,35 @@
 				</section>
 				<section data-auto-animate>
 					<h2>Real-Time Inference</h2>
-						<p class="leftalign fragment custom c-blur2 preload" data-fragment-index="0">
-							<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
-						</p>
-						<p class="leftalign fragment custom c-blur2">
-							<b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
-							\(\Gamma_{\text{post}}\)
-						</p>
-						<p class="leftalign fragment custom c-blur2">
-							<b class="color-emph">Phase 3</b> (Online): Compute MAP point in real-time
-						</p>
+					<p class="leftalign fragment custom c-blur2 preload" data-fragment-index="0">
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+					</p>
+					<p class="leftalign fragment custom c-blur2">
+						<b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
+						\(\Gamma_{\text{post}}\)
+					</p>
+					<p class="leftalign fragment custom c-blur2">
+						<b class="color-emph">Phase 3</b> (Online): Compute MAP point in real-time
+					</p>
 				</section>
 				<section data-auto-animate>
 					<h2>Real-Time Inference</h2>
-						<p class="leftalign">
-							<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
-						</p>
-						<p class="leftalign">
-							<b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
-							\(\Gamma_{\text{post}}\)
-						</p>
-						<p class="leftalign">
-							<b class="color-emph">Phase 3</b> (Online): Compute MAP point in real-time
-						</p>
+					<p class="leftalign">
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+					</p>
+					<p class="leftalign">
+						<b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
+						\(\Gamma_{\text{post}}\)
+					</p>
+					<p class="leftalign">
+						<b class="color-emph">Phase 3</b> (Online): Compute MAP point in real-time
+					</p>
 				</section>
 				<section data-auto-animate>
 					<h2>Real-Time Inference</h2>
-						<p>
-							<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
-						</p>
+					<p>
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+					</p>
 					<ul>
 						<li>
 							Recall: \( \mathbf{H} = \mathbf{F}^* \Gamma_{\text{noise}}^{-1} \mathbf{F} +
@@ -399,11 +405,11 @@
 				<section data-auto-animate>
 					<h2>Real-Time Inference</h2>
 					<p class="leftalign">
-							<b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
-							\(\Gamma_{\text{post}}\) (through Sherman-Morrison-Woodbury)
+						<b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
+						\(\Gamma_{\text{post}}\) (through Sherman-Morrison-Woodbury)
 					</p>
 					<p class="leftalign">
-							<b class="color-emph">Phase 3</b> (Online): Compute MAP point in real-time
+						<b class="color-emph">Phase 3</b> (Online): Compute MAP point in real-time
 					</p>
 					<ul>
 						<li>
@@ -415,6 +421,10 @@
 							Multi-GPU
 							setup)
 						</li>
+						<li>
+							~<b class="color-emph">200,000x speedup</b> vs matrix-free MatVec via forward/adjoint PDE
+							solves on Frontera CLX for ~100M parameters and 25K data points
+						</li>
 					</ul>
 				</section>
 			</section>
@@ -422,40 +432,39 @@
 			<section>
 				<section data-auto-animate>
 					<h2>Real-Time Inference</h2>
-						<p class="leftalign faded" data-fragment-index="0">
-							<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
-						</p>
-						<p class="leftalign">
-							<b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
-							\(\Gamma_{\text{post}}\)
-						</p>
-						<p class="leftalign faded">
-							<b class="color-emph">Phase 3</b> (Online): Compute MAP point in real-time
-						</p>
+					<p class="leftalign faded" data-fragment-index="0">
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+					</p>
+					<p class="leftalign">
+						<b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
+						\(\Gamma_{\text{post}}\)
+					</p>
+					<p class="leftalign faded">
+						<b class="color-emph">Phase 3</b> (Online): Compute MAP point in real-time
+					</p>
 				</section>
 
 				<section data-auto-animate>
 					<h2>Dealing with
 						\(\Gamma_{\text{post}}\)</h2>
-					
-						<p><b class="color-emph">Sherman-Morrison-Woodbury</b> applied to \(\Gamma_{\text{post}}\):
-						</p>
-						<p>
-							\[
-							\begin{gather}
-							\Gamma_{\text{post}}=\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} \mathcal{F} +
-							\Gamma_{\text{prior}}^{-1}\right)^{-1} \nonumber\\
-							=\Gamma_{\text{prior}}\left(I - \mathcal{F}^*\textcolor{BF5700}{\left(\Gamma_{\text{noise}}
-							+
-							\mathcal{F}\Gamma_{\text{prior}}\mathcal{F}^*\right)}^{-1}\mathcal{F}\Gamma_{\text{prior}}\right)
-							\nonumber
-							\end{gather}
-							\]
-						</p>
-						<p>\(\textcolor{BF5700}{\mathcal{K} = \Gamma_{\text{noise}} +
-							\mathcal{F}\Gamma_{\text{prior}}\mathcal{F}^*}\)</p>
-						<p>Dense Matrix of size \(\sim 10^6\times 10^6\)</p>
-						<p>\(\Rightarrow\) Prefactorize or Compress</p>
+
+					<p><b class="color-emph">Sherman-Morrison-Woodbury</b> applied to \(\Gamma_{\text{post}}\):
+					</p>
+					<p>
+						\[
+						\begin{alignat*}{2}
+						\Gamma_{\text{post}}&=&&\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} \mathcal{F} +
+						\Gamma_{\text{prior}}^{-1}\right)^{-1}\\
+						&=\Gamma_{\text{prior}}\Big(I -
+						\mathcal{F}^*&&\underbrace{\textcolor{BF5700}{\Big(\Gamma_{\text{noise}}
+						+
+						\mathcal{F}\Gamma_{\text{prior}}\mathcal{F}^*\Big)}}_{}^{\textcolor{BF5700}{\mathcal{K}}}\vphantom{a}^{-1}\mathcal{F}\Gamma_{\text{prior}}\Big)
+
+						\end{alignat*}
+						\]
+					</p>
+					<p>\(\textcolor{BF5700}{\mathcal{K}}\) is a dense matrix of size \(\sim 10^6\times 10^6\)</p>
+					<p>\(\Rightarrow\) Prefactorize or Compress</p>
 				</section>
 
 				<section data-auto-animate>
@@ -525,41 +534,37 @@
 			<section>
 				<section data-auto-animate>
 					<h2>Real-Time Inference</h2>
-						<p class="leftalign faded" data-fragment-index="0">
-							<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
-						</p>
-						<p class="leftalign faded">
-							<b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
-							\(\Gamma_{\text{post}}\)
-						</p>
-						<p class="leftalign">
-							<b class="color-emph">Phase 3</b> (Online): Compute MAP point in real-time
-						</p>
+					<p class="leftalign faded" data-fragment-index="0">
+						<b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+					</p>
+					<p class="leftalign faded">
+						<b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
+						\(\Gamma_{\text{post}}\)
+					</p>
+					<p class="leftalign">
+						<b class="color-emph">Phase 3</b> (Online): Compute MAP point in real-time
+					</p>
 				</section>
 				<section data-auto-animate>
 					<h2>Real-Time Inference</h2>
-						<p>\[
-							\begin{gather}
-							\mathbf{m}_{\text{MAP}}=\Gamma_{\text{prior}}\left(\mathbf{I} -
-							\mathbf{F}^*\textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\Gamma_{\text{prior}}\right)\mathbf{F}^*\Gamma_{\text{noise}}^{-1}\mathbf{d}
-							\nonumber
-							\end{gather}
-							\]</p>
-						<p>
-							<b class="color-emph">Operations</b> <br>\(\left(N_m \sim 10^6, N_d \sim 10^2, N_t \sim
-							10^4\right)\)
+					<p>\(
+						\mathbf{m}_{\text{MAP}}=\Gamma_{\text{prior}}\left(\mathbf{I} -
+						\mathbf{F}^*\textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\Gamma_{\text{prior}}\right)\mathbf{F}^*\Gamma_{\text{noise}}^{-1}\mathbf{d}
+						\)</p>
+					<p>
+						<b class="color-emph">Operations</b> <br>\(\left(N_m \sim 10^6, N_d \sim 10^2, N_t \sim
+						10^4\right)\)
+					</p>
 
-							<ul>
-								<li>\(2 \ \mathbf{F}^*\) matvecs &#8212; \(\mathcal{O}(N_dN_mN_t)\)</li>
-								<li> \(1 \ \mathbf{F}\) matvec &#8212; \(\mathcal{O}(N_dN_mN_t)\)</li>
-								<li> \(1 \ \textcolor{BF5700}{\mathbf{K}}\) solve &#8212;
-									\(\mathcal{O}\left(N_d^2N_t^2\right)\)
-									worst
-									case
-								</li>
-								<li> \(2 \ \Gamma_{\text{prior}}\) solves &#8212; \(\mathcal{O}(N_mN_t)\)</li>
-							</ul>
+					<ul>
+						<li>\(2 \ \mathbf{F}^*\) matvecs &#8212; \(\mathcal{O}(N_dN_mN_t)\)</li>
+						<li> \(1 \ \mathbf{F}\) matvec &#8212; \(\mathcal{O}(N_dN_mN_t)\)</li>
+						<li> \(1 \ \textcolor{BF5700}{\mathbf{K}}\) solve &#8212;
+							\(\mathcal{O}\left(N_d^2N_t^2\right)\)
+							worst
+							case
 						</li>
+						<li> \(2 \ \Gamma_{\text{prior}}\) solves &#8212; \(\mathcal{O}(N_mN_t)\)</li>
 					</ul>
 				</section>
 				<section data-auto-animate>
@@ -571,6 +576,40 @@
 								href="https://docs.nvidia.com/cuda/cusolvermp/">cuSOLVERMp</a> backend for dense linear
 							solves and eigenvalue decompositions</li>
 					</ul>
+				</section>
+				<section data-auto-animate>
+					<h2>Timing Results</h2>
+					<p class="leftalign"><b class="color-emph">Test problem:</b> \(N_m = 263,169, N_d = 49, N_t = 500\)
+						running
+						on 8 nodes of <em class="color-emph">Lonestar6</em> at TACC (24 GPUs)</p>
+					<p>\(
+						\mathbf{m}_{\text{MAP}}=\Gamma_{\text{prior}}\left(\mathbf{I} -
+						\mathbf{F}^*\textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\Gamma_{\text{prior}}\right)\mathbf{F}^*\Gamma_{\text{noise}}^{-1}\mathbf{d}
+						\)</p>
+					<table>
+						<tr>
+							<th>Step</th>
+							<th>Time (approx.)</th>
+						</tr>
+						<tr>
+							<th>\(2 \ \mathbf{F}^*\) matvecs</th>
+							<th>0.022s</th>
+						</tr>
+						<tr>
+							<th>\(1 \ \mathbf{F}\) matvec</th>
+							<th>0.011s</th>
+						</tr>
+						<tr>
+							<th>\(1 \ \textcolor{BF5700}{\mathbf{K}}\) solve</th>
+							<th>0.024s</th>
+						</tr>
+						<tr>
+							<th>\(2 \ \Gamma_{\text{prior}}\) solves</th>
+							<th>4.0s</th>
+						</tr>
+					</table>
+
+
 				</section>
 			</section>
 
@@ -595,8 +634,8 @@
 					<h2>Future Work</h2>
 					<ul>
 						<li>Linear Solver for \(\mathbf{K}\)</li>
-						<li>Test on realistic meshes</li>
-						<li>Quantify uncertainty with stochastic estimators</li>
+						<li>Test on Cascadia meshes</li>
+						<li>Try different sampling methods for posterior variance</li>
 						<li>Data-driven priors</li>
 
 					</ul>
