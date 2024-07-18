@@ -57,7 +57,7 @@
 
 		.footnote {
 			font-size: 0.5em;
-			color: grey;
+			/* color: grey; */
 		}
 
 		.caption {
@@ -118,6 +118,14 @@
 			text-align: left;
 		}
 
+		.reveal sup {
+			font-size: 0.65em;
+		}
+
+		/* .reveal .footnote sup {
+			font-size: 0.65em;
+		} */
+
 		/* .reveal table td,
 		.reveal table th {
 			text-align: center;
@@ -147,17 +155,41 @@
 				</div>
 			</section>
 			<section>
-				<video data-src="siam_pp_24/tsunami-clip.mp4" id="tsunami-clip" class="r-stretch" data-autoplay
-					loop></video>
-				<p class="footnote"> <a href="https://www.youtube.com/watch?v=e5PJQW_6k6M">Source: Washington State
-						Dept. of
-						Natural Resources</a> </p>
-			</section>
-			<section>
-				<img src="siam_pp_24/sensor-network.png" alt="Proposed Sensor Network" class="r-stretch">
-				<p class="footnote"> <a href="http://cascadiaoffshore.org/story/White_Paper.html">Source: Cascadia
-						Offshore
-						White Paper</a> </p>
+				<section>
+					<video data-src="siam_pp_24/tsunami-clip.mp4" id="tsunami-clip" class="r-stretch" data-autoplay
+						loop></video>
+					<p class="footnote"> <a href="https://www.youtube.com/watch?v=e5PJQW_6k6M">Source: Washington State
+							Dept. of
+							Natural Resources</a> </p>
+				</section>
+				<section>
+					<img src="siam_pp_24/sensor-network.png" alt="Proposed Sensor Network" class="r-stretch">
+					<p class="footnote"> <a href="http://cascadiaoffshore.org/story/White_Paper.html">Source: Cascadia
+							Offshore
+							White Paper</a> </p>
+				</section>
+				<section data-auto-animate>
+					<h3>Cascadia Subduction Zone: Tsunami Early Warning</h3>
+					<ul>
+						<li>Predict tsunami wave propagation by <b class="color-emph">inversion of <u>near-field</u>
+								pressure data</b>
+							recorded during a megathrust rupture</li>
+						<li>Quantify uncertainty in inverse solution via framework of <b class="color-emph">Bayesian
+								inference</b></li>
+						<li>Invert for the spatiotemporal seafloor motion (time-dependent boundary condition) using a
+							(linearized) acoustic-gravity model in the (compressible) deep ocean</li>
+					</ul>
+				</section>
+				<section data-auto-animate>
+					<h2>Challenges</h2>
+					<ul>
+						<li>Forward problem involves 3D space + time</li>
+						<li>Parameter is a 2D space + time field</li>
+						<li>Hyperbolic forward PDEs don't easily lend themselves to surrogates</li>
+						<li>Inversion computation must be done in <b class="color-emph">real time</b> (i.e. seconds)
+						</li>
+					</ul>
+				</section>
 			</section>
 			<section>
 				<section data-auto-animate>
@@ -186,13 +218,14 @@
 						\frac{ \partial\eta}{\partial t} = \boldsymbol{u} \cdot \hat{\boldsymbol{n}}, &
 						\Gamma_s \times (0,T) \nonumber\\
 						\boldsymbol{u} \cdot \hat{\boldsymbol{n}} = -\frac{\partial b}{\partial t}, & \Gamma_b
-						\times (0,T) \nonumber\\
+						\times (0,T) \text{\textcolor{BF5700}{&#8592; parameter}}\nonumber\\
 						\boldsymbol{u} \cdot \hat{\boldsymbol{n}} = Z^{-1} p, & \Gamma_a \times (0,T)\nonumber
 						\end{cases}
 						\]
 					</p>
 					<p> bulk modulus \(K\), density \(\rho\), \(Z = \rho c\), \(c = \sqrt{K/\rho}\)
-						<br> bathymetry \(b(\boldsymbol{x}, t)\); Homogeneous ICs
+						<br> bathymetry \(b(\boldsymbol{x}, t)\); Homogeneous ICs; <b
+							class="color-emph">observations</b> of \(p\) at sensors
 					</p>
 					<aside class="notes" aria-label="physparams">
 						Z is acoustic wave impedance; c is sound speed in seawater
@@ -214,8 +247,9 @@
 							<b class="color-emph">Goal:</b> determine posterior measure \(\mu_{\text{post}}\)
 						</li>
 						<li>
-							\(m\): model parameters - spatiotemporal field, <br> \(d\): obs. data - pointwise space,
-							continuous time
+							\(m\): model parameters - spatiotemporal field \(=\frac{\partial b}{\partial t}
+							(\boldsymbol{x},t)\) <br> \(d\): pressure obs. - pointwise space,
+							continuous time: \(\left\{p(\boldsymbol{x}_i, t)\right\}_{i=1}^{N_d}\)
 						</li>
 						<li>
 							<b class="color-emph">Bayes Rule:
@@ -228,8 +262,9 @@
 						</li>
 						<br>
 						<li>
-							<b class="color-emph">Parameter-to-Observable (p2o) Map: </b>\(\mathcal{F}: m \mapsto
-							d\)
+							<b class="color-emph">Parameter-to-Observable (p2o) Map: </b>\(\mathcal{F}:
+							m(\boldsymbol{x},t) \mapsto
+							d(\boldsymbol{x}_i,t)\)
 						</li>
 					</ul>
 				</section>
@@ -238,11 +273,20 @@
 					<p class="leftalign">
 						<b class="color-emph">Prior: </b>\(m \sim \mathcal{N}(m_{\text{prior}},
 						\Gamma_{\text{prior}})\)
+						<br>
+						<b class="color-emph">Mat&eacute;rn Covariance: </b>
+						\(
+						\Gamma_{\text{prior}} := \left(
+						\alpha_1 I -
+						\alpha_2 \Delta_{\text{2D}} -
+						\alpha_3 \partial_t^2
+						\right)^{-2}
+						\)
 					</p>
 					<p class="leftalign">
-						<b class="color-emph">Observations: </b>\(d = \mathcal{F}m + \nu\), \(\nu \sim
+						<b class="color-emph">Observations: </b>\(d = \mathcal{F}m + \nu\); \(\nu \sim
 						\mathcal{N}(0,
-						\Gamma_{\text{noise}})\)
+						\Gamma_{\text{noise}}); \Gamma_{\text{noise}} = \gamma I\)
 					</p>
 					<p class="leftalign">
 						<b class="color-emph">Posterior: </b>
@@ -255,6 +299,7 @@
 						\Gamma_{\text{prior}}^{-1} m_{\text{prior}}\right)
 						\end{align*}\]
 					</p>
+					<p class="footnote">Script = infinite-dimensional; boldface = discrete in space and time</p>
 				</section>
 				<section data-auto-animate>
 					<h2>Linear Inverse Problem, Gaussian Prior</h2>
@@ -292,13 +337,16 @@
 						<li>
 							Solving \( \mathcal{H}m_{\text{map}} = \mathcal{F}^* \Gamma_{\text{noise}}^{-1} d +
 							\Gamma_{\text{prior}}^{-1} m_{\text{prior}} \) with CG requires \(\text{rank}(\mathcal{H})\)
-							Hessian actions
+							Hessian actions<sup>1</sup>
 						</li>
 					</ul>
 					<p class="footnote">
-						Ghattas, Omar, and Karen Willcox. "Learning physics-based models from data: perspectives
-						from
-						inverse problems and model reduction." Acta Numerica 30 (2021): 445-554.
+						<a
+							href="https://www.cambridge.org/core/journals/acta-numerica/article/learning-physicsbased-models-from-data-perspectives-from-inverse-problems-and-model-reduction/C072A4B417F8C3873ED75C1D63BBB31D?utm_campaign=shareaholic&utm_medium=copy_link&utm_source=bookmark">
+							<sup>1</sup>Ghattas, Omar, and Karen Willcox. "Learning physics-based models from data:
+							perspectives
+							from
+							inverse problems and model reduction." Acta Numerica 30 (2021): 445-554.</a>
 					</p>
 				</section>
 				<section data-auto-animate>
@@ -306,24 +354,33 @@
 					<ul>
 						<li>
 							For hyperbolic systems, \(\mathcal{H}\) can have high rank \(\Rightarrow\) many PDE solves
+							\(\quad{}\)
 						</li>
 					</ul>
 					<p>
-						<b class="color-emph"> Cascadia Tsunami Problem: </b> <br>\(\text{dim}(\mathbf{m}) \sim
-						10^{10},
-						\text{dim}(\mathbf{d}) \sim 10^6, N_t \sim 10^4\)
+						<b class="color-emph"> Cascadia Tsunami Problem: </b> <br>param. spatial DoFs: \(\sim
+						10^6\),
+						no. of sensors: \(\sim 10^2\), time steps: \(\sim 10^3\)
+						<br> \(\Rightarrow\)
+						\(\text{dim}(\mathbf{m}) \sim 10^{9}, \text{dim}(\mathbf{d}) \sim 10^5, N_t \sim 10^3\)
 						<br> \(\Rightarrow\) \(\text{rank}(\mathbf{H}) \gtrsim 10^4\)
 					</p>
 					<ul>
-						<li data-fragment-index="1">
-							\(\sim\) 1 hour / Hessian application \(\Rightarrow\) over <b class="color-emph"> 1 year
+						<li>
+							\(\sim\) 1 hour / Hessian application<sup>1</sup> \(\Rightarrow\) over <b
+								class="color-emph"> 1
+								year
 							</b>
-							(on thousands of nodes) for CG to converge!
+							(on thousands of nodes) for CG to converge .
 						</li>
-						<li data-fragment-index="2">
+						<li>
 							Useless. We need to find the MAP point in <b class="color-emph">seconds</b>.
 						</li>
 					</ul>
+					<p class="footnote"><sup>1</sup>PDE solve deals with 4D space-time state
+						dimension \(\sim 10^{11}\) and has CFL
+						constrained timestep.</p>
+					<p class="footnote">Script = infinite-dimensional; boldface = discrete in space and time</p>
 				</section>
 			</section>
 			<section>
@@ -389,7 +446,7 @@
 								Toeplitz</em>
 						</li>
 						<li>Only <b class="color-emph">one</b> block row of \(\mathbf{F}^*\) needs to be
-							computed/stored!
+							computed/stored
 						</li>
 						<li>
 							Adjoint PDE solved backwards in time with "source" at each observation point (\(\sim\)100
@@ -423,9 +480,16 @@
 						</li>
 						<li>
 							~<b class="color-emph">200,000x speedup</b> vs matrix-free MatVec via forward/adjoint PDE
-							solves on Frontera CLX for ~100M parameters and 25K data points
+							solves on Frontera CLX for ~100M parameters and 25K data points<sup>1</sup>
 						</li>
 					</ul>
+					<p class="footnote"><sup>1</sup>8 NVIDIA A100 40GB GPU nodes (3 GPUs/node) vs 2048 CLX nodes (56
+						cores/node).</p>
+					<aside class="notes" aria-label="shift-invariance">
+						Why not apply Toeplitz structure to forward solve? That works with the state dimension and
+						CFL-limited time stepping which are much larger. The p2o matvec algorithm is agnostic to all of
+						that.
+					</aside>
 				</section>
 			</section>
 
@@ -453,26 +517,26 @@
 					<p>
 						\[
 						\begin{alignat*}{2}
-						\Gamma_{\text{post}}&=&&\left(\mathcal{F}^* \Gamma_{\text{noise}}^{-1} \mathcal{F} +
+						\Gamma_{\text{post}}&=&&\left(\mathbf{F}^* \Gamma_{\text{noise}}^{-1} \mathbf{F} +
 						\Gamma_{\text{prior}}^{-1}\right)^{-1}\\
 						&=\Gamma_{\text{prior}}\Big(I -
-						\mathcal{F}^*&&\underbrace{\textcolor{BF5700}{\Big(\Gamma_{\text{noise}}
+						\mathbf{F}^*&&\underbrace{\textcolor{BF5700}{\Big(\Gamma_{\text{noise}}
 						+
-						\mathcal{F}\Gamma_{\text{prior}}\mathcal{F}^*\Big)}}_{}^{\textcolor{BF5700}{\mathcal{K}}}\vphantom{a}^{-1}\mathcal{F}\Gamma_{\text{prior}}\Big)
+						\mathbf{F}\Gamma_{\text{prior}}\mathbf{F}^*\Big)}}_{}^{\textcolor{BF5700}{\mathbf{K}}}\vphantom{a}^{-1}\mathbf{F}\Gamma_{\text{prior}}\Big)
 
 						\end{alignat*}
 						\]
 					</p>
-					<p>\(\textcolor{BF5700}{\mathcal{K}}\) is a dense matrix of size \(\sim 10^6\times 10^6\)</p>
+					<p>\(\textcolor{BF5700}{\mathbf{K}}\) is a dense matrix of size \(\sim 10^5\times 10^5\)</p>
 					<p>\(\Rightarrow\) Prefactorize or Compress</p>
 				</section>
 
 				<section data-auto-animate>
 					<h2>Spectral Analysis</h2>
 					<ul>
-						<li>Build dense matrices \(\mathcal{F}\mathcal{F}^*\) and \(\mathcal{K}\)</li>
+						<li>Build dense matrices \(\mathbf{F}\mathbf{F}^*\) and \(\mathbf{K}\)</li>
 						<li>Prior solves done with <a href="https://developer.nvidia.com/cudss">cuDSS</a></li>
-						<li>Spatial prior (no time correlation) means \(\Gamma_{\text{prior}}\mathcal{F}^*\) is block
+						<li>Spatial prior (no time correlation) means \(\Gamma_{\text{prior}}\mathbf{F}^*\) is block
 							triangular Toeplitz</li>
 					</ul>
 					<aside class="notes" aria-label="prior Toeplitz">
@@ -483,31 +547,30 @@
 				</section>
 
 				<section data-auto-animate>
-					<h4>Spectrum of \(\mathcal{F} \mathcal{F}^*\) </h4>
-					<img src="wccm_24/FFstar-base.svg" alt="Spectrum of \(\mathcal{F} \mathcal{F}^*\)"
-						class="r-stretch">
-					<p class="caption">Representative case: \(N_m = 263,169, N_d = 49, N_t = 500\)</p>
+					<h4>Spectrum of \(\mathbf{F} \mathbf{F}^*\) </h4>
+					<img src="wccm_24/FFstar-base.svg" alt="Spectrum of \(\mathbf{F} \mathbf{F}^*\)" class="r-stretch">
+					<p class="caption">Representative case: \(N_m = 263\text{K}, N_d = 49, N_t = 500\)</p>
 				</section>
 
 				<section data-auto-animate>
-					<h4>Spectrum of \(\mathcal{K} = \Gamma_{\text{noise}} +
-						\mathcal{F}\Gamma_{\text{prior}}\mathcal{F}^*\) </h4>
-					<img src="wccm_24/K-base.svg" alt="Spectrum of \(\mathcal{K}\)" class="r-stretch">
-					<p class="caption">Representative case: \(N_m = 263,169, N_d = 49, N_t = 500, \\
-						\Gamma_{\text{noise}} = \alpha I, \alpha = 10^{-10}\), Bi-Laplacian
+					<h4>Spectrum of \(\mathbf{K} = \Gamma_{\text{noise}} +
+						\mathbf{F}\Gamma_{\text{prior}}\mathbf{F}^*\) </h4>
+					<img src="wccm_24/K-base.svg" alt="Spectrum of \(\mathbf{K}\)" class="r-stretch">
+					<p class="caption">Representative case: \(N_m = 263\text{K}, N_d = 49, N_t = 500, \\
+						\Gamma_{\text{noise}} = \gamma I, \gamma = 10^{-10}\), Bi-Laplacian
 						Prior (spatial only)</p>
 				</section>
 
 				<section data-auto-animate>
 					<h2>Spectral Analysis</h2>
 					<ul>
-						<li>Spectral decay of \(\mathcal{K}\) is not fast enough to use low-rank approximations</li>
-						<li>\(\mathcal{K}\) can be pre-factorized and stored &mdash; less feasible as size increases
+						<li>Spectral decay of \(\mathbf{K}\) is not fast enough to use low-rank approximations</li>
+						<li>\(\mathbf{K}\) can be pre-factorized and stored &mdash; less feasible as size increases
 						</li>
 						<li>Alternatives:
 							<ul>
-								<li>Create a preconditioner for \(\mathcal{K}\) to use with CG</li>
-								<li>Compress \(\mathcal{K}\) with other methods (e.g. H-matrix approximations)</li>
+								<li>Create a preconditioner for \(\mathbf{K}\) to use with CG</li>
+								<li>Compress \(\mathbf{K}\) with other methods (e.g. H-matrix approximations)</li>
 							</ul>
 						</li>
 					</ul>
@@ -517,13 +580,26 @@
 					<h2>Quantifying Uncertainty</h2>
 					<ul>
 						<li> <b class="color-emph">Pointwise Variance:</b> \(\text{diag}(\Gamma_{\text{post}})\) can be
-							precomputed with stochastic estimators</li>
+							precomputed with stochastic estimators<sup>1</sup></li>
 						<li>Alternative: subsample and interpolate on parameter grid</li>
+						<li>Goal-oriented UQ approach: only consider uncertainty in forward prediction quantity of
+							interest (QoI) of
+							surface-gravity wave
+							<ul>
+								<li>\(\Gamma_{\text{pred}} :=
+									\mathbf{F}_{\text{pred}}\Gamma_{\text{post}}\mathbf{F}_{\text{pred}}^* \in
+									\mathbb{R}^{N_q\times N_q}\)</li>
+								<li>\(\mathbf{F}_{\text{pred}}\) has a similar block-triangular Toeplitz structure to
+									\(\mathbf{F}\)</li>
+								<li>Choose a QoI with \(N_q \ll N_mN_t\) (e.g. wave height at specific locations)</li>
+							</ul>
+						</li>
 					</ul>
 					<aside class="notes" aria-label="post variance">
 						Diagonal is independent of data.
 					</aside>
-					<p class="footnote"> <a href="https://epubs.siam.org/doi/10.1137/22M1476277">Eric, Ilse CF
+					<p class="footnote"> <a href="https://epubs.siam.org/doi/10.1137/22M1476277"><sup>1</sup>Hallman,
+							Eric, Ilse CF
 							Ipsen,
 							and Arvind K. Saibaba. "Monte Carlo methods for
 							estimating the diagonal of a real symmetric matrix." SIAM Journal on Matrix Analysis and
@@ -553,7 +629,7 @@
 						\)</p>
 					<p>
 						<b class="color-emph">Operations</b> <br>\(\left(N_m \sim 10^6, N_d \sim 10^2, N_t \sim
-						10^4\right)\)
+						10^3\right)\)
 					</p>
 
 					<ul>
@@ -564,8 +640,10 @@
 							worst
 							case
 						</li>
-						<li> \(2 \ \Gamma_{\text{prior}}\) solves &#8212; \(\mathcal{O}(N_mN_t)\)</li>
+						<li> \(1 \ \Gamma_{\text{prior}}\) solve<sup>1</sup> &#8212; \(\mathcal{O}(N_mN_t)\)</li>
 					</ul>
+					<p class="footnote">\(^1 \Gamma_{\text{prior}}\mathbf{F}^*\) is a block-triangular Toeplitz matrix
+						for priors with only spatial correlation.</p>
 				</section>
 				<section data-auto-animate>
 					<h2>Implementation</h2>
@@ -579,7 +657,8 @@
 				</section>
 				<section data-auto-animate>
 					<h2>Timing Results</h2>
-					<p class="leftalign"><b class="color-emph">Test problem:</b> \(N_m = 263,169, N_d = 49, N_t = 500\)
+					<p class="leftalign"><b class="color-emph">Test problem:</b> \(N_m = 263\text{K}, N_d = 49, N_t =
+						500\)
 						running
 						on 8 nodes of <em class="color-emph">Lonestar6</em> at TACC (24 GPUs)</p>
 					<p>\(
@@ -604,8 +683,8 @@
 							<th>0.024s</th>
 						</tr>
 						<tr>
-							<th>\(2 \ \Gamma_{\text{prior}}\) solves</th>
-							<th>4.0s</th>
+							<th>\(1 \ \Gamma_{\text{prior}}\) solve</th>
+							<th>0.083s</th>
 						</tr>
 					</table>
 
@@ -621,9 +700,7 @@
 							Exploit autonomous structure to enable real-time inference at large scales
 						</li>
 						<li>
-							Fast matvec algorithm takes p2o application time goes from <b class="color-emph">hours</b>
-							to <b class="color-emph">&lt; 1
-								second</b>!
+							Fast matvec algorithm speeds up p2o application by <b class="color-emph">~200,000x</b>
 						</li>
 						<li>
 							Other applications: seismic source inversion, contaminant transport, CO2 monitoring
@@ -636,12 +713,13 @@
 						<li>Linear Solver for \(\mathbf{K}\)</li>
 						<li>Test on Cascadia meshes</li>
 						<li>Try different sampling methods for posterior variance</li>
+						<li>Consider goal-oriented UQ approach</li>
 						<li>Data-driven priors</li>
 
 					</ul>
 				</section>
 				<section>
-					<h2>Thank You!</h2>
+					<h2>Thank You</h2>
 					<div class="container">
 						<div class="col1">
 							<img src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" class="myimg95">
