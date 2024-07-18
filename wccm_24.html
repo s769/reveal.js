@@ -227,6 +227,7 @@
 						<br> bathymetry \(b(\boldsymbol{x}, t)\); Homogeneous ICs; <b
 							class="color-emph">observations</b> of \(p\) at sensors
 					</p>
+					<p class="footnote">Implemented in <a href="https://mfem.org/">MFEM</a>.</p>
 					<aside class="notes" aria-label="physparams">
 						Z is acoustic wave impedance; c is sound speed in seawater
 						<br>
@@ -358,12 +359,13 @@
 						</li>
 					</ul>
 					<p>
-						<b class="color-emph"> Cascadia Tsunami Problem: </b> <br>param. spatial DoFs: \(\sim
+						<b class="color-emph"> Cascadia Tsunami Problem: </b> <br>parameter spatial DoFs: \(N_m\sim
 						10^6\),
-						no. of sensors: \(\sim 10^2\), time steps: \(\sim 10^3\)
+						number of sensors: \(N_d\sim 10^2\), 
+						<br>time steps: \(N_t\sim 10^3\)
 						<br> \(\Rightarrow\)
-						\(\text{dim}(\mathbf{m}) \sim 10^{9}, \text{dim}(\mathbf{d}) \sim 10^5, N_t \sim 10^3\)
-						<br> \(\Rightarrow\) \(\text{rank}(\mathbf{H}) \gtrsim 10^4\)
+						\(\text{dim}(\mathbf{m}) \sim 10^{9}, \text{dim}(\mathbf{d}) \sim 10^5\)
+						\(\Rightarrow\) \(\text{rank}(\mathbf{H}) \gtrsim 10^4\)
 					</p>
 					<ul>
 						<li>
