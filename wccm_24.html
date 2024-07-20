@@ -134,10 +134,6 @@
 			font-size: 1em !important;
 		}
 
-		.reveal img {
-			max-width: none;
-			max-height: none;
-		}
 
 		.center-table th,
 		.center-table td {
@@ -166,7 +162,7 @@
 <body>
 	<div class="reveal">
 		<div class="slides">
-			<section style="margin-top: 15%;">
+			<section class="center">
 				<h4>Real-Time High-Fidelity Algorithms for <br>
 					Extreme-Scale Bayesian Inverse Problems
 					Involving Shift-Invariant Systems
@@ -174,34 +170,34 @@
 				<p style="font-size: x-large;"><u>Sreeram Venkat</u><sup>1</sup>, Stefan Henneking<sup>1</sup>, Milinda
 					Fernando<sup>1</sup>, Omar Ghattas<sup>1</sup>
 				</p>
-				<p style="font-size: large;">WCCM/PANACM 2024 &mdash; Vancouver, BC &mdash; July 21-26, 2024</p>
 				<p style="font-size: medium;"><sup>1</sup>Oden Institute for Computational Engineering and Sciences, The
 					University of Texas at Austin</p>
+				<p style="font-size: large;">WCCM/PANACM 2024 &mdash; Vancouver, BC &mdash; July 21-26, 2024</p>
+
 				<div class="container">
-					<div class="col1">
-						<img src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" class="myimg95">
+					<div class="col">
+						<img data-src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" class="myimg95">
 					</div>
-					<div class="col2" style="width: 30%;">
-						<img src="wccm_24/qr-code.png" alt="s769.github.io/wccm_24.html" style="width: 50%;"
-							class="r-stretch">
+					<div class="col">
+						<img data-src="wccm_24/qr-code.png" alt="s769.github.io/wccm_24.html" style="width: 50%;">
 					</div>
-					<div class="col3">
-						<img src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
+					<div class="col">
+						<img data-src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
 					</div>
 				</div>
 			</section>
 			<section>
-				<section>
+				<section data-auto-animate>
 					<h4>Cascadia Subduction Zone Tsunami</h4>
-					<video data-src="siam_pp_24/tsunami-clip.mp4" id="tsunami-clip" class="r-stretch" data-autoplay
-						loop></video>
+					<video data-src="siam_pp_24/tsunami-clip-75speed.mp4" id="tsunami-clip" style="width: 95%;"
+						data-autoplay loop></video>
 					<p class="footnote"> <a href="https://www.youtube.com/watch?v=e5PJQW_6k6M">Source: Washington State
 							Dept. of
 							Natural Resources</a> </p>
 				</section>
-				<section>
+				<section data-auto-animate>
 					<h4>Proposed Sensor Network</h4>
-					<img src="siam_pp_24/sensor-network.png" alt="Proposed Sensor Network" class="r-stretch">
+					<img data-src="siam_pp_24/sensor-network.png" alt="Proposed Sensor Network" style="width: 75%;">
 					<p class="footnote"> <a href="http://cascadiaoffshore.org/story/White_Paper.html">Source: Cascadia
 							Offshore
 							White Paper</a> </p>
@@ -226,7 +222,8 @@
 						</ul>
 					</ul>
 				</section>
-				<!-- <section data-auto-animate>
+			</section>
+			<!-- <section data-auto-animate>
 					<h4>Challenges</h4>
 					<ul>
 						<li>Forward problem involves 3D space + time</li>
@@ -236,9 +233,9 @@
 						</li>
 					</ul>
 				</section> -->
-			</section>
-			<section>
-				<!-- <section data-auto-animate>
+			<!-- </section>
+			<section> -->
+			<!-- <section data-auto-animate>
 					<h4>Forward Problem</h4>
 
 					<img class="r-stretch" src="siam_pp_24/pde-domain-cropped.svg" alt="PDE Domain">
@@ -246,10 +243,14 @@
 						absorbing BCs on Gamma_a: 1st order, PML
 					</aside>
 				</section> -->
+			<!-- </section> -->
+
+			<section>
 				<section data-auto-animate>
 					<h4>Forward Problem</h4>
-					<div class="r-hstack">
-						<div class="col1">
+					<p class="leftalign">Coupled <b class="color-emph"> Acoustic-Gravity </b> wave equations</p>
+					<div class="container">
+						<div class="col">
 							<p>
 								\[\begin{cases}
 								\rho \frac{ \partial\boldsymbol{u}}{\partial t} + \nabla p = \boldsymbol{0},
@@ -266,23 +267,22 @@
 								\]
 							</p>
 						</div>
-						<div class="col1">
-							<img src="siam_pp_24/pde-domain-cropped.svg" alt="PDE Domain" style="width: 150%;">
+						<div class="col">
+							<img data-src="siam_pp_24/pde-domain-cropped.svg" alt="PDE Domain" style="width: 150%;">
 						</div>
 					</div>
 					<ul>
-						<li>Coupled <b class="color-emph"> Acoustic-Gravity </b> wave equations</li>
 						<li><b class="color-emph">Velocity:</b> \(\boldsymbol{u}(\boldsymbol{x}, t)\), <b
 								class="color-emph">Pressure:</b> \(p(\boldsymbol{x}, t)\),
 							<b class="color-emph">Surface Height:</b> \(\eta(\boldsymbol{x}, t)\)
 						</li>
-						<li> bulk modulus \(K\), density \(\rho\), \(Z = \rho c\), \(c = \sqrt{K/\rho}\) </li>
-						<li> bathymetry \(b(\boldsymbol{x}, t)\); Homogeneous ICs; <b
-								class="color-emph">observations</b> of \(p\) at sensors </li>
+						<li> Bulk modulus \(K\), density \(\rho\), \(Z = \rho c\), \(c = \sqrt{K/\rho}\) </li>
+						<li> Bathymetry \(b(\boldsymbol{x}, t)\); homogeneous ICs</li>
+						<li><b class="color-emph">Observations</b> of pressure \(p\) at seafloor sensors </li>
 					</ul>
 
 
-					<p class="footnote">Implemented in <a href="https://mfem.org/">MFEM</a>.</p>
+					<p class="footnote">Implemented in <a href="https://mfem.org/">MFEM</a></p>
 					<aside class="notes" aria-label="physparams">
 						absorbing BCs on Gamma_a: 1st order, PML
 						<br>
@@ -291,43 +291,45 @@
 						bathymetry related to seafloor motion is the parameter
 					</aside>
 				</section>
-			</section>
-			<section>
-				<h4>Inverse Problem</h4>
-				<ul>
-					<li>Given pressure recordings from sensors on the seafloor, infer the seafloor motion along the
-						fault line.</li>
-				</ul>
-				<div class="container">
-					<div class="col1">
-						<img src="wccm_24/2D_noise_5_inversion_bathym_var.gif" alt="Inverted Parameter"
-							style="width: 100%; margin-bottom: 0; padding-bottom: 0;">
-						<p class="caption" style="padding: 0%; margin: 0%; ">Inferred seafloor motion (mean and
-							uncertainty)</p>
-					</div>
-					<div class="col2">
-						<img src="wccm_24/2D_noise_5_inversion_pressure.gif" alt="Inverted Pressure Observations"
-							style="width: 100%; margin-bottom: 0; padding-bottom: 0;">
-						<p class="caption" style="padding: 0%; margin: 0%;">Reconstructed sea bottom pressure</p>
-					</div>
-				</div>
 
-				<img src="wccm_24/2D_noise_5_inversion_eta.gif" alt="Inverted Surface Gravity Wave Observations"
-					style="width: 50%; margin-top: 0; padding-top: 0; margin-bottom: 0; padding-bottom: 0;">
-				<p class="caption" style="padding: 0%; margin: 0%;">Reconstructed surface gravity wave </p>
-				<aside class="notes" aria-label="2D inversion">
-					2D inversion with 5% noise
-				</aside>
-			</section>
-			<section>
-				<section>
+				<section data-auto-animate>
+					<h4>Inverse Problem</h4>
+					<ul>
+						<li>Given pressure recordings from sensors on the seafloor, infer the seafloor motion along the
+							fault line.</li>
+					</ul>
+					<div class="container">
+						<div class="col">
+							<img data-src="wccm_24/2D_noise_5_inversion_bathym_var.gif" alt="Inverted Parameter"
+								style="width: 100%; margin-bottom: 0; padding-bottom: 0;">
+							<p class="caption" style="padding: 0%; margin: 0%; ">Inferred seafloor motion (mean and
+								uncertainty)</p>
+						</div>
+						<div class="col">
+							<img data-src="wccm_24/2D_noise_5_inversion_pressure.gif"
+								alt="Inverted Pressure Observations"
+								style="width: 100%; margin-bottom: 0; padding-bottom: 0;">
+							<p class="caption" style="padding: 0%; margin: 0%;">Reconstructed sea bottom pressure</p>
+						</div>
+					</div>
+
+					<img data-src="wccm_24/2D_noise_5_inversion_eta.gif"
+						alt="Inverted Surface Gravity Wave Observations"
+						style="width: 50%; margin-top: 0; padding-top: 0; margin-bottom: 0; padding-bottom: 0;">
+					<p class="caption" style="padding: 0%; margin: 0%;">Reconstructed surface gravity wave </p>
+					<aside class="notes" aria-label="2D inversion">
+						2D inversion with 5% noise
+						<br> able to reconstruct well the smooth modes of the parameter
+					</aside>
+				</section>
+				<section data-auto-animate>
 					<h4>Bayesian Inverse Problem</h4>
 					<ul>
 						<li>
 							<b class="color-emph">Bayes Rule:
 							</b>
-							\(\frac{\text{d}\mu_{\text{post}}}{\text{d}\mu_{\text{prior}}} \propto
-							\pi_{\text{like}}(d|m) \)
+							\(\text{d}\mu_{\text{post}} \propto
+							\pi_{\text{like}}(d|m) \text{d}\mu_{\text{prior}} \)
 						</li>
 						<li>
 							<b class="color-emph">Goal:</b> determine posterior measure \(\mu_{\text{post}}\)
@@ -357,8 +359,8 @@
 						</li> -->
 
 					</ul>
-					<img src="wccm_24/FFstar-base.svg" alt="Spectrum of \(\mathbf{F} \mathbf{F}^*\)" class="r-stretch"
-						style="margin:0; padding:0;">
+					<img data-src="wccm_24/FFstar-base.svg" alt="Spectrum of \(\mathbf{F} \mathbf{F}^*\)"
+						style="width: 100%; margin:0; padding:0;">
 					<p class="caption" style="margin:0; padding:0;">Eigenvalues of \(\mathbf{F} \mathbf{F}^*\) for a
 						representative case with ~132M parameters and 25K data points.</p>
 					<!-- <p class="caption" style="margin:0; padding:0;">Representative case: \(N_m = 263\text{K}, N_d = 49, N_t = 500\)</p> -->
@@ -388,14 +390,19 @@
 
 					<p class="leftalign">
 						<b class="color-emph">Posterior: </b>
-						\[\begin{align*}
-						\mu_{\text{post}} &= \mathcal{N}(m_{\text{map}},
-						\Gamma_{\!\text{post}}) \\
-						\Gamma_{\!\text{post}}&=\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} \mathcal{F} +
-						\Gamma_{\!\text{prior}}^{-1}\right)^{-1}\\
-						m_{\text{map}}&=\Gamma_{\!\text{post}}\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} d +
-						\Gamma_{\!\text{prior}}^{-1} m_{\text{prior}}\right)
-						\end{align*}\]
+					<div class="box" ,
+						style="background-color: blanchedalmond; border: 1px solid black; border-radius: 25px;">
+						<p>
+							\[\begin{align*}
+							\mu_{\text{post}} &= \mathcal{N}(m_{\text{map}},
+							\Gamma_{\!\text{post}}) \\
+							\Gamma_{\!\text{post}}&=\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} \mathcal{F} +
+							\Gamma_{\!\text{prior}}^{-1}\right)^{-1}\\
+							m_{\text{map}}&=\Gamma_{\!\text{post}}\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} d +
+							\Gamma_{\!\text{prior}}^{-1} m_{\text{prior}}\right)
+							\end{align*}\]
+						</p>
+					</div>
 					</p>
 					<!-- <p class="leftalign">
 						Want to find \(m_{\text{map}}\) and \(\Gamma_{\!\text{post}}\) in <b class="color-emph">real
@@ -430,19 +437,17 @@
 						<li>
 							\(\Gamma_{\!\text{post}}^{-1} =: \mathcal{H} \) is the <b class="color-emph">Hessian</b>
 							(of
-							negative log-posterior)
+							negative log-posterior).
 						</li>
 						<li>
-							Each Hessian action \(\mathcal{H}v\) requires <b class="color-emph">1 Forward PDE
-								Solve</b>
+							Each matrix-free Hessian action requires <b class="color-emph">1 Forward</b>
 							and
-							<b class="color-emph">1 Adjoint PDE Solve</b> (traditionally)
+							<b class="color-emph">1 Adjoint</b> PDE solve.
 						</li>
 						<li>
-							Solving \( \mathcal{H}m_{\text{map}} = \mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} d +
-							\Gamma_{\!\text{prior}}^{-1} m_{\text{prior}} \) with CG requires
+							Finding \( m_{\text{map}} \) with CG requires
 							\(\text{rank}(\mathcal{H})\)
-							Hessian actions<sup>1</sup>
+							Hessian actions<sup>1</sup>.
 						</li>
 						<li>
 							For hyperbolic systems, \(\mathcal{H}\) can have high rank \(\Rightarrow\) many PDE solves
@@ -480,6 +485,12 @@
 						PDE solve deals with 3D space-time state
 						dimension \(\sim 10^{11}\) and has CFL
 						constrained timestep.
+						<br>
+						1 hr time is actually benchmarked on optimized scalable FEM code
+						<br>
+						when we say rank of Hessian, we mean "effective rank" since it will be numerically full rank but
+						you cant hope to reconstruct al high order modes from sparse data so the "rank" is the point at
+						which the evals of the hessian begin looking comparable to noise
 					</aside>
 				</section>
 				<!-- <section data-auto-animate>
@@ -565,7 +576,8 @@
 							using the high-fidelity model.
 						</li>
 					</ul>
-					<p class="footnote leftalign"><em class="color-emph"><sup>&ast;</sup>Exact up to discretization errors</em></p>
+					<p class="footnote leftalign"><em class="color-emph"><sup>&ast;</sup>Exact up to discretization
+							errors</em></p>
 				</section>
 				<!-- <section data-auto-animate>
 					<h4>Real-Time Inference</h4>
@@ -645,7 +657,7 @@
 					<ul>
 						<li>
 							Both rely on <b class="color-emph"> fast applications </b> of \(\mathbf{F}\) and
-							\(\mathbf{F}^*\)
+							\(\mathbf{F}^*\).
 						</li>
 						<li>
 							Block Toeplitz structure \(\Rightarrow\) FFT-based Hessian actions (algorithm implemented on
@@ -656,15 +668,15 @@
 							~<b class="color-emph">200,000x speedup</b> vs matrix-free Hessian action via
 							forward/adjoint
 							PDE
-							solves for 132M parameters and 25K data points<sup>1</sup>
+							solves for 132M params. and 25K data points<sup>1</sup>
 						</li>
 					</ul>
 					<p class="footnote"><sup>1</sup>8 <a
 							href="https://docs.tacc.utexas.edu/hpc/lonestar6/"><em>Lonestar6</em></a> NVIDIA A100 40GB
 						GPU nodes (3 GPUs/node) vs 2048 <a
 							href="https://docs.tacc.utexas.edu/hpc/frontera/"><em>Frontera</em></a> CLX nodes (56
-						cores/node). <br> <a href="https://arxiv.org/abs/2407.13066">Venkat, S., Fernando, M.,
-							Henneking, S., &amp; Ghattas, O. (2024). Fast and
+						cores/node). <br> <a href="https://arxiv.org/abs/2407.13066">S. Venkat, M. Fernando,
+							S. Henneking, &amp; O. Ghattas, (2024). Fast and
 							Scalable FFT-Based GPU-Accelerated Algorithms for Hessian Actions Arising in Linear Inverse
 							Problems Governed by Autonomous Dynamical Systems. ArXiv. /abs/2407.13066</a></p>
 
@@ -686,17 +698,17 @@
 							~<b class="color-emph">200,000x speedup</b> vs matrix-free Hessian action via
 							forward/adjoint
 							PDE
-							solves for 132M parameters and 25K data points
+							solves for 132M params. and 25K data points
 						</li>
 					</ul>
 					<div class="container">
 						<div class="col">
-							<img src="wccm_24/single-gpu-line.svg" alt="Single GPU Performance"
-								style="width: 90%; margin:0; padding:0;">
+							<img data-src="wccm_24/single-gpu-line.svg" alt="Single GPU Performance"
+								style="width: 100%; margin:0; padding:0;">
 						</div>
 						<div class="col">
-							<img src="wccm_24/weak-scaling-gpu.svg" alt="Multi-GPU Performance"
-								style="width: 90%;  margin:0; padding:0;">
+							<img data-src="wccm_24/weak-scaling-gpu.svg" alt="Multi-GPU Performance"
+								style="width: 100%;  margin:0; padding:0;">
 						</div>
 					</div>
 					<p class="caption">
@@ -781,14 +793,14 @@
 
 				<!-- <section data-auto-animate>
 					<h4>Spectrum of \(\mathbf{F} \mathbf{F}^*\) </h4>
-					<img src="wccm_24/FFstar-base.svg" alt="Spectrum of \(\mathbf{F} \mathbf{F}^*\)" class="r-stretch">
+					<img data-src="wccm_24/FFstar-base.svg" alt="Spectrum of \(\mathbf{F} \mathbf{F}^*\)" class="r-stretch">
 					<p class="caption">Representative case: \(N_m = 263\text{K}, N_d = 49, N_t = 500\)</p>
 				</section> -->
 
 				<!-- <section data-auto-animate>
 					<h4>Spectrum of \(\mathbf{K} = \Gamma_{\!\text{noise}} +
 						\mathbf{F}\Gamma_{\!\text{prior}}\mathbf{F}^*\) </h4>
-					<img src="wccm_24/K-base.svg" alt="Spectrum of \(\mathbf{K}\)" class="r-stretch">
+					<img data-src="wccm_24/K-base.svg" alt="Spectrum of \(\mathbf{K}\)" class="r-stretch">
 					<p class="caption">Representative case: \(N_m = 263\text{K}, N_d = 49, N_t = 500, \\
 						\Gamma_{\!\text{noise}} = \gamma I, \gamma = 10^{-10}\), Bi-Laplacian
 						Prior (spatial only)</p>
@@ -935,19 +947,18 @@
 				</section>
 				<section data-auto-animate>
 					<h4>3D Inversion: True Pressure Field</h4>
-					<img src="wccm_24/3D_true_pressure_color.gif" alt="True Pressure Field" class="r-stretch"
-						style="width: 95%;">
+					<img data-src="wccm_24/3D_true_pressure_color.gif" alt="True Pressure Field" style="width: 95%;">
 				</section>
 				<section data-auto-animate>
 					<h4>3D Inversion: Sensor Observations</h4>
 					<div class="container">
 						<div class="col">
-							<img src="wccm_24/no_noise.png" alt="No Noise" class="r-stretch"
+							<img data-src="wccm_24/no_noise.png" alt="No Noise"
 								style="width: 90%; margin:0; padding: 0;">
 							<p class="caption">Sea bottom pressure (no noise)</p>
 						</div>
 						<div class="col">
-							<img src="wccm_24/noisy_3.png" alt="Noisy 6%" class="r-stretch"
+							<img data-src="wccm_24/noisy_3.png" alt="Noisy 6%"
 								style="width: 90%; margin:0; padding: 0;">
 							<p class="caption">Observations with 6% relative noise</p>
 						</div>
@@ -1004,18 +1015,18 @@
 
 					<!-- <div class="r-cstack"> -->
 					<!-- <div class="r-hstack">
-							<img src="wccm_24/no_noise.png" alt="No Noise" class="r-stretch"
+							<img data-src="wccm_24/no_noise.png" alt="No Noise" class="r-stretch"
 								style="width: 75%; margin:0; padding: 0;">
 							<p class="caption" style="margin:0; padding: 0;">Sea bottom pressure (no noise)</p>
-							<img src="wccm_24/noisy_1.png" alt="Noisy 1" class="r-stretch"
+							<img data-src="wccm_24/noisy_1.png" alt="Noisy 1" class="r-stretch"
 								style="width: 75%; margin:0; padding: 0;">
 							<p class="caption" style="margin:0; padding: 0;">Observations with 2% relative noise</p>
 						</div> -->
 					<!-- <div class="r-cstack">
-							<img src="wccm_24/noisy_2.png" alt="Noisy 2" class="r-stretch"
+							<img data-src="wccm_24/noisy_2.png" alt="Noisy 2" class="r-stretch"
 								style="width: 75%; margin:0; padding: 0;">
 							<p class="caption" style="margin:0; padding: 0;">Observations with 4% relative noise</p>
-							<img src="wccm_24/noisy_3.png" alt="Noisy 3" class="r-stretch"
+							<img data-src="wccm_24/noisy_3.png" alt="Noisy 3" class="r-stretch"
 								style="width: 75%; margin:0; padding: 0;">
 							<p class="caption" style="margin:0; padding: 0;">Observations with 6% relative noise</p>
 						</div> -->
@@ -1121,8 +1132,7 @@
 				</section> -->
 				<section data-auto-animate>
 					<h4>3D Inversion Results: Bathymetry</h4>
-					<img src="wccm_24/bathymetry_true_inv.png" alt="Bathymetry Change" class="r-stretch"
-						style="width: 95%;">
+					<img data-src="wccm_24/bathymetry_true_inv.png" alt="Bathymetry Change" style="width: 80%;">
 					<p class="caption"><b class="color-emph">Left:</b>True total bathymetry change (time-integrated
 						parameter field); <b class="color-emph">Right:</b>
 						Total bathymetry change inferred from
@@ -1131,22 +1141,23 @@
 				<section data-auto-animate>
 					<h4>3D Inversion Results: Pressure</h4>
 					<div class="container">
-						<div class="col1">
-							<img src="wccm_24/3D_inv_pressure_color.gif" alt="Pressure Field" class="myimg95">
+						<div class="col">
+							<img data-src="wccm_24/3D_inv_pressure_color.gif" alt="Pressure Field" style="width: 100%;">
 						</div>
-						<div class="col2">
-							<img src="wccm_24/3D_diff_pressure_color.gif" alt="Pressure Difference" class="myimg95">
+						<div class="col">
+							<img data-src="wccm_24/3D_diff_pressure_color.gif" alt="Pressure Difference"
+								style="width: 100%;">
 						</div>
 					</div>
 					<p class="caption"><b class="color-emph">Left: </b> Sea bottom pressure reconstructed with the
-						parameter field inferred from synthetic observations with 6\% relative additive noise; <b
+						parameter field inferred from synthetic observations with 6% relative additive noise; <b
 							class="color-emph">Right: </b>Difference
 						between reconstructed and true pressure field</p>
 				</section>
 				<section data-auto-animate>
 					<h4>3D Inversion Results: Surface-Gravity Wave</h4>
-					<img src="wccm_24/surface_wave_true_inv.png" alt="Surface-Gravity Wave Reconstruction"
-						class="r-stretch" style="width: 95%;">
+					<img data-src="wccm_24/surface_wave_true_inv.png" alt="Surface-Gravity Wave Reconstruction"
+						style="width: 80%;">
 					<p class="caption"><b class="color-emph">Left: </b>Surface gravity wave obtained from true parameter
 						field; <b class="color-emph">Right: </b>Surface-gravity wave reconstructed with the
 						parameter field inferred from synthetic observations with 6% relative additive noise</p>
@@ -1174,12 +1185,15 @@
 								Other applications: seismic source inversion, contaminant transport
 							</li>
 						</ul>
+					</ul>
+					<ul style="columns: 2; -webkit-columns: 2; -moz-columns: 2">
 						<li>Future Work:
 							<ul>
 								<li>Goal-oriented UQ</li>
 								<li>Data-driven priors</li>
 							</ul>
 						</li>
+						<br>
 						<li>Acknowledgements:
 							<ul>
 								<li>NSF Graduate Research Fellowship grant: DGE 2137420</li>
@@ -1188,15 +1202,14 @@
 						</li>
 					</ul>
 					<div class="container">
-						<div class="col1">
-							<img src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" class="myimg95">
+						<div class="col">
+							<img data-src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" class="myimg95">
 						</div>
-						<div class="col2" style="width: 30%;">
-							<img src="wccm_24/qr-code.png" alt="s769.github.io/wccm_24.html" style="width: 50%;"
-								class="r-stretch">
+						<div class="col">
+							<img data-src="wccm_24/qr-code.png" alt="s769.github.io/wccm_24.html" style="width: 50%;">
 						</div>
-						<div class="col3">
-							<img src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
+						<div class="col">
+							<img data-src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
 						</div>
 					</div>
 				</section>
@@ -1214,10 +1227,10 @@
 					<h4>Thank You</h4>
 					<div class="container">
 						<div class="col1">
-							<img src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" class="myimg95">
+							<img data-src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" class="myimg95">
 						</div>
 						<div class="col2">
-							<img src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
+							<img data-src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
 						</div>
 					</div>
 				</section> -->
@@ -1270,12 +1283,12 @@
 	<!-- <div id="hidden" style="display:none;">
 		<div id="header">
 			<div id="header-left" style="display: block;">
-				<img src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" style="width: 75%; margin: 5%;">
+				<img data-src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" style="width: 75%; margin: 5%;">
 			</div>
 			<div id="header-right" style="display: block;">
 			</div>
 			<div id="footer-left">
-				<img src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" style="width: 60%; margin: 5%;">
+				<img data-src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" style="width: 60%; margin: 5%;">
 			</div>
 		</div>
 	</div> -->
@@ -1312,7 +1325,6 @@
 			},
 
 			center: false,
-			margin: 0.01,
 
 			// 'pointer': {"key": "q", "color": "#32cd32", "pointerSize": 18, "alwaysVisible": false},
 
@@ -1383,10 +1395,10 @@
 		*/
 
 	</script>
-	<script>
+	<!-- <script>
 		let vid = document.getElementById('tsunami-clip');
 		vid.playbackRate = 7.5;
-	</script>
+	</script> -->
 
 
 </body>
