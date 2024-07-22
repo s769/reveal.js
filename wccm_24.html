@@ -1322,27 +1322,27 @@
 			slideNumber: true,
 			totalTime: 1500,
 
-			multiplex: {
-				// Example values. To generate your own, see the socket.io server instructions.
-				secret: '17198636422737364430', // Obtained from the socket.io server. Gives this (the master) control of the presentation
-				id: '9bab1850d60bbaa7', // Obtained from socket.io server
-				url: 'https://reveal-multiplex.glitch.me/' // Location of socket.io server
-			},
+			// multiplex: {
+			// 	// Example values. To generate your own, see the socket.io server instructions.
+			// 	secret: '17198636422737364430', // Obtained from the socket.io server. Gives this (the master) control of the presentation
+			// 	id: '9bab1850d60bbaa7', // Obtained from socket.io server
+			// 	url: 'https://reveal-multiplex.glitch.me/' // Location of socket.io server
+			// },
 
 			center: false,
 
 			// 'pointer': {"key": "q", "color": "#32cd32", "pointerSize": 18, "alwaysVisible": false},
 
-			notes_pointer: {
-				pointer: {
-					size: 15,  // in pixels (scaled like the rest of reveal.js)
-					color: 'rgba(255, 0, 0, 0.8)',  // something valid for css background-color
-					key: 'A'
-				},
-				notes: {
-					key: 'S'
-				}
-			},
+			// notes_pointer: {
+			// 	pointer: {
+			// 		size: 15,  // in pixels (scaled like the rest of reveal.js)
+			// 		color: 'rgba(255, 0, 0, 0.8)',  // something valid for css background-color
+			// 		key: 'A'
+			// 	},
+			// 	notes: {
+			// 		key: 'S'
+			// 	}
+			// },
 
 
 
@@ -1358,14 +1358,14 @@
 			// },
 
 
-			dependencies: [
-				// ...
-				{src: 'https://reveal-multiplex.glitch.me/socket.io/socket.io.js', async: true},
-				{src: 'https://reveal-multiplex.glitch.me/master.js', async: true},
+			// dependencies: [
+			// 	// ...
+			// 	{src: 'https://reveal-multiplex.glitch.me/socket.io/socket.io.js', async: true},
+			// 	{src: 'https://reveal-multiplex.glitch.me/master.js', async: true},
 
-				{src: 'node_modules/reveal.js-notes-pointer/notes-pointer.js', async: true},
-				// async is optional
-			]
+			// 	{src: 'node_modules/reveal.js-notes-pointer/notes-pointer.js', async: true},
+			// 	// async is optional
+			// ]
 
 
 		});
