@@ -179,7 +179,7 @@
 						<img data-src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" class="myimg95">
 					</div>
 					<div class="col">
-						<img data-src="wccm_24/qr-code.png" alt="s769.github.io/wccm_24.html" style="width: 50%;">
+						<img data-src="wccm_24/qr-code-3.svg" alt="https://s769.github.io/reveal.js/wccm_24.html" style="width: 50%;">
 					</div>
 					<div class="col">
 						<img data-src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
@@ -248,7 +248,7 @@
 			<section>
 				<section data-auto-animate>
 					<h4>Forward Problem</h4>
-					<p class="leftalign">Coupled <b class="color-emph"> Acoustic-Gravity </b> wave equations</p>
+					<p class="leftalign">Coupled <b class="color-emph"> Acoustic-Gravity </b> wave equations:</p>
 					<div class="container">
 						<div class="col">
 							<p>
@@ -335,7 +335,7 @@
 							<b class="color-emph">Goal:</b> determine posterior measure \(\mu_{\text{post}}\)
 						</li>
 						<li>
-							\(m\): model parameters &mdash; spatiotemporal field \(=\frac{\partial b}{\partial t}
+							\(m\): model parameters &mdash; spatiotemporal field: \(\frac{\partial b}{\partial t}
 							(\boldsymbol{x},t)\) </li>
 						<li>\(d\): pressure obs. &mdash; pointwise in space and time: \(\left\{p(\boldsymbol{x}_i,
 							t)\right\}_{i=1}^{N_d}\)
@@ -362,7 +362,7 @@
 					<img data-src="wccm_24/FFstar-base.svg" alt="Spectrum of \(\mathbf{F} \mathbf{F}^*\)"
 						style="width: 100%; margin:0; padding:0;">
 					<p class="caption" style="margin:0; padding:0;">Eigenvalues of \(\mathbf{F} \mathbf{F}^*\) for a
-						representative case with ~132M parameters and 25K data points.</p>
+						representative case with ~132M parameters and ~25K data points.</p>
 					<!-- <p class="caption" style="margin:0; padding:0;">Representative case: \(N_m = 263\text{K}, N_d = 49, N_t = 500\)</p> -->
 				</section>
 				<section data-auto-animate>
@@ -476,7 +476,7 @@
 					<p class="footnote" style="padding: 0;">
 						<a
 							href="https://www.cambridge.org/core/journals/acta-numerica/article/learning-physicsbased-models-from-data-perspectives-from-inverse-problems-and-model-reduction/C072A4B417F8C3873ED75C1D63BBB31D?utm_campaign=shareaholic&utm_medium=copy_link&utm_source=bookmark">
-							<sup>1</sup>Ghattas, Omar, and Karen Willcox. "Learning physics-based models from data:
+							<sup>1</sup>Omar Ghattas, and Karen Willcox. "Learning physics-based models from data:
 							perspectives
 							from
 							inverse problems and model reduction." Acta Numerica 30 (2021): 445-554.</a>
@@ -616,7 +616,7 @@
 							\Gamma_{\!\text{prior}}^{-1}\)
 						</li>
 						<li>
-							shift invariance \(\Rightarrow\) \(\mathbf{F}\) is <em class="color-emph">block
+							Shift invariance \(\Rightarrow\) \(\mathbf{F}\) is <em class="color-emph">block
 								lower-triangular
 								Toeplitz</em>
 						</li>
@@ -662,20 +662,20 @@
 						<li>
 							Block Toeplitz structure \(\Rightarrow\) FFT-based Hessian actions (algorithm implemented on
 							Multi-GPU
-							system)
+							cluster)
 						</li>
 						<li>
 							~<b class="color-emph">200,000x speedup</b> vs matrix-free Hessian action via
-							forward/adjoint
+							forward and adjoint
 							PDE
-							solves for 132M params. and 25K data points<sup>1</sup>
+							solves for ~132M parameters and ~25K data points<sup>1</sup>
 						</li>
 					</ul>
 					<p class="footnote"><sup>1</sup>8 <a
 							href="https://docs.tacc.utexas.edu/hpc/lonestar6/"><em>Lonestar6</em></a> NVIDIA A100 40GB
-						GPU nodes (3 GPUs/node) vs 2048 <a
+						GPU nodes (3 GPUs/node) vs 2048 <a 
 							href="https://docs.tacc.utexas.edu/hpc/frontera/"><em>Frontera</em></a> CLX nodes (56
-						cores/node). <br> <a href="https://arxiv.org/abs/2407.13066">S. Venkat, M. Fernando,
+						cores/node). <br> <a href="https://arxiv.org/abs/2407.13066">S. V., M. Fernando,
 							S. Henneking, &amp; O. Ghattas, (2024). Fast and
 							Scalable FFT-Based GPU-Accelerated Algorithms for Hessian Actions Arising in Linear Inverse
 							Problems Governed by Autonomous Dynamical Systems. ArXiv. /abs/2407.13066</a></p>
@@ -696,9 +696,9 @@
 						</li>
 						<li>
 							~<b class="color-emph">200,000x speedup</b> vs matrix-free Hessian action via
-							forward/adjoint
+							forward and adjoint
 							PDE
-							solves for 132M params. and 25K data points
+							solves for ~132M parameters and ~25K data points
 						</li>
 					</ul>
 					<div class="container">
@@ -768,8 +768,7 @@
 					<aside class="notes" aria-label="post variance">
 						Diagonal is independent of data.
 					</aside>
-					<p class="footnote"> <a href="https://epubs.siam.org/doi/10.1137/22M1476277"><sup>1</sup>Hallman,
-							Eric, Ilse CF
+					<p class="footnote"> <a href="https://epubs.siam.org/doi/10.1137/22M1476277"><sup>1</sup>Eric Hallman, Ilse CF
 							Ipsen,
 							and Arvind K. Saibaba. "Monte Carlo methods for
 							estimating the diagonal of a real symmetric matrix." SIAM Journal on Matrix Analysis and
@@ -948,6 +947,12 @@
 				<section data-auto-animate>
 					<h4>3D Inversion: True Pressure Field</h4>
 					<img data-src="wccm_24/3D_true_pressure_color.gif" alt="True Pressure Field" style="width: 95%;">
+					<aside class="Notes" aria-label="3D pressure">
+						pressure in domain
+						<br>
+						focused on the center of domain
+						<br>
+					</aside>
 				</section>
 				<section data-auto-animate>
 					<h4>3D Inversion: Sensor Observations</h4>
@@ -1178,7 +1183,7 @@
 								Fast matvec algorithm speeds up Hessian action by <b class="color-emph">~200,000x</b>
 							</li>
 							<li>
-								Can solve inverse problem with ~132M parameters and 25K data points in <b
+								Can solve inverse problem with ~132M parameters and ~25K data points in <b
 									class="color-emph">0.14s</b>
 							</li>
 							<li>
@@ -1206,7 +1211,7 @@
 							<img data-src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" class="myimg95">
 						</div>
 						<div class="col">
-							<img data-src="wccm_24/qr-code.png" alt="s769.github.io/wccm_24.html" style="width: 50%;">
+							<img data-src="wccm_24/qr-code-3.svg" alt="https://s769.github.io/reveal.js/wccm_24.html" style="width: 40%; padding:0; margin:0;">
 						</div>
 						<div class="col">
 							<img data-src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
