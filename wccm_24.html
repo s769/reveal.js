@@ -4,8 +4,13 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<script src="http://localhost:1948/socket.io/socket.io.js"></script>
-	<title>reveal.js</title>
+	<!-- <script src="http://localhost:1948/socket.io/socket.io.js"></script> -->
+	<title>Real-Time High-Fidelity Algorithms for
+		Extreme-Scale Bayesian Inverse Problems
+		Involving Shift-Invariant Systems</title>
+
+
+
 
 	<link rel="stylesheet" href="dist/reset.css">
 	<link rel="stylesheet" href="dist/reveal.css">
@@ -179,7 +184,8 @@
 						<img data-src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" class="myimg95">
 					</div>
 					<div class="col">
-						<img data-src="wccm_24/qr-code-4.svg" alt="https://s769.github.io/reveal.js/wccm_24.html" style="width: 50%; padding: 0; margin: 0;">
+						<img data-src="wccm_24/qr-code-4.svg" alt="https://s769.github.io/reveal.js/wccm_24.html"
+							style="width: 50%; padding: 0; margin: 0;">
 					</div>
 					<div class="col">
 						<img data-src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
@@ -191,14 +197,16 @@
 					<h4>Cascadia Subduction Zone Tsunami</h4>
 					<video data-src="siam_pp_24/tsunami-clip-75speed.mp4" id="tsunami-clip" style="width: 95%;"
 						data-autoplay loop></video>
-					<p class="footnote"> <a href="https://www.youtube.com/watch?v=e5PJQW_6k6M" target="_blank" rel="noopener noreferrer">Source: Washington State
+					<p class="footnote"> <a href="https://www.youtube.com/watch?v=e5PJQW_6k6M" target="_blank"
+							rel="noopener noreferrer">Source: Washington State
 							Dept. of
 							Natural Resources</a> </p>
 				</section>
 				<section data-auto-animate>
 					<h4>Proposed Sensor Network</h4>
 					<img data-src="siam_pp_24/sensor-network.png" alt="Proposed Sensor Network" style="width: 75%;">
-					<p class="footnote"> <a href="http://cascadiaoffshore.org/story/White_Paper.html" target="_blank" rel="noopener noreferrer">Source: Cascadia
+					<p class="footnote"> <a href="http://cascadiaoffshore.org/story/White_Paper.html" target="_blank"
+							rel="noopener noreferrer">Source: Cascadia
 							Offshore
 							White Paper</a> </p>
 				</section>
@@ -282,7 +290,8 @@
 					</ul>
 
 
-					<p class="footnote">Implemented in <a href="https://mfem.org/" target="_blank" rel="noopener noreferrer">MFEM</a></p>
+					<p class="footnote">Implemented in <a href="https://mfem.org/" target="_blank"
+							rel="noopener noreferrer">MFEM</a></p>
 					<aside class="notes" aria-label="physparams">
 						absorbing BCs on Gamma_a: 1st order, PML
 						<br>
@@ -370,7 +379,7 @@
 					<p class="leftalign">
 						<b class="color-emph">Gaussian Prior with Mat&eacute;rn Covariance:</b>\[m \sim
 						\mathcal{N}(m_{\text{prior}},
-						\Gamma_{\!\text{prior}}), \quad \Gamma_{\!\text{prior}} := \left(
+						\Gamma_{\!\text{prior}}), \quad \Gamma_{\!\text{prior}} \coloneqq \left(
 						\alpha_1 I -
 						\alpha_2 \Delta_{\text{2D}} -
 						\alpha_3 \partial_t^2
@@ -435,7 +444,7 @@
 					<h4>Finding the MAP Point</h4>
 					<ul class="spaced-ul">
 						<li>
-							\(\Gamma_{\!\text{post}}^{-1} =: \mathcal{H} \) is the <b class="color-emph">Hessian</b>
+							\(\Gamma_{\!\text{post}}^{-1} \eqqcolon \mathcal{H} \) is the <b class="color-emph">Hessian</b>
 							(of
 							negative log-posterior).
 						</li>
@@ -673,9 +682,10 @@
 					</ul>
 					<p class="footnote"><sup>1</sup>8 <a
 							href="https://docs.tacc.utexas.edu/hpc/lonestar6/"><em>Lonestar6</em></a> NVIDIA A100 40GB
-						GPU nodes (3 GPUs/node) vs 2048 <a 
+						GPU nodes (3 GPUs/node) vs 2048 <a
 							href="https://docs.tacc.utexas.edu/hpc/frontera/"><em>Frontera</em></a> CLX nodes (56
-						cores/node). <br> <a href="https://arxiv.org/abs/2407.13066" target="_blank" rel="noopener noreferrer">S. V., M. Fernando,
+						cores/node). <br> <a href="https://arxiv.org/abs/2407.13066" target="_blank"
+							rel="noopener noreferrer">S. V., M. Fernando,
 							S. Henneking, &amp; O. Ghattas, (2024). Fast and
 							Scalable FFT-Based GPU-Accelerated Algorithms for Hessian Actions Arising in Linear Inverse
 							Problems Governed by Autonomous Dynamical Systems. ArXiv. /abs/2407.13066</a></p>
@@ -768,7 +778,8 @@
 					<aside class="notes" aria-label="post variance">
 						Diagonal is independent of data.
 					</aside>
-					<p class="footnote"> <a href="https://epubs.siam.org/doi/10.1137/22M1476277" target="_blank" rel="noopener noreferrer"><sup>1</sup>Eric Hallman, Ilse CF
+					<p class="footnote"> <a href="https://epubs.siam.org/doi/10.1137/22M1476277" target="_blank"
+							rel="noopener noreferrer"><sup>1</sup>Eric Hallman, Ilse CF
 							Ipsen,
 							and Arvind K. Saibaba. "Monte Carlo methods for
 							estimating the diagonal of a real symmetric matrix." SIAM Journal on Matrix Analysis and
@@ -831,7 +842,7 @@
 							interest (QoI) of
 							surface-gravity wave
 							<ul>
-								<li>\(\Gamma_{\!\text{pred}} :=
+								<li>\(\Gamma_{\!\text{pred}} \coloneqq
 									\mathbf{F}_{\text{pred}}\Gamma_{\!\text{post}}\mathbf{F}_{\text{pred}}^* \in
 									\mathbb{R}^{N_q\times N_q}\)</li>
 								<li>\(\mathbf{F}_{\text{pred}}\) has a similar block-triangular Toeplitz structure to
@@ -947,7 +958,7 @@
 				<section data-auto-animate>
 					<h4>3D Inversion: True Pressure Field</h4>
 					<img data-src="wccm_24/3D_true_pressure_color.gif" alt="True Pressure Field" style="width: 95%;">
-					<aside class="Notes" aria-label="3D pressure">
+					<aside class="notes" aria-label="3D pressure">
 						pressure in domain
 						<br>
 						focused on the center of domain
@@ -1202,7 +1213,8 @@
 						<li>Acknowledgements:
 							<ul>
 								<li>NSF Graduate Research Fellowship grant: DGE 2137420</li>
-								<li>Texas Advanced Computing Center (<a href="https://tacc.utexas.edu/" target="_blank" rel="noopener noreferrer">TACC</a>)</li>
+								<li>Texas Advanced Computing Center (<a href="https://tacc.utexas.edu/" target="_blank"
+										rel="noopener noreferrer">TACC</a>)</li>
 							</ul>
 						</li>
 					</ul>
@@ -1211,7 +1223,8 @@
 							<img data-src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" class="myimg95">
 						</div>
 						<div class="col">
-							<img data-src="wccm_24/qr-code-4.svg" alt="https://s769.github.io/reveal.js/wccm_24.html" style="width: 50%; padding:0; margin:0;">
+							<img data-src="wccm_24/qr-code-4.svg" alt="https://s769.github.io/reveal.js/wccm_24.html"
+								style="width: 50%; padding:0; margin:0;">
 						</div>
 						<div class="col">
 							<img data-src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
@@ -1306,6 +1319,10 @@
 	<script src="plugin/search/search.js"></script>
 	<script src="plugin/zoom/zoom.js"></script>
 	<script src="plugin/pointer/pointer.js"></script>
+	<script src="node_modules/reveal.js-menu/menu.js"></script>
+	<script src="plugin/pdfexport/pdfexport.js"></script>
+
+
 	<!-- <script src="node_modules/reveal.js-notes-pointer/notes-pointer.js" async defer></script> -->
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
 		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -1318,7 +1335,7 @@
 			hash: true,
 
 			// Learn about plugins: https://revealjs.com/plugins/
-			plugins: [RevealMarkdown, RevealHighlight, RevealMath.KaTeX, RevealNotes, RevealSearch, RevealZoom],
+			plugins: [RevealMarkdown, RevealHighlight, RevealMath.KaTeX, RevealNotes, RevealSearch, RevealZoom, RevealMenu, PdfExport],
 			slideNumber: true,
 			totalTime: 900,
 
@@ -1330,6 +1347,13 @@
 			// },
 
 			center: false,
+
+			menu: {
+				themes: true,
+				transitions: true,
+				openSlideNumber: true,
+				themesPath: '.dist/theme/',
+			}
 
 			// 'pointer': {"key": "q", "color": "#32cd32", "pointerSize": 18, "alwaysVisible": false},
 
