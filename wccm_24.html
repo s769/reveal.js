@@ -947,15 +947,17 @@
 							<th>\(1 \ \textcolor{BF5700}{\mathbf{K}}\) solve</th>
 							<th style="text-align: center;">0.024s</th>
 						</tr>
-						<tr>
+						<!-- <tr>
 							<th>\(1 \ \Gamma_{\!\text{prior}}\) solve</th>
 							<th style="text-align: center;">0.083s</th>
-						</tr>
+						</tr> -->
 						<tr>
 							<th>Total</th>
-							<th style="text-align: center;">0.140s</th>
+							<th style="text-align: center;">0.079s<em class="color-emph"><sup>&ast;</sup></em></th>
 						</tr>
 					</table>
+
+					<p class="footnote"> <em class="color-emph"><sup>&ast;</sup>For priors with spatial correlation only, \(\Gamma_{\!\text{prior}}\mathbf{F}^*\) is also block-triangular Toeplitz.</em>
 
 					<aside class="notes" aria-label="IO">
 						No I/O time included.
@@ -1201,7 +1203,7 @@
 							</li>
 							<li>
 								Solve inverse problem with ~132M parameters and ~25K data points in <b
-									class="color-emph">0.14s</b>
+									class="color-emph">0.079s</b>
 							</li>
 							<li>
 								Other applications: seismic source inversion, contaminant transport
