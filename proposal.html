@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- <script src="http://localhost:1948/socket.io/socket.io.js"></script> -->
+    <title>Real-Time High-Fidelity Algorithms for
+        Extreme-Scale Bayesian Inverse Problems
+        Involving Shift-Invariant Systems</title>
+
+    <link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
+    <link rel="apple_touch_icon" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="favicon/android-chrome-512x512.png">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white-oden.css">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="plugin/pointer/pointer.js">
+    <style>
+        .reveal p,
+        .reveal ul,
+        .reveal ol {
+            font-size: 0.8em;
+        }
+
+        .color-emph {
+            color: #bf5700;
+        }
+
+        .fragment.c-fade-out {
+            opacity: 1.0;
+        }
+
+        .fragment.c-fade-out.visible {
+            opacity: 0.3;
+        }
+
+        .fragment.c-blur {
+            filter: opacity(30%);
+            transition: filter 0.25s ease-in-out;
+            /* opacity: 0.3; */
+        }
+
+        .fragment.c-blur.current-fragment {
+            filter: none;
+            transition: filter 0.25s ease-in-out;
+            /* opacity: 1.0; */
+        }
+
+        .fragment.c-blur2 {
+            filter: opacity(50%);
+            transition: filter 0.25s ease-in-out;
+            /* opacity: 0.3; */
+        }
+
+        .fragment.c-blur2.current-fragment {
+            filter: none;
+            transition: filter 0.25s ease-in-out;
+            /* opacity: 1.0; */
+        }
+
+        .faded {
+            opacity: 0.5;
+        }
+
+        .footnote {
+            font-size: 0.5em !important;
+            /* color: grey; */
+        }
+
+        .caption {
+            font-size: 0.5em !important;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        #header-left {
+            position: absolute;
+            top: 0%;
+            left: 0%;
+        }
+
+        #header-right {
+            position: absolute;
+            top: 0%;
+            right: 0%;
+        }
+
+        #footer-left {
+            position: absolute;
+            bottom: 0%;
+            left: 0%;
+        }
+
+        .reveal h1,
+        .reveal h2,
+        .reveal h3,
+        .reveal h4,
+        .reveal h5,
+        .reveal h6 {
+            text-transform: none;
+        }
+
+
+
+        .authors {
+            font-size: 0.6em;
+        }
+
+        .myimg95 {
+            width: 95%;
+            margin: 5%;
+        }
+
+        .myimg80 {
+            width: 80%;
+            margin: 5%;
+        }
+
+        .leftalign {
+            text-align: left;
+        }
+
+        .reveal sup {
+            font-size: 0.65em;
+        }
+
+        .katex {
+            font-size: 1em !important;
+        }
+
+
+        .center-table th,
+        .center-table td {
+            text-align: center !important;
+        }
+
+        .spaced-ul li {
+            padding: 5px 0px;
+        }
+
+
+
+
+        /* .reveal .footnote sup {
+			font-size: 0.65em;
+		} */
+
+        /* .reveal table td,
+		.reveal table th {
+			text-align: center;
+			vertical-align: center;
+		} */
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section class="center">
+                <h4>A Bayesian Mathematical and <br> Computational Framework for
+                    Digital Twins Governed by
+                    Large-Scale Linear <br> Autonomous Dynamical Systems
+                    with Application to Real-Time Tsunami Early Warning
+                </h4>
+                <p style="font-size: x-large;"><u>Sreeram Venkat</u><sup>1</sup>, Stefan Henneking<sup>1</sup>, Milinda
+                    Fernando<sup>1</sup>, Omar Ghattas<sup>1</sup>
+                </p>
+                <p style="font-size: medium;"><sup>1</sup>Oden Institute for Computational Engineering and Sciences, The
+                    University of Texas at Austin</p>
+
+                <div class="container">
+                    <div class="col">
+                        <img data-src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" class="myimg95">
+                    </div>
+                    <div class="col">
+                        <img data-src="wccm_24/qr-code-4.svg" alt="https://s769.github.io/reveal.js/wccm_24.html"
+                            style="width: 50%; padding: 0; margin: 0;">
+                    </div>
+                    <div class="col">
+                        <img data-src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
+                    </div>
+                </div>
+            </section>
+            <section data-external-replace="proposal/sections/introduction.html"></section>
+            <section data-external-replace="proposal/sections/background.html"></section>
+            <section data-external-replace="proposal/sections/phase1.html"></section>
+            <section data-external-replace="proposal/sections/configuration.html"></section>
+            <section data-external-replace="proposal/sections/phase2.html"></section>
+            <section data-external-replace="proposal/sections/phase3.html"></section>
+            <section data-external-replace="proposal/sections/results.html"></section>
+            <section data-external-replace="proposal/sections/proposed_work.html"></section>
+            <section data-external-replace="proposal/sections/conclusions.html"></section>
+
+
+
+
+           
+        </div>
+    </div>
+
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/math/math.js"></script>
+    <script src="plugin/search/search.js"></script>
+    <script src="plugin/zoom/zoom.js"></script>
+    <script src="plugin/pointer/pointer.js"></script>
+    <script src="plugin/menu/menu.js"></script>
+    <script src="plugin/pdfexport/pdfexport.js"></script>
+
+
+    <!-- <script src="node_modules/reveal.js-notes-pointer/notes-pointer.js" async defer></script> -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <script>
+        // More info about initialization & config:
+        // - https://revealjs.com/initialization/
+        // - https://revealjs.com/config/
+        Reveal.initialize({
+            hash: true,
+
+            // Learn about plugins: https://revealjs.com/plugins/
+            plugins: [RevealMarkdown, RevealHighlight, RevealMath.KaTeX, RevealNotes, RevealSearch, RevealZoom, RevealMenu, PdfExport],
+            slideNumber: true,
+            totalTime: 900,
+
+            // multiplex: {
+            // 	// Example values. To generate your own, see the socket.io server instructions.
+            // 	secret: '17198636422737364430', // Obtained from the socket.io server. Gives this (the master) control of the presentation
+            // 	id: '9bab1850d60bbaa7', // Obtained from socket.io server
+            // 	url: 'https://reveal-multiplex.glitch.me/' // Location of socket.io server
+            // },
+
+            center: false,
+
+            menu: {
+                themes: true,
+                transitions: true,
+                openSlideNumber: true,
+                themesPath: '.dist/theme/',
+            },
+
+            // 'pointer': {"key": "q", "color": "#32cd32", "pointerSize": 18, "alwaysVisible": false},
+
+            // notes_pointer: {
+            // 	pointer: {
+            // 		size: 15,  // in pixels (scaled like the rest of reveal.js)
+            // 		color: 'rgba(255, 0, 0, 0.8)',  // something valid for css background-color
+            // 		key: 'A'
+            // 	},
+            // 	notes: {
+            // 		key: 'S'
+            // 	}
+            // },
+
+
+
+            // katex: {
+            // 	version: 'latest',
+            // 	delimiters: [
+            // 		{left: '$$', right: '$$', display: true},
+            // 		{left: '$', right: '$', display: false},
+            // 		{left: '\\(', right: '\\)', display: false},
+            // 		{left: '\\[', right: '\\]', display: true}
+            // 	],
+            // 	ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            // },
+
+            dependencies: [
+                {
+                    src: 'plugin/external/external.js',
+                    condition: function () {
+                        return !!document.querySelector('[data-external],[data-external-replace]');
+                    }
+                },
+            ],
+
+            // dependencies: [
+            // 	// ...
+            // 	{src: 'https://reveal-multiplex.glitch.me/socket.io/socket.io.js', async: true},
+            // 	{src: 'https://reveal-multiplex.glitch.me/master.js', async: true},
+
+            // 	{src: 'node_modules/reveal.js-notes-pointer/notes-pointer.js', async: true},
+            // 	// async is optional
+            // ]
+
+
+        });
+
+        // automatically load the initial fragment on a slide if the fragment
+        // has been defined with the 'preload' class
+        Reveal.addEventListener('slidechanged', function (event) {
+            if (event.currentSlide.querySelectorAll('.preload[data-fragment-index="0"]').length > 0) {
+                Reveal.nextFragment();
+            }
+        });
+
+        // if the initial fragment on a slide has been defined with a 'preload' class
+        // then transition to the previous slide if the fragment is hidden
+        Reveal.addEventListener('fragmenthidden', function (event) {
+            if (event.fragment.hasAttribute('data-fragment-index') && event.fragment.classList.contains('preload')) {
+                if (event.fragment.attributes['data-fragment-index'].value == "0") {
+                    Reveal.prev();
+                }
+            }
+        });
+
+        /* var header = $('#header').html();
+        if (window.location.search.match(/print-pdf/gi)) {
+            Reveal.addEventListener('ready', function (event) {
+                $('.slide-background').append(header);
+            });
+        }
+        else {
+            $('div.reveal').append(header);
+        }
+        */
+
+    </script>
+    <!-- <script>
+		let vid = document.getElementById('tsunami-clip');
+		vid.playbackRate = 7.5;
+	</script> -->
+
+
+</body>
+
+</html>

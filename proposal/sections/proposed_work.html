@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Proposed Work</h4>
+        <ul>
+            <li>Scale to full CSZ Size</li>
+            <li>Incorporate real CSZ bathymetry in mesh</li>
+            <li>Data-driven priors</li>
+            <li>Software release</li>
+            <li>Optimal experimental design</li>
+            <li>Other application problems</li>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Scale to Full CSZ Size</h4>
+        <ul>
+            <li>Forward/adjoint PDE solvers and p2o/p2q matvecs scale</li>
+            <li>How to handle \(\mathbf{K}\) solve?</li>
+            <ul>
+                <li>Might not fit on a single GPU \(\Rightarrow\) testing <a
+                        href="https://docs.nvidia.com/cuda/cusolvermp/">cuSOLVERMp</a></li>
+                <li>Cholesky vs. Eigenecomposition</li>
+                <ul>
+                    <li>Cholesky is more robust to ill-conditioned matrices, but solve is less parallelizable</li>
+                    <li>Eigendecomposition needs to deal with inverting very small eigenvalues, but "solve" is very
+                        efficent</li>
+                </ul>
+                <li>Distributed solves require proper data handling/communication optimization</li>
+            </ul>
+            <li>Map directly from observations to QoI</li>
+            <li>Handle different sampling rates for observations, parameter, and QoI</li>
+            <li>Update predictions as more data is collected</li>
+            <li>Better communication cost modeling and experiments to determine optimal data layout/partitioning</li>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Incorporate Real CSZ Bathymetry in Mesh</h4>
+        <ul>
+            <li>Use real bathymetry data from <a
+                    href="https://www.gebco.net/data_and_products/gridded_bathymetry_data/">GEBCO</a> to generate mesh
+            </li>
+            <li><b class="color-emph">Meshing Algorithm:</b></li>
+            <ul>
+                <li>Inputs:</li>
+                <ul>
+                    <li>4 vertices of quadrilateral patch in lat. lon. coordinates</li>
+                    <li>Bathymetry interpolating function</li>
+                    <li>Mesh resolution: number of cells in \(x, y, z\)</li>
+                </ul>
+                <li>First make mesh of unit cube with desired resolution</li>
+                <li>Transform each point in \(xy\) plane to the lat. lon. patch (interpolate)</li>
+                <li>Transform in \(z\) direction using the bathymetry interpolating function</li>
+                <li>Transform mesh to <a
+                        href="https://docs.wrld3d.com/unity/latest/docs/examples/ecef-coordinate-system/">ECEF</a>
+                    coordinates</li>
+                <li>Glue patches together to make full mesh</li>
+                <aside class="notes" aria-label="Mesh Algorithm">
+                    <p>Laplace Beltrami operator required</p>
+                </aside>
+            </ul>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Incorporate Real CSZ Bathymetry in Mesh</h4>
+        <video data-src="proposal/images/CSZ-lat-lon-animation.mp4" style="width: 95%;" data-autoplay loop></video>
+        <p class="caption">Animation showing <a
+                href="https://www.gebco.net/data_and_products/gridded_bathymetry_data/">GEBCO</a> bathymetry data and
+            mesh of a quadrilateral patch of the CSZ using
+            the meshing algorithm described previously</p>
+    </section>
+    <section data-auto-animate>
+        <h4>Incorporate Real CSZ Bathymetry in Mesh</h4>
+        <img data-src="proposal/images/CSZ-lat-lon-mesh-2.png" alt="CSZ Lat. Lon. Patch" style="width: 95%;">
+        <p class="caption">3D hexahedral mesh of a quadrilateral patch of the CSZ in lat. lon. coordinates with \(\sim\)250m
+            grid spacing</p>
+    </section>
+    <section data-auto-animate>
+        <h4>Data-Driven Priors</h4>
+        <ul>
+            <li>Mat&eacute;rn covariance function:
+                \[\begin{align*} k(x, x') = \sigma(x) \sigma(x') \frac{2^{1-\nu(x, x')}}{\Gamma(\nu(x, x'))}
+                &\left( \frac{\sqrt{2\nu(x, x')} \| x - x' \|_{A(x, x')}}{\ell(x, x')} \right)^{\nu(x, x')}\\
+                \times K_{\nu(x, x')}&\left( \frac{\sqrt{2\nu(x, x')} \| x - x' \|_{A(x, x')}}{\ell(x, x')}
+                \right),
+                \end{align*}\]
+                where \(\sigma(x)\) is the signal variance, \(\nu(x, x')\) is the smoothness parameter, \(\ell(x, x')\)
+                is the length scale, and \(A(x, x')\) is the anisotropy matrix.
+            </li>
+            <li><b class="color-emph">Learn</b> \(\sigma(x)\), \(\nu(x, x')\), \(\ell(x, x')\), and \(A(x, x')\) from
+                data</li>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Data-Driven Priors</h4>
+        <ul>
+            <li><b class="color-emph">Learn</b> \(\sigma(x)\), \(\nu(x, x')\), \(\ell(x, x')\), and \(A(x, x')\) from
+                data</li>
+            <li><b class="color-emph">Cost Function:</b>
+                \[
+                C(\sigma, \nu, \ell, A) \coloneqq \frac12\sum_i\|\hat{\mathbf{q}}_i(\sigma, \nu, \ell, A) -
+                \mathbf{q}_i\|^2 +
+                \mathcal{R}(\sigma, \nu, \ell, A),
+                \]
+                where \(\hat{\mathbf{q}}_i\) is the predicted QoI at sensor \(i\) and \(\mathcal{R}\) is a
+                regularization</li>
+            <li>Bilevel optimization is expensive; cheaper to minimize
+                \[
+                C_2(\sigma, \nu, \ell, A) \coloneqq \frac12\sum_r\|\mathbf{\Gamma}_{\!\text{emp}}v_r -
+                \mathbf{\Gamma}(\sigma,
+                \nu, \ell, A)v_r\|^2 + \mathcal{R}(\sigma, \nu, \ell, A)
+                \]
+                where \(v_r\) are eigenvectors of empirical covariance matrix \(\mathbf{\Gamma}_{\!\text{emp}}\) with
+                non-zero eigenvalues</li>
+
+
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Data-Driven Priors</h4>
+        <ul>
+            <li><a href="https://zenodo.org/records/59943">Database</a> of 1,300 rupture scenarios for CSZ</li>
+            <ul>
+                <li>Use to build training dataset</li>
+            </ul>
+            <li>Augment training dataset with generative AI methods (e.g. diffusion, VAE)</li>
+            <ul>
+                <li>Dimension reduction likely needed since vectors are size \(\sim 10^9\)</li>
+            </ul>
+            <li>Theoretical analysis required to show spectral properties of priors, convergence of optimization using
+                generated
+                data distributions, etc.</li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Software Release</h4>
+        <ul>
+            <li><a href="https://github.com/s769/FFTMatvec">FFTMatvec</a> for fast block-triangular Toeplitz matvecs
+            </li>
+            <li><b class="color-emph">Goal:</b> release full inversion framework as open-source software</li>
+            <li>Generic to handle other problems than just CSZ inversion</li>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Optimal Experimental Design</h4>
+        <ul>
+            <li>Given a budget, how to optimally place sensors to minimize uncertainty in QoI?</li>
+            <li>Maximize expected information gain via KL-divergence (closed form for linear Gaussian case)</li>
+            <li>KL-divergence depends on sensor locations</li>
+            <li><b class="color-emph">Option 1:</b> select from subset of viable locations</li>
+            <ul>
+                <li>Use sparsity-promoting regularization or greedy algorithm</li>
+            </ul>
+            <li><b class="color-emph">Option 2:</b> allow sensor locations to vary continuously along a fiber optic
+                cable</li>
+            <ul>
+                <li>Shape optimization problem for cable path</li>
+            </ul>
+            <li>Eventually inform actual CSZ censor placement</li>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Other Application Problems</h4>
+        <ul>
+            <li>Nuclear testing treaty verification</li>
+            <li>Contaminant transport</li>
+            <li>Atmospheric CO<sub>2</sub> monitoring</li>
+            <li>For problems with advection, unknown time-dependent velocity field can be an issue</li>
+            <ul>
+                <li>Consider indoor problems (e.g. airport, indoor stadium) where velocity is known</li>
+                <li>Model as steady/piecewise steady and then use the approach introduced here</li>
+            </ul>
+            <li>Potentially relax linearity assumptions of forward/inverse problem</li>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Timeline</h4>
+        <img data-src="proposal/images/timeline.svg" alt="Timeline" style="width: 100%;">
+    </section>
+</section>

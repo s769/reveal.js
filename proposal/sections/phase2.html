@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Phase 2: Compute Compact Representation of
+            \(\Gamma_{\!\text{post}}\)</h4>
+        <ul>
+            <li class="leftalign"><b class="color-emph">Sherman-Morrison-Woodbury formula</b> applied to
+                \(\Gamma_{\!\text{post}}\):
+                \[
+                \begin{alignat*}{2}
+                \Gamma_{\!\text{post}}&=&&\left(\mathbf{F}^* \Gamma_{\!\text{noise}}^{-1} \mathbf{F} +
+                \Gamma_{\!\text{prior}}^{-1}\right)^{-1}\\
+                &=\Gamma_{\!\text{prior}}\Big(I -
+                \mathbf{F}^*&&\underbrace{\textcolor{BF5700}{\Big(\Gamma_{\!\text{noise}}
+                +
+                \mathbf{F}\Gamma_{\!\text{prior}}\mathbf{F}^*\Big)}}_{}^{\textcolor{BF5700}{\mathbf{K}}}\vphantom{a}^{-1}\mathbf{F}\Gamma_{\!\text{prior}}\Big)
+
+                \end{alignat*}
+                \]
+            </li>
+            <li>Inversion operation shifted from a matrix of size \(N_m\times N_m\) to a matrix of size
+                \(N_d\times N_d\)</li>
+            <li>\(\textcolor{BF5700}{\mathbf{K}}\) is a dense matrix of size \(\sim 10^5\times 10^5
+                \Rightarrow\) compute Cholesky/eigenvalue decomposition</li>
+            <li>For priors with only spatial correlation, \(\Gamma_{\!\text{prior}}\) is <em
+                    class="color-emph">block-diagonal</em> <br>\(\Rightarrow \mathbf{G} \coloneqq
+                \Gamma_{\!\text{prior}}\mathbf{F}\) is also a block-triangular Toeplitz matrix</li>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Phase 2: Compute Compact Representation of
+            \(\Gamma_{\!\text{post}}\)</h4>
+        <ul>
+            <li class="leftalign"><b class="color-emph">Sherman-Morrison-Woodbury formula</b> applied to
+                \(\Gamma_{\!\text{post}}\):
+                \[
+                \begin{align*}
+                \Gamma_{\!\text{post}}&=\Gamma_{\!\text{prior}}\Big(I -
+                \mathbf{F}^*\underbrace{\textcolor{BF5700}{\Big(\Gamma_{\!\text{noise}}
+                +
+                \mathbf{F}\Gamma_{\!\text{prior}}\mathbf{F}^*\Big)}}_{}^{\textcolor{BF5700}{\mathbf{K}}}\vphantom{a}^{-1}\mathbf{F}\Gamma_{\!\text{prior}}\Big)
+
+                \end{align*}
+                \]
+            </li>
+            <li>For priors with only spatial correlation, \(\Gamma_{\!\text{prior}}\) is <em
+                    class="color-emph">block-diagonal</em> <br>\(\Rightarrow \mathbf{G} \coloneqq
+                \Gamma_{\!\text{prior}}\mathbf{F}\) is also a block-triangular Toeplitz matrix</li>
+            <li>\(\mathbf{G}\) is computed by prior-solving the adjoint PDE solution vectors that define \(\mathbf{F}\)
+            </li>
+            <li>Prior solves done with <a href="https://developer.nvidia.com/cudss" target="_blank"
+                    rel="noopener noreferrer">cuDSS</a> (direct solver)</li>
+            <ul>
+                <li>Batch solve over timesteps</li>
+                <li>cuDSS selected after comparing performance of different solvers</li>
+            </ul>
+
+        </ul>
+
+    </section>
+    <section data-auto-animate>
+        <h4>Comparison of Prior Solvers</h4>
+        <div class="r-hstack">
+            <img data-src="proposal/images/prior_solvers.png" alt="Comparison of Prior Solvers" style="width: 70%;">
+            <table style="font-size: large;" class="center-table">
+                <tr>
+                    <td>Solver</td>
+                    <td>Setup Time (s)</td>
+                </tr>
+                <tr>
+                    <td>boomerAMG</td>
+                    <td>0.17</td>
+                </tr>
+                <tr>
+                    <td>boomerAMG+CG</td>
+                    <td>0.17</td>
+                </tr>
+                <tr>
+                    <td>cuSPARSE</td>
+                    <td>4.07</td>
+                </tr>
+                <tr>
+                    <td>PETSc Direct (CPU)</td>
+                    <td>3.46</td>
+                </tr>
+                <tr>
+                    <td>CHOLMOD</td>
+                    <td>0.49</td>
+                </tr>
+                <tr>
+                    <td>MKL-PARDISO</td>
+                    <td>1.15</td>
+                </tr>
+                <tr>
+                    <td>cuDSS</td>
+                    <td>1.18</td>
+                </tr>
+            </table>
+        </div>
+        <p class="caption">
+            <b class="color-emph">Left:</b> comparison of prior solve times; <b class="color-emph">Right:</b> comparison
+            of setup/factorization times for different prior solvers
+        </p>
+        <ul>
+            <li class="leftalign">cuDSS selected for overall performance and batching capabilities</li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Spectral Analysis</h4>
+        <div class="r-hstack">
+            <img data-src="proposal/images/evals_p2o.png" alt="Eigenvalues of \(\mathbf{F} \mathbf{F}^*\)"
+                style="width: 50%;">
+            <img data-src="proposal/images/evals_K.png" alt="Eigenvalues of \(\mathbf{K}\)" style="width: 50%;">
+        </div>
+        <p class="caption"><b class="color-emph">Left:</b> Eigenvalues of \(\mathbf{F} \mathbf{F}^*\) for a
+            representative case; <b class="color-emph">Right:</b> Eigenvalues of \(\mathbf{K}\) for the same case</p>
+        <ul>
+
+            <li class="leftalign">Spectral decay of \(\mathbf{K}\) is not fast enough to use low-rank approximations
+            </li>
+            <li class="leftalign">Alternatives:
+                <ul>
+                    <li style="opacity: 50%;">Create a preconditioner for \(\mathbf{K}\) to use with CG</li>
+                    <li style="opacity: 50%;">Compress \(\mathbf{K}\) with other methods (e.g. H-matrix approximations)
+                    </li>
+                    <li>Pre-factorize and store \(\mathbf{K}\) (Cholesky or Eigendecomposition)</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Quantifying Uncertainty</h4>
+        <ul>
+            <li>Computing \(\Gamma_{\!\text{post}}\) is prohibitively expensive (size \(N_mN_t \times N_mN_t\))</li>
+            <ul>
+                <li>Even computing the full diagonal of \(\Gamma_{\!\text{post}}\) requires \(N_mN_t\) matrix actions
+                </li>
+                <li>\(\mathbf{G}^*\) trick can't be fully exploited; prior solves are expensive</li>
+                <li>Option: subsample diagonal of \(\Gamma_{\!\text{post}}\)</li>
+            </ul>
+            <li><b class="color-emph">Goal-oriented approach</b>: quantify uncertainty in QoI instead</li>
+            <li>\(\mathbf{q} \sim \mathcal{N}(\mathbf{F}_{\!\text{pred}}m_{\text{map}}, \Gamma_{\!\text{pred}}), \
+                \Gamma_{\!\text{pred}} \coloneqq
+                \mathbf{F}^*_{\!\text{pred}}\Gamma_{\!\text{post}}\mathbf{F}_{\!\text{pred}} \sim N_qN_t\times N_qN_t\)
+            </li>
+            <li>For the CSZ application, \(N_q \lt N_d\), so \(\Gamma_{\!\text{post}}\) can be feasibly computed </li>
+            <ul>
+                <li>Defining \(\mathbf{G}_{\!\text{pred}} \coloneqq \Gamma_{\!\text{prior}}\mathbf{F}_{\!\text{pred}}\),
+                    we can use the prior trick again</li>
+                <li>Only need wave heights at a few key locations (e.g. cities along coast)</li>
+            </ul>
+            <li>Define \(\mathbf{A} : \mathbf{d}\mapsto \mathbf{q}\) map from observation to QoI</li>
+            <ul>
+                <li>Matrix is size \(N_qN_t\times N_dN_t \sim\) 8GB for full CSZ</li>
+                <li>Observation to QoI calculation is a dense matvec that can be done on a laptop</li>
+            </ul>
+        </ul>
+    </section>
+
+    <!-- <section data-auto-animate>
+        <h4>Spectral Analysis</h4>
+        <ul>
+            <li>Build dense matrices \(\mathbf{F}\mathbf{F}^*\) and \(\mathbf{K}\)</li>
+            <li>Prior solves done with <a href="https://developer.nvidia.com/cudss" target="_blank" rel="noopener noreferrer">cuDSS</a></li>
+            <li>Spatial prior (no time correlation) means \(\Gamma_{\!\text{prior}}\mathbf{F}^*\) is block
+                triangular Toeplitz</li>
+        </ul>
+        <aside class="notes" aria-label="prior Toeplitz">
+            We only need to do prior solves of the \(N_d\) adjoint vectors instead of \(N_dN_t\). This
+            also
+            reduces communication from reordering.
+        </aside>
+    </section> -->
+
+    <!-- <section data-auto-animate>
+        <h4>Spectrum of \(\mathbf{F} \mathbf{F}^*\) </h4>
+        <img data-src="wccm_24/FFstar-base.svg" alt="Spectrum of \(\mathbf{F} \mathbf{F}^*\)" class="r-stretch">
+        <p class="caption">Representative case: \(N_m = 263\text{K}, N_d = 49, N_t = 500\)</p>
+    </section> -->
+
+    <!-- <section data-auto-animate>
+        <h4>Spectrum of \(\mathbf{K} = \Gamma_{\!\text{noise}} +
+            \mathbf{F}\Gamma_{\!\text{prior}}\mathbf{F}^*\) </h4>
+        <img data-src="wccm_24/K-base.svg" alt="Spectrum of \(\mathbf{K}\)" class="r-stretch">
+        <p class="caption">Representative case: \(N_m = 263\text{K}, N_d = 49, N_t = 500, \\
+            \Gamma_{\!\text{noise}} = \gamma I, \gamma = 10^{-10}\), Bi-Laplacian
+            Prior (spatial only)</p>
+    </section> -->
+
+    <!-- <section data-auto-animate>
+        <h4>Spectral Analysis</h4>
+        <ul>
+            <li>Spectral decay of \(\mathbf{K}\) is not fast enough to use low-rank approximations</li>
+            <li>\(\mathbf{K}\) can be pre-factorized and stored &mdash; less feasible as size increases
+            </li>
+            <li>Alternatives:
+                <ul>
+                    <li>Create a preconditioner for \(\mathbf{K}\) to use with CG</li>
+                    <li>Compress \(\mathbf{K}\) with other methods (e.g. H-matrix approximations)</li>
+                </ul>
+            </li>
+        </ul>
+    </section> -->
+    <!-- 
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Quantifying Uncertainty</h4>
+        <ul>
+            <li> <b class="color-emph">Pointwise Variance:</b> \(\text{diag}(\Gamma_{\!\text{post}})\) can
+                be
+                precomputed with stochastic estimators<sup>1</sup></li>
+            <li>Alternative: subsample and interpolate on parameter grid</li>
+            <li>Goal-oriented UQ approach: only consider uncertainty in forward prediction quantity of
+                interest (QoI) of
+                surface-gravity wave
+                <ul>
+                    <li>\(\Gamma_{\!\text{pred}} \coloneqq
+                        \mathbf{F}_{\text{pred}}\Gamma_{\!\text{post}}\mathbf{F}_{\text{pred}}^* \in
+                        \mathbb{R}^{N_q\times N_q}\)</li>
+                    <li>\(\mathbf{F}_{\text{pred}}\) has a similar block-triangular Toeplitz structure to
+                        \(\mathbf{F}\)</li>
+                    <li>Choose a QoI with \(N_q \ll N_mN_t\) (e.g. wave height at specific locations)</li>
+                </ul>
+            </li> 
+        </ul>
+        <aside class="notes" aria-label="post variance">
+            Diagonal is independent of data.
+        </aside>
+        <p class="footnote"> <a href="https://epubs.siam.org/doi/10.1137/22M1476277" target="_blank" rel="noopener noreferrer"><sup>1</sup>Hallman,
+                Eric, Ilse CF
+                Ipsen,
+                and Arvind K. Saibaba. "Monte Carlo methods for
+                estimating the diagonal of a real symmetric matrix." SIAM Journal on Matrix Analysis and
+                Applications 44.1 (2023): 240-269. </a></p>
+    </section> -->
+
+</section>

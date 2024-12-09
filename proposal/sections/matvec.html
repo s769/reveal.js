@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<section data-auto-animate>
+    <h4>Real-Time Inference</h4>
+    <p>
+        <b class="color-emph">Phase 1</b> (Offline): Construct p2o map via adjoint solves
+    </p>
+    <p class="leftalign">
+        shift-invariance \(\Rightarrow\) \(\mathbf{F}\) is <em class="color-emph">block
+            lower-triangular
+            Toeplitz</em>
+    </p>
+    <div class="container" style="background-color: #E1B07E; border-radius: 10px; padding-bottom: 3%;">
+        <div class="r-cstack col1 fragment custom c-blur preload" data-fragment-index="0">
+            <p>\(\mathbf{F}\)</p>
+            <div class="r-hstack">
+                <div data-id="box1"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box2"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box3"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box4"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box5"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box6"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box7"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box8"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box9"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box10"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box11"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box12"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box13"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box14"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box15"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box16"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+
+        </div>
+        <div class="col2 fragment custom c-blur" data-fragment-index="1" style="align-items: center; margin-top: 14%;">
+            <p>&rarr;</p>
+        </div>
+        <div class="r-cstack col3 fragment custom c-blur" data-fragment-index="1">
+            <p>\(\mathbf{F}\)</p>
+            <div class="r-hstack">
+                <div data-id="box1"
+                    style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box2"
+                    style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box3"
+                    style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box4"
+                    style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box5"
+                    style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box6"
+                    style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box7"
+                    style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box8"
+                    style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box9"
+                    style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box10"
+                    style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box11"
+                    style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box12"
+                    style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box13"
+                    style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box14"
+                    style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box15"
+                    style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box16"
+                    style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+        </div>
+        <div class="col4 fragment custom c-blur" data-fragment-index="2" style="align-items: center; margin-top: 14%;">
+            <p>&rarr;</p>
+        </div>
+        <div class="r-cstack col5 fragment custom c-blur" data-fragment-index="2">
+            <p>\(\mathbf{F}\)</p>
+            <div class="r-hstack">
+                <div data-id="box1"
+                    style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box5"
+                    style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box9"
+                    style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box13"
+                    style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+        </div>
+        <div class="col6 fragment custom c-blur" data-fragment-index="3" style="align-items: center; margin-top: 14%;">
+            <p>&#x219D;</p>
+        </div>
+        <div class="r-cstack col7 fragment custom c-blur" data-fragment-index="3">
+            <p>\(\mathbf{F}^*\)</p>
+            <div class="r-hstack">
+                <div data-id="box1"
+                    style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box5"
+                    style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box9"
+                    style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box13"
+                    style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <p>
+        <br>
+        <br>
+    </p>
+
+</section>
+<section data-auto-animate>
+    <h4>Real-Time Inference</h4>
+    <p>
+        <b class="color-emph">Phase 1</b> (Offline): Construct p2o map via adjoint solves
+    </p>
+    <p class="leftalign">
+        shift-invariance \(\Rightarrow\) \(\mathbf{F}\) is <em class="color-emph">block
+            lower-triangular
+            Toeplitz</em>
+    </p>
+    <div class="container" style="background-color: #E1B07E; border-radius: 10px; padding-bottom: 3%;">
+        <div class="r-cstack col1" data-fragment-index="1">
+            <p>\(\mathbf{F}\)</p>
+            <div class="r-hstack">
+                <div data-id="box1"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box2"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box3"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box4"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box5"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box6"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box7"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box8"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box9"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box10"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box11"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box12"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box13"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box14"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box15"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box16"
+                    style="background: #999; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+
+        </div>
+        <div class="col2 " data-fragment-index="2" style="align-items: center; margin-top: 14%;">
+            <p>&rarr;</p>
+        </div>
+        <div class="r-cstack col3 " data-fragment-index="2">
+            <p>\(\mathbf{F}\)</p>
+            <div class="r-hstack">
+                <div data-id="box1"
+                    style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box2"
+                    style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box3"
+                    style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box4"
+                    style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box5"
+                    style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box6"
+                    style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box7"
+                    style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box8"
+                    style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box9"
+                    style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box10"
+                    style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box11"
+                    style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box12"
+                    style="background: #E1B07E; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box13"
+                    style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box14"
+                    style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box15"
+                    style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box16"
+                    style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+        </div>
+        <div class="col4 " data-fragment-index="3" style="align-items: center; margin-top: 14%;">
+            <p>&rarr;</p>
+        </div>
+        <div class="r-cstack col5 " data-fragment-index="3">
+            <p>\(\mathbf{F}\)</p>
+            <div class="r-hstack">
+                <div data-id="box1"
+                    style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box5"
+                    style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box9"
+                    style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="r-hstack">
+                <div data-id="box13"
+                    style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+        </div>
+        <div class="col6 " data-fragment-index="4" style="align-items: center; margin-top: 14%;">
+            <p>&#x219D;</p>
+        </div>
+        <div class="r-cstack col7 " data-fragment-index="4">
+            <p>\(\mathbf{F}^*\)</p>
+            <div class="r-hstack">
+                <div data-id="box1"
+                    style="background: #A4036F; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box5"
+                    style="background: #00A9B7; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box9"
+                    style="background: #16DB93; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+                <div data-id="box13"
+                    style="background: #333F48; width: 50px; height: 30px; margin: 5px; border-radius: 5px;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <p class="leftalign">Only <b class="color-emph">one</b> block row of \(\mathbf{F}^*\) needs to be computed/stored
+    </p>
+    <p class="leftalign">\(\mathcal{O}(N_dN_mN_t)\) storage instead of \(\mathcal{O}(N_dN_mN_t^2)\)</p>
+    <p class="leftalign">\(N_d\) adjoint PDE solves instead of \(N_dN_t\)</p>
+
+</section>
+<section data-transition="fade" data-auto-animate data-auto-animate-id="reindex">
+    <h4 data-id="head">Matvecs with Block Triangular Toeplitz Matrices</h4>
+    <ul>
+        <li class="leftalign">\(\mathbf{F} \) has \(N_t \times N_t\) blocks</li>
+        <li class="leftalign">Each block is \(N_d \times N_m\)</li>
+        <li class="leftalign">This is <em class="color-emph">time-outer, space-inner (TOSI)</em> indexing</li>
+        <li class="leftalign">Preprocessing: Reindex to <em class="color-emph">space-outer, time-inner (SOTI)</em></li>
+        <li class="leftalign">CSZ: \(N_d \sim 10^2, N_m \sim 10^{6}, N_t \sim 10^3\)</li>
+        <li class="leftalign">Each block is \(N_t \times N_t\)</li>
+        <li class="leftalign"><em class="color-emph">Each block</em> of \(\mathbf{F} \) is now a lower-triangular
+            Toeplitz matrix</li>
+    </ul>
+    <p>\(\mathbf{F}\)</p>
+    <div data-external-replace="tosi_to_soti_animation.html##first"></div>
+
+</section>
+<section data-auto-animate data-auto-animate-duration="3.0" data-auto-animate-id="reindex">
+    <h4 data-id="head">Matvecs with Block Triangular Toeplitz Matrices</h4>
+    <ul>
+        <li class="leftalign">\(\mathbf{F} \) has \(N_t \times N_t\) blocks</li>
+        <li class="leftalign">Each block is \(N_d \times N_m\)</li>
+        <li class="leftalign">This is <em class="color-emph">time-outer, space-inner (TOSI)</em> indexing</li>
+        <li class="leftalign">Preprocessing: Reindex to <em class="color-emph">space-outer, time-inner (SOTI)</em></li>
+        <li class="leftalign">CSZ: \(N_d \sim 10^2, N_m \sim 10^{6}, N_t \sim 10^3\)</li>
+        <li class="leftalign">Each block is \(N_t \times N_t\)</li>
+        <li class="leftalign"><em class="color-emph">Each block</em> of \(\mathbf{F} \) is now a lower-triangular
+            Toeplitz matrix</li>
+    </ul>
+    <p>\(\mathbf{F}\)</p>
+    <div data-external-replace="tosi_to_soti_animation2.html##first"></div>
+
+</section>
+
+<section data-transition="fade">
+    <h4 data-id="head">Matvecs with Block Triangular Toeplitz Matrices</h4>
+    <ul>
+        <li class="leftalign">\(\mathbf{F} \) has \(N_t \times N_t\) blocks</li>
+        <li class="leftalign">Each block is \(N_d \times N_m\)</li>
+        <li class="leftalign">This is <em class="color-emph">time-outer, space-inner (TOSI)</em> indexing</li>
+        <li class="leftalign">Preprocessing: Reindex to <em class="color-emph">space-outer, time-inner (SOTI)</em></li>
+        <li class="leftalign">CSZ: \(N_d \sim 10^2, N_m \sim 10^{6}, N_t \sim 10^3\)</li>
+        <li class="leftalign">Each block is \(N_t \times N_t\)</li>
+        <li class="leftalign"><em class="color-emph">Each block</em> of \(\mathbf{F} \) is now a lower-triangular
+            Toeplitz matrix</li>
+    </ul>
+
+    <table>
+        <tr>
+            <th style="text-align: center;">TOSI</th>
+            <th style="text-align: center;">SOTI</th>
+        </tr>
+        <tr>
+            <td>            <div data-external-replace="tosi_to_soti_animation.html##first"></div>
+            </td>
+
+            <td>            <div data-external-replace="tosi_to_soti_animation2.html##first"></div>
+            </td>
+        </tr>
+    </table>
+
+</section>
+<section data-auto-animate>
+    <h4>Matvec Algorithm</h4>
+    <ul>
+        <li class="leftalign">Toeplitz matrix \(A\) is represented by its first column \(a_0\)</li>
+        <li class="leftalign">Embed \(A\) in a circulant matrix \(C\)</li>
+        <li class="leftalign">\(a_0\mapsto [a_0 \ \mathbf{0}]^T =: c_0\) (zero padding)</li>
+        <li class="leftalign">Input vector \(v \mapsto [v \ \mathbf{0}]^T =: u\)</li>
+        <li class="leftalign">\(C\) is diagonalized by the Fourier Transform</li>
+        <li class="leftalign">\(Cu = \text{IFFT}\left(\frac{1}{\sqrt{2n}} \text{FFT}(c_0) \odot
+            \text{FFT}(u)\right)\)</li>
+        <li class="leftalign">\(Av\) is the first half of \(Cu\)</li>
+        <li class="leftalign"><b class="color-emph">Idea:</b> compute (padded) FFTs of matrix/vector blocks, take
+            elementwise products (EWP), and sum block results</li>
+    </ul>
+    
+</section>
+<section data-auto-animate>
+    <h4>Matvec Algorithm</h4>
+    <ul>
+        <li class="leftalign">This algorithm is not ideal for the batched case on GPUs</li>
+        <ul>
+            <li class="leftalign">Even though EWP is embarassingly parallel, strided reduction has suboptimal memory
+                access</li>
+            <li class="leftalign">EWP and strided reductions have to be split over multiple kernels since access
+                patterns differ greatly</li>
+            <li class="leftalign">Leads to more data movement to/from global memory (these are memory-bound operations)
+            </li>
+        </ul>
+        <li class="leftalign">Multi-GPU setup: \(p\) GPUs arranged in an \(r \times c\) grid</li>
+        <li class="leftalign">Matrix elements partitioned into \(r \times c\) blocks</li>
+        <li class="leftalign">Each GPU has \(n_d \times n_m \coloneqq N_d/r \times N_m/c\) blocks of \(N_t\) elements
+        </li>
+        <li class="leftalign">Parameter vector partitioned over first row of GPUs</li>
+        <li class="leftalign">Data vector partitioned over first column of GPUs</li>
+    </ul>
+</section>
+<section data-auto-animate>
+    <h4>Matvec Algorithm</h4>
+    <ul>
+        <li class="leftalign" data-id="step1"><b class="color-emph ">Precompute</b> (padded)
+            FFTs of each matrix block</li>
+        <li class="leftalign" data-id="step2"><b class="color-emph">Locally reindex</b> matrix to <em
+                class="color-emph">TOSI</em> (swapaxes operation) </li>
+        <li class="leftalign" data-id="step3">Input vectors (reindexed): \(n_m\) blocks of
+            \(N_t\) entries broadcasted down each column</li>
+        <li class="leftalign" data-id="step4"><b class="color-emph">FFTs</b>
+            (padded/batched) of input vectors</li>
+        <li class="leftalign" data-id="step5"><b class="color-emph">Locally reindex</b> vector to <em
+                class="color-emph">TOSI</em> (transpose operation)</li>
+        <li class="leftalign" data-id="step6"><b class="color-emph">Strided, Batched GEMV</b> between corresponding
+            matrix and vector blocks</li>
+        <li class="leftalign" data-id="step7"><b class="color-emph">Locally reindex</b> vector to <em
+                class="color-emph">SOTI</em> (transpose operation)</li>
+        <li class="leftalign" data-id="step8"><b class="color-emph">IFFTs</b> (batched) of
+            resulting vector</li>
+        <li class="leftalign" data-id="step9"><b class="color-emph">Sum</b> processor
+            results (global reduction) across each row (\(n_d\) blocks of \(N_t\) elements)</li>
+        <li class="leftalign" data-id="step10"><b class="color-emph">Cost:</b> \(\mathcal{O}(N_dN_mN_t + (N_d + N_m)N_t\log N_t) + \text{comm.}\)</li>
+    </ul>
+</section>
+<section data-auto-animate>
+    <h4>Matvec Algorithm</h4>
+    <ul>
+        <li class="leftalign">FFT &rarr; ReIndex 1 &rarr; SBGEMV &rarr; ReIndex 2 &rarr; IFFT &rarr; G. Red.</li>
+        <li class="leftalign">Same algorithm for \(\mathbf{F}^*\) </li>
+        <ul>
+            <li class="leftalign">Broadcast across rows first</li>
+            <li class="leftalign">Complex conjugate SBGEMV</li>
+            <li class="leftalign">Global reduction down columns</li>
+        </ul>
+        <li class="leftalign"><b class="color-emph">No extra storage or communication needed.</b></li>
+    </ul>
+    <div class="container">
+        <div class="col">
+            <img data-src="proposal/images/roofline.svg" alt="Roofline Analysis"
+                style="width: 100%; margin:0; padding:0;">
+        </div>
+        <div class="col">
+            <img data-src="proposal/images/weak_scaling_bars.svg" alt="Roofline Analysis"
+                style="width: 100%;  margin:0; padding:0;">
+        </div>
+    </div>
+    <p class="caption">
+        <b class="color-emph">Left:</b> Roofline analysis of major kernels; <b class="color-emph">Right:</b> Weak
+        scaling runtime breakdown
+    </p>
+</section>

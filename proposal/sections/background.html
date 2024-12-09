@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Forward Problem</h4>
+        <p class="leftalign">Coupled <b class="color-emph"> Acoustic-Gravity </b> wave equations:</p>
+        <div class="container">
+            <div class="col">
+                <p>
+                    \[\begin{cases}
+                    \rho \frac{ \partial\boldsymbol{u}}{\partial t} + \nabla p = \boldsymbol{0},
+                    \frac{1}{K} \frac{ \partial p}{\partial t} + \nabla \cdot \boldsymbol{u} = 0, &
+                    \Omega \times (0,T)\nonumber\\
+                    p = \rho g \eta,
+                    \frac{ \partial\eta}{\partial t} = \boldsymbol{u} \cdot \hat{\boldsymbol{n}}, &
+                    \Gamma_s \times (0,T) \nonumber\\
+                    \boldsymbol{u} \cdot \hat{\boldsymbol{n}} = -\frac{\partial b}{\partial t},
+                    \text{\textcolor{BF5700}{&#8592; parameter}} & \Gamma_b
+                    \times (0,T) \nonumber\\
+                    \boldsymbol{u} \cdot \hat{\boldsymbol{n}} = Z^{-1} p, & \Gamma_a \times (0,T)\nonumber
+                    \end{cases}
+                    \]
+                </p>
+            </div>
+            <div class="col">
+                <img data-src="siam_pp_24/pde-domain-cropped.svg" alt="PDE Domain" style="width: 150%;">
+            </div>
+        </div>
+        <ul>
+            <li><b class="color-emph">Velocity:</b> \(\boldsymbol{u}(\boldsymbol{x}, t)\), <b
+                    class="color-emph">Pressure:</b> \(p(\boldsymbol{x}, t)\),
+                <b class="color-emph">Surface Height:</b> \(\eta(\boldsymbol{x}, t)\)
+            </li>
+            <li> Bulk modulus \(K\), density \(\rho\), \(Z = \rho c\), \(c = \sqrt{K/\rho}\) </li>
+            <li> Bathymetry \(b(\boldsymbol{x}, t)\); homogeneous ICs</li>
+            <li><b class="color-emph">Observations</b> of pressure \(p\) at seafloor sensors </li>
+        </ul>
+
+
+        <p class="footnote">Implemented in <a href="https://mfem.org/" target="_blank"
+                rel="noopener noreferrer">MFEM</a></p>
+        <aside class="notes" aria-label="physparams">
+            absorbing BCs on Gamma_a: 1st order, PML
+            <br>
+            Z is acoustic wave impedance; c is sound speed in seawater
+            <br>
+            bathymetry related to seafloor motion is the parameter
+        </aside>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Inverse Problem</h4>
+        <ul>
+            <li>Given pressure recordings from sensors on the seafloor, infer the seafloor motion along the
+                fault line.</li>
+        </ul>
+        <div class="container">
+            <div class="col">
+                <img data-src="wccm_24/2D_noise_5_inversion_bathym_var.gif" alt="Inverted Parameter"
+                    style="width: 100%; margin-bottom: 0; padding-bottom: 0;">
+                <p class="caption" style="padding: 0%; margin: 0%; ">Inferred seafloor motion (mean and
+                    uncertainty)</p>
+            </div>
+            <div class="col">
+                <img data-src="wccm_24/2D_noise_5_inversion_pressure.gif"
+                    alt="Inverted Pressure Observations"
+                    style="width: 100%; margin-bottom: 0; padding-bottom: 0;">
+                <p class="caption" style="padding: 0%; margin: 0%;">Reconstructed sea bottom pressure</p>
+            </div>
+        </div>
+
+        <img data-src="wccm_24/2D_noise_5_inversion_eta.gif"
+            alt="Inverted Surface Gravity Wave Observations"
+            style="width: 50%; margin-top: 0; padding-top: 0; margin-bottom: 0; padding-bottom: 0;">
+        <p class="caption" style="padding: 0%; margin: 0%;">Reconstructed surface gravity wave </p>
+        <aside class="notes" aria-label="2D inversion">
+            2D inversion with 5% noise
+            <br> able to reconstruct well the smooth modes of the parameter
+        </aside>
+    </section>
+    <section data-auto-animate>
+        <h4>Bayesian Inverse Problem</h4>
+        <ul>
+            <li>
+                <b class="color-emph">Bayes Rule:
+                </b>
+                \(\text{d}\mu_{\text{post}} \propto
+                \pi_{\text{like}}(d|m) \text{d}\mu_{\text{prior}} \)
+            </li>
+            <li>
+                <b class="color-emph">Goal:</b> determine posterior measure \(\mu_{\text{post}}\)
+            </li>
+            <li>
+                \(m\): model parameters &mdash; spatiotemporal field: \(\frac{\partial b}{\partial t}
+                (\boldsymbol{x},t)\) </li>
+            <li>\(d\): pressure obs. &mdash; pointwise in space and time: \(\left\{p(\boldsymbol{x}_i,
+                t)\right\}_{i=1}^{N_d}\)
+            </li>
+
+            <li>
+                <b class="color-emph">Parameter-to-Observable (p2o) Map: </b>\(\mathcal{F}:
+                m(\boldsymbol{x},t) \mapsto
+                d(\boldsymbol{x}_i,t)\)
+            </li>
+            <!-- <ul>
+                    <li>Solve forward PDE using the given parameter field as the boundary condition.</li>
+                    <li>Extract pressure values at sensor locations</li>
+                </ul>
+            </li>
+            <li>Assume that when discretized, \(\text{dim}(\mathbf{d}) \ll \text{dim}(\mathbf{m})\)
+                <ul>
+                    <li>This is usually the case, since it is difficult/expensive to get spatiotemporally
+                        dense data.</li>
+                </ul>
+            </li> -->
+
+        </ul>
+        <img data-src="proposal/images/evals_p2o.png" alt="Spectrum of \(\mathbf{F} \mathbf{F}^*\)"
+            style="width: 100%; margin:0; padding:0;">
+        <p class="caption" style="margin:0; padding:0;">Eigenvalues of \(\mathbf{F} \mathbf{F}^*\) for a
+            representative case with ~132M parameters and ~25K data points.</p>
+        <!-- <p class="caption" style="margin:0; padding:0;">Representative case: \(N_m = 263\text{K}, N_d = 49, N_t = 500\)</p> -->
+    </section>
+    <section data-auto-animate>
+        <h4>Linear Inverse Problem, Gaussian Prior</h4>
+        <p class="leftalign">
+            <b class="color-emph">Gaussian Prior with Mat&eacute;rn Covariance:</b>\[m \sim
+            \mathcal{N}(m_{\text{prior}},
+            \Gamma_{\!\text{prior}}), \quad \Gamma_{\!\text{prior}} \coloneqq \left(
+            \alpha_1 I -
+            \alpha_2 \Delta_{\text{2D}} -
+            \alpha_3 \partial_t^2
+            \right)^{-2}\]
+
+        </p>
+        <p class="leftalign">
+            <b class="color-emph">Likelihood: </b>\(\pi_{\text{like}}(d|m) \propto \exp\left(-\frac{1}{2}
+            \|\mathcal{F}m - d\|_{\Gamma_{\!\text{noise}}^{-1}}^2\right)\)
+        </p>
+
+        <p class="leftalign">
+            <b class="color-emph">Observations: </b>\(d = \mathcal{F}m + \nu, \quad \nu \sim
+            \mathcal{N}(0,
+            \Gamma_{\!\text{noise}})\)
+        </p>
+
+        <p class="leftalign">
+            <b class="color-emph">Posterior: </b>
+        <div class="box" ,
+            style="background-color: blanchedalmond; border: 1px solid black; border-radius: 25px;">
+            <p>
+                \[\begin{align*}
+                \mu_{\text{post}} &= \mathcal{N}(m_{\text{map}},
+                \Gamma_{\!\text{post}}) \\
+                \Gamma_{\!\text{post}}&=\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} \mathcal{F} +
+                \Gamma_{\!\text{prior}}^{-1}\right)^{-1}\\
+                m_{\text{map}}&=\Gamma_{\!\text{post}}\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} d +
+                \Gamma_{\!\text{prior}}^{-1} m_{\text{prior}}\right)
+                \end{align*}\]
+            </p>
+        </div>
+        </p>
+        <!-- <p class="leftalign">
+            Want to find \(m_{\text{map}}\) and \(\Gamma_{\!\text{post}}\) in <b class="color-emph">real
+                time</b>
+        </p> -->
+
+        <!-- <p class="footnote">
+            <a
+                href="https://www.cambridge.org/core/journals/acta-numerica/article/inverse-problems-a-bayesian-perspective/587A3A0D480A1A7C2B1B284BCEDF7E23?utm_campaign=shareaholic&utm_medium=copy_link&utm_source=bookmark">
+                Stuart, Andrew M. "Inverse problems: a Bayesian perspective." Acta numerica 19 (2010):
+                451-559.
+            </a>
+        </p> -->
+        <aside class="notes" aria-label="postcov">
+            Posterior covariance does not depend on data
+        </aside>
+        <!-- <p class="footnote">Script = infinite-dimensional; boldface = discrete in space and time</p> -->
+    </section>
+    <!-- <section data-auto-animate>
+        <h4>Linear Inverse Problem, Gaussian Prior</h4>
+        \[\begin{align*}
+        \Gamma_{\!\text{post}}&=\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} \mathcal{F} +
+        \Gamma_{\!\text{prior}}^{-1}\right)^{-1}\\
+        m_{\text{map}}&=\Gamma_{\!\text{post}}\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} d +
+        \Gamma_{\!\text{prior}}^{-1} m_{\text{prior}}\right)
+        \end{align*}\]
+
+    </section> -->
+    <section data-auto-animate>
+        <h4>Finding the MAP Point</h4>
+        <ul class="spaced-ul">
+            <li>
+                \(\Gamma_{\!\text{post}}^{-1} \eqqcolon \mathcal{H} \) is the <b
+                    class="color-emph">Hessian</b>
+                (of
+                negative log-posterior).
+            </li>
+            <li>
+                Each matrix-free Hessian action requires <b class="color-emph">1 Forward</b>
+                and
+                <b class="color-emph">1 Adjoint</b> PDE solve.
+            </li>
+            <li>
+                Finding \( m_{\text{map}} \) with CG requires
+                \(\text{rank}(\mathcal{H})\)
+                Hessian actions<sup>1</sup>.
+            </li>
+            <li>
+                For hyperbolic systems, \(\mathcal{H}\) can have high rank \(\Rightarrow\) many PDE solves
+            </li>
+            <li>
+                Cascadia Tsunami Problem:
+                <ul>
+                    <li>param. spatial DoFs: \(N_m\sim
+                        10^6\),
+                        # of sensors: \(N_d\sim 10^2\), time steps: \(N_t\sim 10^3\)</li>
+                    <li>\(\Rightarrow\)
+                        \(\text{dim}(\mathbf{m}) \sim 10^{9}, \text{dim}(\mathbf{d}) \sim 10^5\)
+                        \(\Rightarrow\) \(\text{rank}(\mathbf{H}) \gtrsim 10^4\)</li>
+
+                </ul>
+            </li>
+            <li>
+                ~1 hour / Hessian action \(\Rightarrow\) over <b class="color-emph"> 1
+                    year
+                </b> to find \(m_{\text{map}}\)
+            </li>
+            <li style="padding-bottom: 0;">
+                Useless. We need to find the MAP point in <b class="color-emph">seconds</b>.
+            </li>
+        </ul>
+        <p class="footnote" style="padding: 0;">
+            <a
+                href="https://www.cambridge.org/core/journals/acta-numerica/article/learning-physicsbased-models-from-data-perspectives-from-inverse-problems-and-model-reduction/C072A4B417F8C3873ED75C1D63BBB31D?utm_campaign=shareaholic&utm_medium=copy_link&utm_source=bookmark">
+                <sup>1</sup>Omar Ghattas, and Karen Willcox. "Learning physics-based models from data:
+                perspectives
+                from
+                inverse problems and model reduction." Acta Numerica 30 (2021): 445-554.</a>
+        </p>
+        <aside class="notes" aria-label="state dims for PDE">
+            PDE solve deals with 3D space-time state
+            dimension \(\sim 10^{11}\) and has CFL
+            constrained timestep.
+            <br>
+            1 hr time is actually benchmarked on optimized scalable FEM code
+            <br>
+            when we say rank of Hessian, we mean "effective rank" since it will be numerically full rank but
+            you cant hope to reconstruct al high order modes from sparse data so the "rank" is the point at
+            which the evals of the hessian begin looking comparable to noise
+        </aside>
+    </section>
+    <!-- <section data-auto-animate>
+        <h4>Finding the MAP Point</h4>
+        <ul>
+            <li>
+                For hyperbolic systems, \(\mathcal{H}\) can have high rank \(\Rightarrow\) many PDE solves
+                \(\quad{}\)
+            </li>
+        </ul>
+        <p>
+            <b class="color-emph"> Cascadia Tsunami Problem: </b> <br>parameter spatial DoFs: \(N_m\sim
+            10^6\),
+            number of sensors: \(N_d\sim 10^2\),
+            <br>time steps: \(N_t\sim 10^3\)
+            <br> \(\Rightarrow\)
+            \(\text{dim}(\mathbf{m}) \sim 10^{9}, \text{dim}(\mathbf{d}) \sim 10^5\)
+            \(\Rightarrow\) \(\text{rank}(\mathbf{H}) \gtrsim 10^4\)
+        </p>
+        <ul>
+            <li>
+                ~ 1 hour / Hessian action<sup>1</sup> \(\Rightarrow\) over <b
+                    class="color-emph"> 1
+                    year
+                </b>
+                (on thousands of nodes) for CG to converge .
+            </li>
+            <li>
+                Useless. We need to find the MAP point in <b class="color-emph">seconds</b>.
+            </li>
+        </ul>
+        <p class="footnote"><sup>1</sup>PDE solve deals with 4D space-time state
+            dimension \(\sim 10^{11}\) and has CFL
+            constrained timestep.</p>
+        <p class="footnote">Script = infinite-dimensional; boldface = discrete in space and time</p> -->
+    <!-- </section> -->
+</section>

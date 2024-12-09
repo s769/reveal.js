@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>3D Inversion: True Pressure Field</h4>
+        <img data-src="wccm_24/3D_true_pressure_color.gif" alt="True Pressure Field" style="width: 95%;">
+        <aside class="notes" aria-label="3D pressure">
+            pressure in domain
+            <br>
+            focused on the center of domain
+            <br>
+        </aside>
+    </section>
+    <section data-auto-animate>
+        <h4>3D Inversion: Sensor Observations</h4>
+        <div class="container">
+            <div class="col">
+                <img data-src="wccm_24/no_noise.png" alt="No Noise" style="width: 90%; margin:0; padding: 0;">
+                <p class="caption">Sea bottom pressure (no noise)</p>
+            </div>
+            <div class="col">
+                <img data-src="wccm_24/noisy_3.png" alt="Noisy 6%" style="width: 90%; margin:0; padding: 0;">
+                <p class="caption">Observations with 6% relative noise</p>
+            </div>
+        </div>
+        <div class="container">
+            <div class="col">
+                <table style="font-size: x-large;" class="center-table">
+                    <tr>
+                        <th><b class="color-emph">Noise Level</b></th>
+                        <th><b class="color-emph">Rel. Error</b></th>
+                    </tr>
+                    <tr>
+                        <th>2%</th>
+                        <th>0.042570</th>
+                    </tr>
+                    <tr>
+                        <th>4%</th>
+                        <th>0.049777</th>
+                    </tr>
+                    <tr>
+                        <th>6%</th>
+                        <th>0.061645</th>
+                    </tr>
+                </table>
+                <p class="caption">Parameter Inference Error</p>
+            </div>
+            <div class="col">
+                <table style="font-size: x-large;" class="center-table">
+                    <tr>
+                        <th><b class="color-emph">Noise Level</b></th>
+                        <th><b class="color-emph">Rel. Error</b></th>
+                        <th><b class="color-emph">Rel. Data Misfit</b></th>
+                    </tr>
+                    <tr>
+                        <th>2%</th>
+                        <th>0.019317</th>
+                        <th>0.000237</th>
+                    </tr>
+                    <tr>
+                        <th>4%</th>
+                        <th>0.040089</th>
+                        <th>0.000999</th>
+                    </tr>
+                    <tr>
+                        <th>6%</th>
+                        <th>0.058727</th>
+                        <th>0.000396</th>
+                    </tr>
+
+                </table>
+                <p class="caption">Pressure Reconstruction Error</p>
+            </div>
+        </div>
+
+        <!-- <div class="r-cstack"> -->
+        <!-- <div class="r-hstack">
+                <img data-src="wccm_24/no_noise.png" alt="No Noise" class="r-stretch"
+                    style="width: 75%; margin:0; padding: 0;">
+                <p class="caption" style="margin:0; padding: 0;">Sea bottom pressure (no noise)</p>
+                <img data-src="wccm_24/noisy_1.png" alt="Noisy 1" class="r-stretch"
+                    style="width: 75%; margin:0; padding: 0;">
+                <p class="caption" style="margin:0; padding: 0;">Observations with 2% relative noise</p>
+            </div> -->
+        <!-- <div class="r-cstack">
+                <img data-src="wccm_24/noisy_2.png" alt="Noisy 2" class="r-stretch"
+                    style="width: 75%; margin:0; padding: 0;">
+                <p class="caption" style="margin:0; padding: 0;">Observations with 4% relative noise</p>
+                <img data-src="wccm_24/noisy_3.png" alt="Noisy 3" class="r-stretch"
+                    style="width: 75%; margin:0; padding: 0;">
+                <p class="caption" style="margin:0; padding: 0;">Observations with 6% relative noise</p>
+            </div> -->
+        <!-- <div class="r-hstack">
+                <table style="font-size: xx-large;">
+                    <tr>
+                        <th><b class="color-emph">Noise Level</b></th>
+                        <th><b class="color-emph">Relative Error</b></th>
+                    </tr>
+                    <tr>
+                        <th>2%</th>
+                        <th>0.042570</th>
+                    </tr>
+                    <tr>
+                        <th>4%</th>
+                        <th>0.049777</th>
+                    </tr>
+                    <tr>
+                        <th>6%</th>
+                        <th>0.061645</th>
+                    </tr>
+                </table>
+                <p class="caption">Parameter Inference Error</p>
+                <table style="font-size: xx-large;">
+                    <tr>
+                        <th><b class="color-emph">Noise Level</b></th>
+                        <th><b class="color-emph">Relative Error</b></th>
+                        <th><b class="color-emph">Relative Data Misfit</b></th>
+                    </tr>
+                    <tr>
+                        <th>2%</th>
+                        <th>0.019317</th>
+                        <th>0.000237</th>
+                    </tr>
+                    <tr>
+                        <th>4%</th>
+                        <th>0.040089</th>
+                        <th>0.000999</th>
+                    </tr>
+                    <tr>
+                        <th>6%</th>
+                        <th>0.058727</th>
+                        <th>0.000396</th>
+                    </tr>
+
+                </table>
+                <p class="caption">Pressure Reconstruction Error</p> -->
+
+        <!-- </div>
+        </div> -->
+    </section>
+    <!-- <section data-auto-animate>
+        <h4>Inversion Results</h4>
+        <div class="r-cstack">
+            <div id="box1" style="background-color: blanchedalmond; border-radius: 20%;">
+                <table style="font-size: x-large;">
+                    <tr>
+                        <th><b class="color-emph">Noise Level</b></th>
+                        <th><b class="color-emph">Relative Error</b></th>
+                    </tr>
+                    <tr>
+                        <th>2%</th>
+                        <th>0.042570</th>
+                    </tr>
+                    <tr>
+                        <th>4%</th>
+                        <th>0.049777</th>
+                    </tr>
+                    <tr>
+                        <th>6%</th>
+                        <th>0.061645</th>
+                    </tr>
+                </table>
+                <p class="caption">Parameter Inference Error</p>
+            </div>
+            <div id="box2" style="background-color: blanchedalmond; border-radius: 20%;">
+                <table style="font-size: x-large;">
+                    <tr>
+                        <th><b class="color-emph">Noise Level</b></th>
+                        <th><b class="color-emph">Relative Error</b></th>
+                        <th><b class="color-emph">Relative Data Misfit</b></th>
+                    </tr>
+                    <tr>
+                        <th>2%</th>
+                        <th>0.019317</th>
+                        <th>0.000237</th>
+                    </tr>
+                    <tr>
+                        <th>4%</th>
+                        <th>0.040089</th>
+                        <th>0.000999</th>
+                    </tr>
+                    <tr>
+                        <th>6%</th>
+                        <th>0.058727</th>
+                        <th>0.000396</th>
+                    </tr>
+
+                </table>
+                <p class="caption">Pressure Reconstruction Error</p>
+            </div>
+        </div>
+    </section> -->
+    <section data-auto-animate>
+        <h4>3D Inversion Results: Bathymetry</h4>
+        <img data-src="wccm_24/bathymetry_true_inv.png" alt="Bathymetry Change" style="width: 80%;">
+        <p class="caption"><b class="color-emph">Left:</b>True total bathymetry change (time-integrated
+            parameter field); <b class="color-emph">Right:</b>
+            Total bathymetry change inferred from
+            synthetic observations with 6% relative additive noise</p>
+    </section>
+    <section data-auto-animate>
+        <h4>3D Inversion Results: Pressure</h4>
+        <div class="container">
+            <div class="col">
+                <img data-src="wccm_24/3D_inv_pressure_color.gif" alt="Pressure Field" style="width: 100%;">
+            </div>
+            <div class="col">
+                <img data-src="wccm_24/3D_diff_pressure_color.gif" alt="Pressure Difference" style="width: 100%;">
+            </div>
+        </div>
+        <p class="caption"><b class="color-emph">Left: </b> Sea bottom pressure reconstructed with the
+            parameter field inferred from synthetic observations with 6% relative additive noise; <b
+                class="color-emph">Right: </b>Difference
+            between reconstructed and true pressure field</p>
+    </section>
+    <section data-auto-animate>
+        <h4>3D Inversion Results: Surface-Gravity Wave</h4>
+        <img data-src="wccm_24/surface_wave_true_inv.png" alt="Surface-Gravity Wave Reconstruction" style="width: 80%;">
+        <p class="caption"><b class="color-emph">Left: </b>Surface gravity wave obtained from true parameter
+            field; <b class="color-emph">Right: </b>Surface-gravity wave reconstructed with the
+            parameter field inferred from synthetic observations with 6% relative additive noise</p>
+    </section>
+    <section data-auto-animate>
+        <h4>QoI Predictions and Uncertainty</h4>
+        <div class="r-hstack">
+            <img data-src="proposal/images/sensor_qoi_locations.svg" alt="Sensor and QOI Locations" style="width: 50%;">
+            <img data-src="proposal/images/qoi_vec_wave_height_uq_0_3.svg" alt="QoI Predictions and Uncertainty"
+                style="width: 50%;">
+        </div>
+        <p class="caption"><b class="color-emph leftalign">Left:</b> Sensor and QoI locations; <b
+                class="color-emph leftalign">Right:</b> QoI predictions and uncertainty for surface wave height
+            at 16 locations</p>
+    </section>
+</section>
