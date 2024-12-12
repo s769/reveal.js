@@ -184,9 +184,11 @@
     <section data-auto-animate data-auto-animate-id="partition">
         <h4 data-id="head">Multi-GPU Partitioning</h4>
         <div data-external-replace="animation/partitioning1.html"></div>
-        <p>
-            \(p\) GPUs arranged in an \(r \times c\) grid
-        </p>
+        <ul>
+            <li>\(p\) GPUs arranged in an \(r \times c\) grid</li>
+            <li>2D partitioning of \(\mathbf{F}\)</li>
+            <li>\(\mathbf{m}\) partitioned over first row of GPUs</li>
+        </ul>
     </section>
     <section data-auto-animate data-auto-animate-id="partition">
         <h4 data-id="head">Broadcast \(\mathbf{m}_{\text{loc}}\)</h4>
@@ -204,6 +206,8 @@
         <div data-external-replace="animation/partitioning4.html"></div>
         <p>
             Reduce across rows &larr;
+            <br>
+            \(\mathbf{d}\) partitioned over first column of GPUs
         </p>
     </section>
     <section>
@@ -230,11 +234,13 @@
                             href="https://arxiv.org/pdf/2407.13066">1</a></sup></li>
                 <li>Algorithm is <em class="color-emph">exact</em> and provides \(\mathcal{O}(10^4)\) speedups over PDE
                     solve method for p2o applications</li>
-                <li>Open-source implementation on <a href="https://github.com/s769/FFTMatvec">GitHub</a></li>
+                <li>Open-source implementation on <a href="https://github.com/s769/FFTMatvec" target="_blank"
+                        rel="noopener noreferrer">GitHub</a></li>
 
             </ul>
         </div>
-        <p class="footnote"><a href="https://arxiv.org/pdf/2407.13066"><sup>1</sup>Fast and Scalable FFT-Based
+        <p class="footnote"><a href="https://arxiv.org/pdf/2407.13066" target="_blank"
+                rel="noopener noreferrer"><sup>1</sup>Fast and Scalable FFT-Based
                 GPU-Accelerated Algorithms for Hessian Actions</a></p>
     </section>
 
@@ -248,11 +254,11 @@
         </ul>
         <div class="container">
             <div class="col">
-                <img data-src="proposal/images/roofline.svg" alt="Roofline Analysis"
+                <img data-src="proposal/images/matvec/roofline.svg" alt="Roofline Analysis"
                     style="width: 100%; margin:0; padding:0;">
             </div>
             <div class="col">
-                <img data-src="proposal/images/single_gpu_scaling.svg" alt="Roofline Analysis"
+                <img data-src="proposal/images/matvec/single_gpu_scaling.svg" alt="Roofline Analysis"
                     style="width: 100%;  margin:0; padding:0;">
             </div>
         </div>

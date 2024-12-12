@@ -2,7 +2,7 @@
 <section>
     <section data-auto-animate>
         <h4>Spectrum of p2o Map</h4>
-        <img data-src="proposal/images/evals_p2o.png" alt="Eigenvalues of \(\mathbf{F} \mathbf{F}^*\)"
+        <img data-src="proposal/images/prior_spectra/evals_p2o.png" alt="Eigenvalues of \(\mathbf{F} \mathbf{F}^*\)"
             class="r-stretch">
         <!-- <img data-src="proposal/images/evals_K.png" alt="Eigenvalues of \(\mathbf{K}\)" style="width: 50%;"> -->
 
@@ -100,8 +100,8 @@
     <section data-auto-animate>
         <h4>3D Inversion: True Parameter and Observations</h4>
         <div class="r-hstack">
-            <img data-src="proposal/images/bathymetry_true.gif" alt="True Seafloor Motion Field" style="width: 50%;">
-            <img data-src="proposal/images/true_pressure.gif" alt="True Observations" style="width: 50%;">
+            <img data-src="proposal/images/results/bathymetry_true.gif" alt="True Seafloor Motion Field" style="width: 50%;">
+            <img data-src="proposal/images/results/true_pressure.gif" alt="True Observations" style="width: 50%;">
         </div>
         <p class="caption"> <b class="color-emph">Left:</b> Synthetic parameter field (seafloor motion) composed of
             superimposed Gaussian deformations; <b class="color-emph">Right:</b> True sea bottom pressure</p>
@@ -110,7 +110,7 @@
         <h4>3D Inversion: Inverse Solution</h4>
         <div class="r-hstack">
             <div>
-                <img data-src="proposal/images/noisy_3.svg" alt="Noisy 6%" style="width: 100%;">
+                <img data-src="proposal/images/results/noisy_3.svg" alt="Noisy 6%" style="width: 100%;">
                 <!-- <p class="caption">Synthetic observations with 6% relative noise</p> -->
             </div>
 
@@ -172,30 +172,22 @@
     <section data-auto-animate>
         <h4>3D Inversion: Inferred Parameter Field (Real-Time)</h4>
         <div class="r-hstack">
-            <img data-src="proposal/images/bathymetry_true.png" alt="Bathymetry Change" style="width: 50%;">
-            <img data-src="proposal/images/bathymetry_inv.png" alt="Bathymetry Change Inverted" style="width: 50%;">
+            <img data-src="proposal/images/results/bathymetry_true.png" alt="Bathymetry Change" >
+            <img data-src="proposal/images/results/bathymetry_inv.png" alt="Bathymetry Change Inverted" >
+            <img data-src="proposal/images/results/bathymetry_diff.png" alt="Bathymetry Change Diff">
         </div>
         <p class="caption"><b class="color-emph">Left:</b>True total bathymetry change (time-integrated
-            parameter field); <b class="color-emph">Right:</b>
+            parameter field); <b class="color-emph">Middle:</b>
             Total bathymetry change inferred from
-            synthetic observations with 6% relative additive noise</p>
-    </section>
-    <section data-auto-animate>
-        <h4>3D Inversion: Inferred Parameter Field (Real-Time)</h4>
-        <div class="r-hstack">
-            <img data-src="proposal/images/bathymetry_inv.png" alt="Bathymetry Change Inverted" style="width: 50%;">
-            <img data-src="proposal/images/bathymetry_diff.png" alt="Bathymetry Change Diff" style="width: 50%;">
-        </div>
-        <p class="caption"><b class="color-emph">Left:</b> Total bathymetry change inferred from
-            synthetic observations with 6% relative additive noise; <b class="color-emph">Right:</b>
-            Difference between inferred and true total bathymetry change</p>
+            synthetic observations with 6% relative additive noise; <b class="color-emph">Right:</b> Difference between
+            inferred and true total bathymetry change</p>
     </section>
 
     <section data-auto-animate>
         <h4>3D Inversion: Pressure Reconstruction</h4>
         <div class="r-hstack">
-            <img data-src="proposal/images/inv_pressure.gif" alt="Pressure Field Inverted" style="width: 50%;">
-            <img data-src="proposal/images/diff_pressure.gif" alt="Pressure Field Difference" style="width: 50%;">
+            <img data-src="proposal/images/results/inv_pressure.gif" alt="Pressure Field Inverted" style="width: 50%;">
+            <img data-src="proposal/images/results/diff_pressure.gif" alt="Pressure Field Difference" style="width: 50%;">
         </div>
         <p class="caption"><b class="color-emph">Left: </b>Sea bottom pressure field reconstructed with the parameter
             field
@@ -205,29 +197,20 @@
     <section data-auto-animate>
         <h4>3D Inversion: Surface-Gravity Wave</h4>
         <div class="r-hstack">
-            <img data-src="proposal/images/wave_true.png" alt="True Wave" style="width: 50%;">
-            <img data-src="proposal/images/wave_inv.png" alt="Inverted Wave" style="width: 50%;">
+            <img data-src="proposal/images/results/wave_true.png" alt="True Wave" >
+            <img data-src="proposal/images/results/wave_inv.png" alt="Inverted Wave" >
+            <img data-src="proposal/images/results/wave_diff.png" alt="Wave Difference" >
         </div>
         <p class="caption"><b class="color-emph">Left: </b>Surface gravity wave obtained from true parameter
-            field; <b class="color-emph">Right: </b>Surface-gravity wave reconstructed with the
-            parameter field inferred from synthetic observations with 6% relative additive noise</p>
-    </section>
-    <section data-auto-animate>
-        <h4>3D Inversion: Surface-Gravity Wave</h4>
-        <div class="r-hstack">
-            <img data-src="proposal/images/wave_inv.png" alt="Inverted Wave" style="width: 50%;">
-            <img data-src="proposal/images/wave_diff.png" alt="Wave Difference" style="width: 50%;">
-        </div>
-        <p class="caption"><b class="color-emph">Left: </b>Surface-gravity wave reconstructed with the
-            parameter field inferred from synthetic observations with 6% relative additive noise; <b
-                class="color-emph">Right: </b>
-            Difference between reconstructed and true surface-gravity wave</p>
+            field; <b class="color-emph">Middle: </b>Surface-gravity wave reconstructed with the
+            parameter field inferred from synthetic observations with 6% relative additive noise; <br><b
+                class="color-emph">Right: </b> Difference between reconstructed and true surface-gravity wave</p>
     </section>
     <section data-auto-animate>
         <h4>QoI Predictions and Uncertainty</h4>
         <div class="r-hstack">
-            <img data-src="proposal/images/sensor_qoi_locations.svg" alt="Sensor and QOI Locations" style="width: 50%;">
-            <img data-src="proposal/images/qoi_vec_wave_height_uq_0_3.svg" alt="QoI Predictions and Uncertainty"
+            <img data-src="proposal/images/results/sensor_qoi_locations.svg" alt="Sensor and QOI Locations" style="width: 50%;">
+            <img data-src="proposal/images/results/qoi_vec_wave_height_uq_0_3.svg" alt="QoI Predictions and Uncertainty"
                 style="width: 50%;">
         </div>
         <p class="caption"><b class="color-emph leftalign">Left:</b> Sensor and QoI locations; <b

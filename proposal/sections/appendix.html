@@ -4,9 +4,9 @@
 <section>
     <section data-visibility="uncounted" data-auto-animate>
         <h4>Weak Scaling to 4096 GPUs</h4>
-        <img data-src="proposal/images/weak_scaling_efficiency.svg" alt="Weak Scaling Efficiency" class="r-stretch">
+        <img data-src="proposal/images/matvec/weak_scaling_efficiency.svg" alt="Weak Scaling Efficiency" class="r-stretch">
         <p class="caption">Weak scaling efficiency of the FFT-based Hessian action algorithm on up to 4096 GPUs on the
-            <a href="https://docs.nersc.gov/systems/perlmutter/architecture/">Perlmutter</a> system
+            <a href="https://docs.nersc.gov/systems/perlmutter/architecture/" target="_blank" rel="noopener noreferrer">Perlmutter</a> system
         </p>
         <aside class="notes" aria-label="weak-scaling">
             Largest size is \(N_d\): 25, \(N_m\): 163,840,000 (40,000 per GPU), \(N_t\): 1000, ~0.2s per matvec with
@@ -16,7 +16,7 @@
     <section data-visibility="uncounted" data-auto-animate>
         <h4>Comparison of Prior Solvers</h4>
         <div class="r-hstack">
-            <img data-src="proposal/images/prior_solvers.png" alt="Comparison of Prior Solvers" style="width: 70%;">
+            <img data-src="proposal/images/prior_spectra/prior_solvers.png" alt="Comparison of Prior Solvers" style="width: 70%;">
             <table style="font-size: large;" class="center-table">
                 <tr>
                     <td>Solver</td>
@@ -64,9 +64,9 @@
     <section data-visibility="uncounted" data-auto-animate>
         <h4>Spectral Analysis</h4>
         <div class="r-hstack">
-            <img data-src="proposal/images/evals_p2o.png" alt="Eigenvalues of \(\mathbf{F} \mathbf{F}^*\)"
+            <img data-src="proposal/images/prior_spectra/evals_p2o.png" alt="Eigenvalues of \(\mathbf{F} \mathbf{F}^*\)"
                 style="width: 50%;">
-            <img data-src="proposal/images/evals_K.png" alt="Eigenvalues of \(\mathbf{K}\)" style="width: 50%;">
+            <img data-src="proposal/images/prior_spectra/evals_K.png" alt="Eigenvalues of \(\mathbf{K}\)" style="width: 50%;">
         </div>
         <p class="caption"><b class="color-emph">Left:</b> Eigenvalues of \(\mathbf{F} \mathbf{F}^*\) for a
             representative case; <b class="color-emph">Right:</b> Eigenvalues of \(\mathbf{K}\) for the same case</p>
@@ -438,11 +438,11 @@ Note: PML formulation of the adjoint equations has an auxiliary differential equ
     </section>
     <section data-visibility="uncounted" data-auto-animate>
         <h4>Forward/Adjoint Solver Scaling</h4>
-        <img data-src="proposal/images/Weak_Scaling.svg" alt="Weak Scaling" class="r-stretch">
+        <img data-src="proposal/images/pde/Weak_Scaling.svg" alt="Weak Scaling" class="r-stretch">
     </section>
     <section data-visibility="uncounted" data-auto-animate>
         <h4>Forward/Adjoint Solver Scaling</h4>
-        <img data-src="proposal/images/Strong_Scaling.svg" alt="Strong Scaling" class="r-stretch">
+        <img data-src="proposal/images/pde/Strong_Scaling.svg" alt="Strong Scaling" class="r-stretch">
     </section>
 
 
