@@ -1,22 +1,10 @@
+<!DOCTYPE html>
 <section>
     <section data-auto-animate>
-        <h4>Real-Time Inference</h4>
+        <h4>Real-Time Inference and Prediction</h4>
         <ul>
-            <li><em class="color-emph">Autonomous Dynamical System: </em>evolution does not depend
-                explicitly on independent variable (e.g. time)
-                <ul>
-                    <li>Here: the mapping mapping \(m(\boldsymbol{x},t+\tau) \mapsto
-                        d(\boldsymbol{x}_i,t+\tau)\) is the same as the mapping \(m(\boldsymbol{x},t)
-                        \mapsto d(\boldsymbol{x}_i,t)\)</li>
-                </ul>
-            </li>
-
-            <li>
-                Exploit (time) <em class="color-emph">shift invariance</em> of autonomous dynamical systems
-                <ul>
-                    <li>Reduce computation and storage costs</li>
-                </ul>
-            </li>
+            <li>Now we have a fast algorithm for applying \(\mathbf{F}\) and \(\mathbf{F}^*\) to vectors. How can we use
+                that to enable real-time inference?</li>
             <li>
                 Split inversion into <b class="color-emph">Offline</b> and <b class="color-emph">Online</b>
                 phases:
@@ -31,11 +19,11 @@
                     \(\Gamma_{\!\text{post}}\)
                 </li>
                 <li>
-                    <b class="color-emph">Phase 3</b> (Online): Compute MAP point in real time
+                    <b class="color-emph">Phase 3</b> (Online): Compute MAP point and QoI in real time
                 </li>
             </ul>
-            <li>Offline/Online decomposition allows us to <em
-                    class="color-emph">exactly<sup>&ast;</sup></em> solve the inverse problem in real time
+            <li>Offline/Online decomposition allows us to <em class="color-emph">exactly<sup>&ast;</sup></em> solve the
+                inference and prediction problems in \(\mathcal{O}(\text{seconds})\)
                 using the high-fidelity model.
             </li>
         </ul>
@@ -43,7 +31,7 @@
                 errors</em></p>
     </section>
 
-    <section data-auto-animate>
+    <!-- <section data-auto-animate>
         <h4>Real-Time Inference</h4>
         <p>
             <b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
@@ -80,10 +68,10 @@
         <aside class="notes" aria-label="causality">
             causality is the reason for lower-triangularity
         </aside>
-    </section>
+    </section> -->
 
 
-    <section data-auto-animate>
+    <!-- <section data-auto-animate>
         <h4>Real-Time Inference</h4>
         <p class="leftalign">
             <b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
@@ -126,7 +114,6 @@
         </aside>
     </section>
     
-    <section data-external-replace="./matvec.html"></section>
 
     <section data-auto-animate>
         <h4>Real-Time Inference</h4>
@@ -157,5 +144,16 @@
 
 
 
+    </section> -->
+</section>
+<section>
+    <section data-auto-animate>
+        <h4>Phase 1: Constructing the p2o Map</h4>
+        <ul>
+            <li>Requires \(N_d\) adjoint PDE solves; solution vectors are of size \(N_mN_t\)</li>
+            <li>PDE solution vectors define block lower-triangular Toeplitz matrix</li>
+        </ul>
+            <img data-src="proposal/images/Strong_Scaling.svg" alt="Strong Scaling" class="r-stretch">
+        <p class="footnote"><sup>1</sup> Implemented by Stefan Henneking with MFEM</p>
     </section>
 </section>

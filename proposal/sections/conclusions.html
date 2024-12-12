@@ -16,7 +16,7 @@
             <li><b class="color-emph ">Area B:</b>
                 <ul>
                     <li>Fast block-triangular Toeplitz matvec algorithm and implementation</li>
-                    <li>Solver options for \(\mathbf{K}\)</li>
+                    <li>Appropriate algorithm for inverting \(\mathbf{K}\)</li>
                     <li>Cost and communication model for matvec algorithms</li>
                     <li>Software release</li>
                 </ul>
@@ -37,7 +37,7 @@
             <li>Summary
                 <ul>
                     <li>
-                        Exploit autonomous structure of the Hessian to enable real-time inference at extreme
+                        Exploit autonomous structure to enable real-time inference at extreme
                         scale
                     </li>
                     <li>
@@ -47,17 +47,31 @@
                         <b class="color-emph">Exact</b> inference and prediction with ~132M parameters and ~25K data
                         points in <b class="color-emph">0.06s</b>
                     </li>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
                 </ul>
             </li>
             <li>Acknowledgements
                 <ul>
+                    <li>Collaborators: Stefan Henneking and Milinda Fernando</li>
+                    <li>Advisor: Omar Ghattas</li>
+                    <li>Committee Members:
+                        <ul>
+                            <li>Per-Gunnar Martinsson</li>
+                            <li>George Biros</li>
+                            <li>Patrick Heimbach</li>
+                            <li>Karen Willcox</li>
+                            <li>Alice Gabriel</li>
+                        </ul>
+                    </li>
 
                     <li>NSF Graduate Research Fellowship grant: DGE 2137420</li>
                     <li>CSEM Fellowship</li>
-                    <li>Texas Advanced Computing Center (<a href="https://tacc.utexas.edu/" target="_blank"
-                            rel="noopener noreferrer">TACC</a>)</li>
-                    <li>NERSC Perlmutter (<a href="https://www.nersc.gov/" target="_blank"
-                            rel="noopener noreferrer">NERSC</a>)
+                    <li><a href="https://tacc.utexas.edu/" target="_blank" rel="noopener noreferrer">Texas Advanced
+                            Computing Center</a></li>
+                    <li><a href="https://www.nersc.gov/" target="_blank" rel="noopener noreferrer">NERSC Perlmutter</a>
                         <br>
                     </li>
 
@@ -71,7 +85,7 @@
             </div>
             <div class="col">
                 <img data-src="proposal/images/qr-proposal.svg" alt="https://s769.github.io/reveal.js/proposal.html"
-                    style="width: 50%; padding: 0; margin: 0;">
+                    style="width: 40%; padding: 0; margin: 0;">
             </div>
             <div class="col">
                 <img data-src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
@@ -101,15 +115,3 @@
     </section> -->
 </section>
 
-<section>
-    <section data-visibility="uncounted" data-auto-animate>
-        <h4>Weak Scaling to 4096 GPUs</h4>
-        <img data-src="proposal/images/weak_scaling_efficiency.svg" alt="Weak Scaling Efficiency" class="r-stretch">
-        <p class="caption">Weak scaling efficiency of the FFT-based Hessian action algorithm on up to 4096 GPUs on the
-            <a href="https://docs.nersc.gov/systems/perlmutter/architecture/">Perlmutter</a> system
-        </p>
-        <aside class="notes" aria-label="weak-scaling">
-            Largest size is \(N_d\): 25, \(N_m\): 163,840,000 (40,000 per GPU), \(N_t\): 1000, ~0.2s per matvec with 4096 GPUs
-        </aside>
-    </section>
-</section>
