@@ -322,7 +322,7 @@
     <script src="plugin/math/math.js"></script>
     <script src="plugin/search/search.js"></script>
     <script src="plugin/zoom/zoom.js"></script>
-    <script src="plugin/pointer/pointer.js"></script>
+    <!-- <script src="plugin/pointer/pointer.js"></script> -->
     <script src="plugin/menu/menu.js"></script>
     <script src="plugin/pdfexport/pdfexport.js"></script>
 
@@ -341,7 +341,7 @@
             // Learn about plugins: https://revealjs.com/plugins/
             plugins: [RevealMarkdown, RevealHighlight, RevealMath.KaTeX, RevealNotes, RevealSearch, RevealZoom, RevealMenu, PdfExport],
             slideNumber: true,
-            totalTime: 900,
+            totalTime: 3000,
 
             // multiplex: {
             // 	// Example values. To generate your own, see the socket.io server instructions.
@@ -361,16 +361,16 @@
 
             // 'pointer': {"key": "q", "color": "#32cd32", "pointerSize": 18, "alwaysVisible": false},
 
-            // notes_pointer: {
-            // 	pointer: {
-            // 		size: 15,  // in pixels (scaled like the rest of reveal.js)
-            // 		color: 'rgba(255, 0, 0, 0.8)',  // something valid for css background-color
-            // 		key: 'A'
-            // 	},
-            // 	notes: {
-            // 		key: 'S'
-            // 	}
-            // },
+            notes_pointer: {
+                pointer: {
+                    size: 15,  // in pixels (scaled like the rest of reveal.js)
+                    color: 'rgba(255, 0, 0, 0.8)',  // something valid for css background-color
+                    key: 'A'
+                },
+                notes: {
+                    key: 'S'
+                }
+            },
 
 
 
@@ -392,6 +392,7 @@
                         return !!document.querySelector('[data-external],[data-external-replace]');
                     }
                 },
+                {src: 'node_modules/reveal.js-notes-pointer/notes-pointer.js', async: false}
             ],
 
             // dependencies: [

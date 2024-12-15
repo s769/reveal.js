@@ -214,7 +214,7 @@
                 perspectives
                 from
                 inverse problems and model reduction." Acta Numerica 30 (2021): 445-554.</a> By "rank", we mean
-            "effective rank", the threshold beyond which the modes of the Hessian are not informed by the data or the
+            "effective rank", the threshold beyond which the modes of the Hessian are not informed by the data and the
             prior.
         </p>
         <aside class="notes" aria-label="state dims for PDE">
@@ -225,8 +225,8 @@
             1 hr time is actually benchmarked on optimized scalable FEM code
             <br>
             when we say rank of Hessian, we mean "effective rank" since it will be numerically full rank but
-            you cant hope to reconstruct all high order modes from sparse data so the "rank" is the point at
-            which the evals of the hessian begin looking comparable to noise
+            you cant hope to reconstruct all high order modes from sparse data so the "rank" is the threshold beyond
+            which the modes of the Hessian are not informed by the data and the prior
         </aside>
     </section>
     <section data-auto-animate>
@@ -262,7 +262,7 @@
 
             <ul>
                 <li>Very large \((10^9)\) parameter dimension</li>
-                <li>Kolmogorov N-width for wave equations (worst-case linear subspace projection error) decays like
+                <li>Kolmogorov N-width<sup>1</sup> for wave equations decays like
                     \(\mathcal{O}(N^{-1/2})\) </li>
                 <li>Hyperbolic forward PDE is intolerant of approximation errors (errors propagate rather than
                     dissipate)</li>
@@ -270,6 +270,10 @@
                     amplified in the inversion</li>
             </ul>
         </ul>
+        <p class="footnote"><sup>1</sup>Worst-case approximation error (over all parameter inputs) of
+            the best \(N\)-dim linear subspace approximation to the PDE solution manifold (<a
+                href="https://www.sciencedirect.com/science/article/pii/S0893965919301983" target="_blank"
+                rel="noopener noreferrer">Greif and Urban 2019</a>)</p>
     </section>
 
 </section>
