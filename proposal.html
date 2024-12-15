@@ -166,6 +166,32 @@
             break-inside: avoid;
         }
 
+        /* .fadedlist {
+            opacity: 0.5;
+        }
+
+        li.fadedlist > ul {
+            display: none;
+        } */
+        /* 
+        ul.toc-list>li {
+            opacity: 0.4;
+            transition: opacity 0.3s ease;
+        }
+
+        ul.toc-list>li>ul {
+            display: none
+        }
+
+        ul.toc-list>li.active {
+            opacity: 1;
+            font-weight: bold;
+        }
+
+        ul.toc-list>li.active>ul {
+            display: block;
+        } */
+
 
 
 
@@ -182,6 +208,57 @@
 </head>
 
 <body>
+    <template id="toc-template">
+        <h4>Outline</h4>
+        <ul id="toc-list">
+            <li data-highlight="1">Background
+                <ul>
+                    <li>Forward Problem: Acoustic-Gravity Equations</li>
+                    <li>Bayesian Inverse Problem</li>
+                </ul>
+            </li>
+            <li data-highlight="2">Fast p2o Map Applications
+                <ul>
+                    <li>Algorithmic Derivation</li>
+                    <li>Algorithmic Implementation and Numerical Results</li>
+                </ul>
+            </li>
+            <li data-highlight="3"> Real-Time Inference and Prediction Framework
+                <ul>
+                    <li>
+                        Phase 1: Construct p2o Map
+                    </li>
+
+                    <li>
+                        Phase 2: Compute Compact Representation of Posterior Covariance
+                    </li>
+                    <li>
+                        Phase 3: Real-time Inference and Prediction
+                    </li>
+                </ul>
+            </li>
+            <li data-highlight="4">Preliminary Results
+                <ul>
+                    <li>Test Configuration</li>
+                    <li>Performance Results</li>
+                    <li>Inversion and Preditction Results</li>
+                </ul>
+            </li>
+            <li data-highlight="5">Proposed Work for Dissertation
+                <ul>
+                    <li>Scale to full CSZ Size</li>
+                    <li>Incorporate real CSZ bathymetry in mesh</li>
+                    <li>Analyze ill-posedness of inverse problem via spectral analysis</li>
+                    <li>Data-driven priors</li>
+                    <li>Software release</li>
+                    <li>Optimal experimental design</li>
+                    <li>Other application problems</li>
+                </ul>
+            </li>
+        </ul>
+
+    </template>
+
     <div class="reveal">
         <div class="slides">
             <section class="center">
@@ -213,28 +290,19 @@
                 </div>
             </section>
             <section data-external-replace="proposal/sections/introduction.html"></section>
-            <section>
-                <h4>Outline</h4>
-                <ul>
-                    <li>Background
-                    </li>
-                    <li>Fast p2o Application Algorithm
-                    </li>
-                    <li> Real-Time Inference and Prediction Framework
-                    </li>
-                    <li>Preliminary Results</li>
-                    <li>Proposed Work for Dissertation</li>
-                    <li>Conclusions</li>
-                </ul>
-
-            </section>
-            <section data-external-replace="proposal/sections/background.html"></section>
+            <section class="toc-slide" data-current="1"></section>
+            <section data-external-replace="proposal/sections/pde_model.html"></section>
+            <section data-external-replace="proposal/sections/inverse_problem.html"></section>
+            <section class="toc-slide" data-current="2"></section>
             <section data-external-replace="proposal/sections/matvec.html"></section>
+            <section class="toc-slide" data-current="3"></section>
             <section data-external-replace="proposal/sections/phase1.html"></section>
             <section data-external-replace="proposal/sections/phase2.html"></section>
             <section data-external-replace="proposal/sections/phase3.html"></section>
+            <section class="toc-slide" data-current="4"></section>
             <section data-external-replace="proposal/sections/configuration.html"></section>
             <section data-external-replace="proposal/sections/results.html"></section>
+            <section class="toc-slide" data-current="5"></section>
             <section data-external-replace="proposal/sections/proposed_work.html"></section>
             <section data-external-replace="proposal/sections/conclusions.html"></section>
             <section data-external-replace="proposal/sections/appendix.html"></section>
@@ -368,10 +436,66 @@
         */
 
     </script>
-    <!-- <script>
-		let vid = document.getElementById('tsunami-clip');
-		vid.playbackRate = 7.5;
-	</script> -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get the TOC template
+            const tocTemplate = document.querySelector('#toc-template').content;
+
+            // Find all TOC slides
+            const tocSlides = document.querySelectorAll('.toc-slide');
+
+            tocSlides.forEach((slide) => {
+                // Clone the TOC template content
+                const tocClone = document.importNode(tocTemplate, true);
+
+                // Get the current bullet to highlight
+                const current = slide.getAttribute('data-current');
+
+
+                const bullets = tocClone.querySelectorAll('li');
+
+
+                bullets.forEach((bullet) => {
+                    // If the bullet is highlighted
+                    //check if bullet has a data-highlight attribute
+
+                    if (bullet.hasAttribute('data-highlight')) {
+
+
+
+                        if (bullet.getAttribute('data-highlight') === current) {
+                            bullet.style.opacity = '1';
+                            bullet.style.fontWeight = 'normal';
+                            if (bullet.querySelector('ul')) {
+                                bullet.querySelector('ul').style.display = 'block'; // Show nested list
+                                bullet.querySelector('ul').style.opacity = '1';
+                                // set opacity of ul > li to 1
+                                bullet.querySelectorAll('ul > li').forEach((nestedBullet) => {
+                                    nestedBullet.style.opacity = '1';
+                                    nestedBullet.style.fontWeight = 'normal';
+                                });
+                            }
+                        } else {
+                            // For non-highlighted bullets where parent is not highlighted
+
+                            bullet.style.opacity = '0.4';
+                            bullet.style.fontWeight = 'normal';
+                            if (bullet.querySelector('ul')) {
+                                bullet.querySelector('ul').style.display = 'none'; // Hide nested list
+                                bullet.querySelector('ul').style.opacity = '0.4';
+                            }
+
+
+
+                        }
+                    }
+                });
+
+                // Append the TOC content to the slide
+                slide.appendChild(tocClone);
+            });
+        });
+    </script>
 
 
 </body>

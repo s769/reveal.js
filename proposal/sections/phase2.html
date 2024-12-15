@@ -20,7 +20,7 @@
             </li>
             <li>Inversion operation shifted from a matrix of size \(N_mN_t\times N_mN_t\) to a matrix of size
                 \(N_dN_t\times N_dN_t\) <span class="color-emph">\((N_mN_t \sim 10^9, N_dN_t \sim 10^5)\)</span></li>
-            <li>\(\textcolor{BF5700}{\mathbf{K}}\) is a dense matrix of size \(\sim 10^5\times 10^5
+            <li>\(\textcolor{BF5700}{\mathbf{K}}\) is a dense matrix (with no obvious structure) of size \(\sim 10^5\times 10^5
                 \Rightarrow\) compute Cholesky/eigenvalue decomposition</li>
             <li>For priors with only spatial correlation, \(\Gamma_{\!\text{prior}}\) is <em
                     class="color-emph">block-diagonal</em> <br>\(\Rightarrow \mathbf{G}^* \coloneqq
@@ -50,7 +50,7 @@
                 \(\mathbf{F}^*\)
             </li>
             <li>Prior solves done with <a href="https://developer.nvidia.com/cudss" target="_blank"
-                    rel="noopener noreferrer">cuDSS</a> (direct solver)</li>
+                    rel="noopener noreferrer">cuDSS</a> (sparse direct solver)</li>
             <ul>
                 <li>Batch solve over timesteps</li>
                 <li>cuDSS selected after comparing performance of different solvers</li>
@@ -86,12 +86,13 @@
                 \Gamma_{\!\text{pred}} \coloneqq
                 \mathbf{F}^*_{\!\text{pred}}\Gamma_{\!\text{post}}\mathbf{F}_{\!\text{pred}} \sim N_qN_t\times N_qN_t\)
             </li>
-            <li>For the CSZ application, \(N_q \lt N_d\), so \(\Gamma_{\!\text{post}}\) can be feasibly computed </li>
+            <li>For the CSZ application, \(N_q \approx N_d\), so \(\Gamma_{\!\text{post}}\) can be feasibly computed </li>
             <ul>
                 <li>Defining \(\mathbf{G}_{\!\text{pred}}^* \coloneqq
                     \Gamma_{\!\text{prior}}\mathbf{F}_{\!\text{pred}}^*\),
                     we can use the prior trick again</li>
                 <li>Only need wave heights at a few key spatial locations/time points </li>
+                <li>QoI can be sampled at lower frequencies</li>
             </ul>
         </ul>
     </section>

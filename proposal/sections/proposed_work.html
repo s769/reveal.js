@@ -1,17 +1,6 @@
 <!DOCTYPE html>
 <section>
     <section data-auto-animate>
-        <h4>Proposed Work</h4>
-        <ul>
-            <li>Scale to full CSZ Size</li>
-            <li>Incorporate real CSZ bathymetry in mesh</li>
-            <li>Data-driven priors</li>
-            <li>Software release</li>
-            <li>Optimal experimental design</li>
-            <li>Other application problems</li>
-        </ul>
-    </section>
-    <section data-auto-animate>
         <h4>Scale to Full CSZ Size</h4>
         <ul>
             <li>Forward/adjoint PDE solvers and p2o/p2q matvecs scale</li>
@@ -21,15 +10,15 @@
                         href="https://docs.nvidia.com/cuda/cusolvermp/">cuSOLVERMp</a></li>
                 <li>Cholesky vs. Eigendecomposition</li>
                 <ul>
-                    <li>Cholesky is more robust to ill-conditioned matrices, but solve is less parallelizable</li>
+                    <li>Cholesky is less memory intensive, but solve is less parallelizable</li>
                     <li>Eigendecomposition needs to deal with inverting very small eigenvalues, but "solve" is very
-                        efficent</li>
+                        efficient</li>
                 </ul>
                 <li>Distributed solves require proper data handling/communication optimization</li>
             </ul>
             <li>Map directly from observations to QoI</li>
             <li>Handle different sampling rates for observations, parameter, and QoI</li>
-            <li>Update predictions as more data is collected</li>
+            <li>Update predictions as more data is acquired</li>
             <li>Better communication cost modeling and experiments to determine optimal data layout/partitioning</li>
         </ul>
     </section>
@@ -54,15 +43,18 @@
                         href="https://docs.wrld3d.com/unity/latest/docs/examples/ecef-coordinate-system/">ECEF</a>
                     coordinates</li>
                 <li>Glue patches together to make full mesh</li>
+                <li><a href="https://pyvista.org/" target="_blank" rel="noopener noreferrer">PyVista</a> for implementation</li>
                 <aside class="notes" aria-label="Mesh Algorithm">
                     <p>Laplace Beltrami operator required</p>
                 </aside>
+                
             </ul>
         </ul>
     </section>
     <section data-auto-animate>
         <h4>Incorporate Real CSZ Bathymetry in Mesh</h4>
-        <video data-src="proposal/images/meshes/CSZ-lat-lon-animation.mp4" style="width: 95%;" data-autoplay loop></video>
+        <video data-src="proposal/images/meshes/CSZ-lat-lon-animation.mp4" style="width: 95%;" data-autoplay
+            loop></video>
         <p class="caption">Animation showing <a
                 href="https://www.gebco.net/data_and_products/gridded_bathymetry_data/">GEBCO</a> bathymetry data and
             mesh of a quadrilateral patch of the CSZ using
@@ -73,6 +65,26 @@
         <img data-src="proposal/images/meshes/CSZ-lat-lon-mesh-2.png" alt="CSZ Lat. Lon. Patch" style="width: 95%;">
         <p class="caption">3D hexahedral mesh of a quadrilateral patch of the CSZ in lat. lon. coordinates with ~250m
             grid spacing</p>
+        <aside class="notes" aria-label="Mesh">
+            <p>Vertical scale is exaggerated</p>
+        </aside>
+
+    </section>
+    <section data-auto-animate>
+        <h4>Ill-Posedness of Inverse Problem</h4>
+        <ul>
+            <li>Ill-posedness of inverse problem can be analyzed via spectral properties of \(\mathcal{K}\) or
+                \(\mathcal{H}\)</li>
+            <li>Derive expressions for eigenvalues and eigenfunctions of \(\mathcal{K}\) or \(\mathcal{H}\)
+                <ul>
+                    <li>We are working with linear forward/inverse problems</li>
+                    <li>Assume continuous observations (at least to begin with)</li>
+                    <li>Work with box geometries for analysis</li>
+                </ul>
+            </li>
+            <li>Also consider spectrum of \(\mathcal{F}^*\Gamma_{\!\text{noise}}\mathcal{F}\) (data-misfit Hessian)</li>
+            <li>Results can motivate algorithms for solving with \(\mathbf{K}\) or OED problems</li>
+        </ul>
     </section>
     <section data-auto-animate>
         <h4>Data-Driven Priors</h4>
@@ -83,7 +95,7 @@
                 \times K_{\nu(x, x')}&\left( \frac{\sqrt{2\nu(x, x')} \| x - x' \|_{A(x, x')}}{\ell(x, x')}
                 \right),
                 \end{align*}\]
-                where \(\sigma(x)\) is the signal variance, \(\nu(x, x')\) is the smoothness parameter, \(\ell(x, x')\)
+                where \(\sigma(x)\) is the variance (amplitude), \(\nu(x, x')\) is the smoothness parameter, \(\ell(x, x')\)
                 is the length scale, and \(A(x, x')\) is the anisotropy matrix.
             </li>
             <li><b class="color-emph">Learn</b> \(\sigma(x)\), \(\nu(x, x')\), \(\ell(x, x')\), and \(A(x, x')\) from
@@ -109,7 +121,7 @@
                 \mathbf{\Gamma}(\sigma,
                 \nu, \ell, A)v_r\|^2 + \mathcal{R}(\sigma, \nu, \ell, A)
                 \]
-                where \(v_r\) are eigenvectors of empirical covariance matrix \(\mathbf{\Gamma}_{\!\text{emp}}\) with
+                where \(v_r\) are eigenvectors of empirical covariance matrix \(\mathbf{\Gamma}_{\!\text{emp}}\) corresponding to
                 non-zero eigenvalues</li>
 
 

@@ -1,64 +1,10 @@
 <!DOCTYPE html>
 <section>
     <section data-auto-animate>
-        <h4>Forward Problem</h4>
-        <p class="leftalign">Coupled <b class="color-emph"> Acoustic-Gravity </b> wave equations:</p>
-        <div class="container">
-            <div class="col">
-                <p>
-                    \[\begin{cases}
-                    \rho \frac{ \partial\boldsymbol{u}}{\partial t} + \nabla p = \boldsymbol{0},
-                    \frac{1}{K} \frac{ \partial p}{\partial t} + \nabla \cdot \boldsymbol{u} = 0, &
-                    \Omega \times (0,T)\nonumber\\
-                    p = \rho g \eta,
-                    \frac{ \partial\eta}{\partial t} = \boldsymbol{u} \cdot \hat{\boldsymbol{n}}, &
-                    \Gamma_s \times (0,T) \nonumber\\
-                    \boldsymbol{u} \cdot \hat{\boldsymbol{n}} = -\frac{\partial b}{\partial t},
-                    \text{\textcolor{BF5700}{&#8592; parameter}} & \Gamma_b
-                    \times (0,T) \nonumber\\
-                    \boldsymbol{u} \cdot \hat{\boldsymbol{n}} = Z^{-1} p, & \Gamma_a \times (0,T)\nonumber
-                    \end{cases}
-                    \]
-                </p>
-            </div>
-            <div class="col">
-                <img data-src="siam_pp_24/pde-domain-cropped.svg" alt="PDE Domain" style="width: 150%;">
-            </div>
-        </div>
-        <ul>
-            <li><b class="color-emph">Velocity:</b> \(\boldsymbol{u}(x, t)\), <b class="color-emph">Pressure:</b> \(p(x,
-                t)\),
-                <b class="color-emph">Surface Height:</b> \(\eta(x, t)\)
-            </li>
-            <li> Bulk modulus \(K\), density \(\rho\), \(Z = \rho c\), \(c = \sqrt{K/\rho}\) </li>
-            <li> Bathymetry \(b(x, t)\); homogeneous ICs</li>
-            <li><b class="color-emph">Observations</b> of pressure \(p\) at seafloor sensors </li>
-        </ul>
-
-
-        <p class="footnote">Implemented in <a href="https://mfem.org/" target="_blank"
-                rel="noopener noreferrer">MFEM</a></p>
-        <aside class="notes" aria-label="physparams">
-            absorbing BCs on Gamma_a: 1st order, PML
-            <br>
-            Z is acoustic wave impedance; c is sound speed in seawater
-            <br>
-            bathymetry related to seafloor motion is the parameter
-        </aside>
-    </section>
-    <section data-auto-animate>
-        <h4>Acoustic-Gravity Model Illustration</h4>
-        <img data-src="proposal/images/pde/tsunami-white-bg.png" alt="Tsunami Model" class="r-stretch">
-        <p class="caption">Illustration of surface wave height (top) and pressure field (middle)
-            induced by seafloor motion (bottom) in a 3D model problem domain.</p>
-    </section>
-
-    <section data-auto-animate>
         <h4>Goals:</h4>
         <ul>
             <li><b class="color-emph">Inverse Problem:</b> given pressure recordings from sensors on the seafloor, infer
-                the seafloor motion along the
-                fault line</li>
+                infer the earthquake-induced seafloor motion</li>
             <li><b class="color-emph">Prediction Problem:</b> Given inferred spatiotemporal seafloor motion,
                 predict tsunami wave heights at sample locations/times</li>
         </ul>
@@ -156,8 +102,10 @@
                 \mathcal{N}(0,
                 \Gamma_{\!\text{noise}})\)</li>
         </ul>
-        <p class="footnote"><a href="https://arxiv.org/pdf/1302.6989" target="_blank" rel="noopener noreferrer">Dashti, M., &amp; Stuart, A. M. (2013). The Bayesian
-                approach to inverse problems. arXiv preprint arXiv:1302.6989.</a></p>
+        <p class="footnote"><a
+                href="https://www.cambridge.org/core/journals/acta-numerica/article/inverse-problems-a-bayesian-perspective/587A3A0D480A1A7C2B1B284BCEDF7E23"
+                target="_blank" rel="noopener noreferrer">Stuart, A. M. (2010). Inverse problems: a Bayesian
+                perspective. Acta numerica, 19, 451-559.</a></p>
 
     </section>
     <section data-auto-animate>
@@ -211,7 +159,9 @@
             </a>
         </p> -->
         <aside class="notes" aria-label="postcov">
-            Posterior covariance does not depend on data
+            Posterior covariance does not depend on data.
+            subset of the Matern family of covariance operators can be written as the inverse of an elliptic different
+            operator, with the coefficients \(\alpha_i\) chosen to impose the desired correlation and variance structure
         </aside>
         <!-- <p class="footnote">Script = infinite-dimensional; boldface = discrete in space and time</p> -->
     </section>
@@ -264,8 +214,8 @@
                 perspectives
                 from
                 inverse problems and model reduction." Acta Numerica 30 (2021): 445-554.</a> By "rank", we mean
-            "effective rank", the threshold beyond which the eigenvalues of the Hessian begin looking comparable to
-            noise.
+            "effective rank", the threshold beyond which the modes of the Hessian are not informed by the data or the
+            prior.
         </p>
         <aside class="notes" aria-label="state dims for PDE">
             PDE solve deals with 3D space-time state

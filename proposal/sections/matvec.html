@@ -10,9 +10,9 @@
             <li><em class="color-emph">Autonomous Dynamical System: </em>evolution does not depend
                 explicitly on independent variable (e.g. time)
                 <ul>
-                    <li>Here: the mapping mapping \(m(\boldsymbol{x},t+\tau) \mapsto
-                        d(\boldsymbol{x}_i,t+\tau)\) is the same as the mapping \(m(\boldsymbol{x},t)
-                        \mapsto d(\boldsymbol{x}_i,t)\)</li>
+                    <li>Here: the mapping mapping \(m(x,t+\tau) \mapsto
+                        d(x,t+\tau)\) is the same as the mapping \(m(x,t)
+                        \mapsto d(x,t)\)</li>
                 </ul>
             </li>
             <li>
@@ -23,6 +23,99 @@
             </li>
 
         </ul>
+    </section>
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Derivation of Block-Triangular Toeplitz Structure</h4>
+
+        <ul>
+            <li>Consider linear time-invariant (LTI) system:
+                \[\footnotesize
+                \begin{align*}
+                \frac{\partial u}{\partial t} &= \mathcal{A} u + \mathcal{C} m \quad (+\text{BCs}) && \text{in } \Omega
+                \times (0,T), \\
+                u &= u_0 && \text{in } \Omega \times \{ 0 \}, \\
+                d &= \mathcal{B} u && \text{in } \Omega \times (0,T)\\
+                \end{align*}
+                \]
+            </li>
+            <li>Discretize (FE + explicit time-stepping):
+                \[\footnotesize
+                \begin{split}
+                u_1 &= A u_0 + C m_0 , \\
+                u_2 &= A u_1 + C m_1 , \\
+                &= A (A u_0 + C m_0) + C m_1
+                = A^2 u_0 + A^1 C m_0 + A^0 C m_1 , \\[-4pt]
+                \vdots \\[-12pt]
+                u_{k+1} &= A^{k+1} u_0 + \sum_{i=0}^k A^i C m_{k-i} , \\[-5pt]
+                d_{k+1} &= B u_{k+1}
+                \end{split}
+                \]
+            </li>
+        </ul>
+    </section>
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Derivation of Block-Triangular Toeplitz Structure</h4>
+        <p>
+            \[\footnotesize
+
+            \begin{bmatrix}
+            d_1 \\
+            d_2 \\
+            \vdots \\
+            d_{k+1} \\
+            \vdots \\
+            d_{N_t}
+            \end{bmatrix}
+
+
+            =
+            \begin{bmatrix}
+            B A^0 C \\
+            B A^1 C & B A^0 C \\
+            \vdots & \vdots & \ddots \\
+            B A^k C & B A^{k-1} C & \cdots & B A^0 C \\
+            \vdots & \vdots & & \vdots & \ddots \\
+            B A^{N_t-1} C & B A^{N_t-2} C & \cdots & B A^{N_t-(k+1)} C & \cdots & B A^0 C
+            \end{bmatrix}
+            \begin{bmatrix}
+            m_0 \\
+            m_1 \\
+            \vdots \\
+            m_k \\
+            \vdots \\
+            m_{N_t-1}
+            \end{bmatrix}
+
+            \]
+        </p>
+        <p>
+            \[\footnotesize
+            \begin{bmatrix}
+            d_1 \\[2pt]
+            d_2 \\[6pt]
+            d_3 \\[1pt]
+            \vdots \\[3pt]
+            d_{N_t}
+            \end{bmatrix}
+            =
+            \begin{bmatrix}
+            F_{11} & 0 & 0 & \cdots & 0 \\[2pt]
+            F_{21} & F_{11} & 0 & \cdots & 0 \\
+            F_{31} & F_{21} & F_{11} & \ddots & \vdots \\
+            \vdots & \vdots & \ddots & \ddots & 0 \\[2pt]
+            F_{N_t,1} & F_{N_t-1,1} & \cdots & F_{21} & F_{11}
+            \end{bmatrix}
+            \begin{bmatrix}
+            m_0 \\[2pt]
+            m_1 \\[6pt]
+            m_2 \\[1pt]
+            \vdots \\[3pt]
+            m_{N_t-1}
+            \end{bmatrix}
+            \]
+        </p>
+        <p class="caption">Defining \(F_{ij} := B A^{i-j} C\), \(i,j=1,2,\ldots,N_t, i \ge j\) and assuming \(u_0=0\)
+            WLOG</p>
     </section>
     <section data-auto-animate>
         <h4>Fast p2o Map Applications</h4>
@@ -270,7 +363,7 @@
             <li>Using 4,096 GPUs on <a
                     href="https://docs.nersc.gov/systems/perlmutter/architecture/"><em>Perlmutter</em></a>, a matvec
                 with <br> \(N_mN_t \sim 1.6\times 10^{11},
-                N_dN_t\sim2.5\times10^3\) is computed in ~0.2 s</li>
+                N_dN_t\sim2.5\times10^4\) is computed in ~0.2 s</li>
         </ul>
     </section>
 </section>

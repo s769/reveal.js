@@ -85,265 +85,73 @@
         </ul>
     </section>
 
-    <!-- 
-    \begin{itemize}
-\item
-{
-Consider linear time-invariant (LTI) system:
-\[
-\begin{aligned}
-	\frac{\partial u}{\partial t} &= \mc A u + \mc C m && \text{in } \Omega \times (0,T), \\
-	u &= u_0 && \text{in } \Omega \times \{ 0 \}, \\
-	d &= \mc B u && \text{in } \Omega \times (0,T),
-\end{aligned}
-\]
-with appropriate BCs on $\p \Omega \times (0,T)$.
-}
-\item Discretize (FE + explicit time-stepping):
-{
-\[
-	u_{k+1} = A u_k + C m_k, \quad k=0,1,\cdots,N_t-1
-\]
-}
-\item 
-{
-Discretized LTI system:
-\[
-\begin{split}
-	u_1 &= A u_0 + C m_0 , \\
-	u_2 &= A u_1 + C m_1 , \\
-		&= A (A u_0 + C m_0) + C m_1
-		= A^2 u_0 + A^1 C m_0 + A^0 C m_1 , \\[-4pt]
-		\vdots \\[-12pt]
-	u_{k+1} &= A^{k+1} u_0 + \sum_{i=0}^k A^i C m_{k-i} , \\[-5pt]
-	d_{k+1} &= B u_{k+1}
-\end{split}
-\]
-}
-\end{itemize}
-    -->
-
-    <section data-visibility="uncounted" data-auto-animate>
-        <h4>Derivation of Block-Triangular Toeplitz Structure</h4>
-
+    <section data-auto-animate>
+        <h4>Convergence of Modal Solutions</h4>
         <ul>
-            <li>Consider linear time-invariant (LTI) system:
+            <li>For wavenumber \(\kappa_n\) and angular frequency \(\omega\), the homogeneous solutions with source
+                \(\partial_tb = 0\) are:
                 \[
-                \begin{align*}
-                \frac{\partial u}{\partial t} &= \mathcal{A} u + \mathcal{C} m && \text{in } \Omega \times (0,T), \\
-                u &= u_0 && \text{in } \Omega \times \{ 0 \}, \\
-                d &= \mathcal{B} u && \text{in } \Omega \times (0,T),
-                \end{align*}
+                \begin{aligned}
+                p(x,y,t) &= \sin(k_n x) \sin(\omega t)
+                \left( \sinh(\kappa_n y) + \frac{g \kappa_n}{\omega^2} \cosh(\kappa_n y) \right) , \\
+                u_x(x,y,t) &= \frac{k_n p_0}{\rho \omega u_0}
+                \cos(k_n x) \cos(\omega t)
+                \left( \sinh(\kappa_n y) + \frac{g \kappa_n}{\omega^2} \cosh(\kappa_n y) \right) , \\
+                u_y(x,y,t) &= \frac{\kappa_n p_0}{\rho \omega u_0}
+                \sin(k_n x) \cos(\omega t)
+                \left( \cosh(\kappa_n y) + \frac{g \kappa_n}{\omega^2} \sinh(\kappa_n y) \right) , \\
+                \eta(x,t) &= \frac{\kappa_n p_0}{\rho \omega^2 l_0}
+                \sin(k_n x) \sin(\omega t) .
+                \end{aligned}
                 \]
-                with appropriate BCs on \(\partial \Omega \times (0,T)\).
             </li>
-            <li>Discretize (FE + explicit time-stepping):
-                \[
-                u_{k+1} = A u_k + C m_k, \quad k=0,1,\cdots,N_t-1
-                \]
+            <li>Dispersion relation: \(\omega^2 = g \kappa_n \tanh(\kappa_n H)\), \(k_n = \sqrt{\kappa_n^2 +
+                (\omega/c)^2}\)
             </li>
         </ul>
     </section>
-    <!-- 
-    \item
-{
-Rewrite discretized LTI system:\footnote{Assuming $u_0 = 0$ (WLOG).}
-\[
-\left[
-	\begin{array}{@{\hskip 2pt}c@{\hskip 2pt}}
-		d_1 \\
-		d_2 \\
-		\vdots \\
-		d_{k+1} \\
-		\vdots \\
-		d_{N_t}
-	\end{array}
-	\right]
-	=
-	\left[ 
-	\begin{array}{@{\hskip 2pt}cc@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 4pt}c@{\hskip 2pt}}
-		B A^0 C  \\
-		B A^1 C & B A^0 C  \\
-		\vdots & \vdots & \ddots  \\
-		B A^k C & B A^{k-1} C & \cdots & B A^0 C \\
-		\vdots & \vdots & & \vdots & \ddots  \\
-		B A^{N_t-1} C & B A^{N_t-2} C & \cdots & B A^{N_t-(k+1)} C & \cdots & B A^0 C
-	\end{array}
-	\right]
-	%
-	\left[ 
-	\begin{array}{@{\hskip 2pt}c@{\hskip 2pt}}
-		m_0 \\
-		m_1 \\
-		\vdots \\
-		m_k \\
-		\vdots \\
-		m_{N_t-1}
-	\end{array}
-	\right]
-\]
-}
-\item
-{
-Define $F_{ij} := B A^{i-j} C$, $i,j=1,2,\ldots,N_t, i \ge j$. Then:
-\[
-\left[ \begin{array}{c}
-	d_1 \\[2pt]
-	d_2 \\[6pt]
-	d_3 \\[1pt]
-	\vdots \\[3pt]
-	d_{N_t}
-	\end{array} \right]
-	=
-	\left[ \begin{array}{ccccc}
-	F_{11} & 0 & 0 & \cdots & 0 \\[2pt]
-	F_{21} & F_{11} & 0 & \cdots & 0 \\
-	F_{31} & F_{21} & F_{11} & \ddots & \vdots \\
-	\vdots & \vdots & \ddots & \ddots & 0 \\[2pt]
-	F_{N_t,1} & F_{N_t-1,1} & \cdots & F_{21} & F_{11}
-	\end{array} \right]
-	\hskip 5pt
-	\left[ \begin{array}{c}
-	m_0 \\[2pt]
-	m_1 \\[6pt]
-	m_2 \\[1pt]
-	\vdots \\[3pt]
-	m_{N_t-1}
-	\end{array} \right]
-\]
-}
-    -->
-    <section data-visibility="uncounted" data-auto-animate>
-        <h4>Derivation of Block-Triangular Toeplitz Structure</h4>
+    <section data-auto-animate>
+        <h4>Types of Modal Solutions</h4>
         <ul>
-            <li>Discretized LTI system:
-                \[
-                \begin{split}
-                u_1 &= A u_0 + C m_0 , \\
-                u_2 &= A u_1 + C m_1 , \\
-                &= A (A u_0 + C m_0) + C m_1
-                = A^2 u_0 + A^1 C m_0 + A^0 C m_1 , \\[-4pt]
-                \vdots \\[-12pt]
-                u_{k+1} &= A^{k+1} u_0 + \sum_{i=0}^k A^i C m_{k-i} , \\[-5pt]
-                d_{k+1} &= B u_{k+1}
-                \end{split}
-                \]
+            <li>Surface-gravity wave mode: \(k_0 \gt 0\) (\(\kappa_0 \gt 0\))</li>
+            <li>Propagating acoustic-gravity modes: \(k_n \gt 0\) (\(|\kappa_n| \lt \omega/c\)),
+                \(n=1,\ldots,K\),
+                \(\lfloor K=\omega H / (\pi c) + 1/2 \rfloor\)</li>
+            <li>Decaying (evanescent) acoustic modes: \(k_n^2 \lt 0\) (\(|\kappa_n| \gt \omega/c\)),
+                \(n=K+1,\ldots\)
             </li>
+            <li>For a given frequency \(\omega\), there are infinitely many \(\kappa_n\in \mathbb{C}, n=0,1,2,\dots\)
+                that satisfy the dispersion
+                relation</li>
+
         </ul>
     </section>
-    <section data-visibility="uncounted" data-auto-animate>
-        <h4>Derivation of Block-Triangular Toeplitz Structure</h4>
-        <ul>
-            <li>
-                Rewrite Assuming \(u_0 = 0\) (WLOG).
-                \[
-
-                \begin{bmatrix}
-                d_1 \\
-                d_2 \\
-                \vdots \\
-                d_{k+1} \\
-                \vdots \\
-                d_{N_t}
-                \end{bmatrix}
-
-
-                =
-                \begin{bmatrix}
-                B A^0 C \\
-                B A^1 C & B A^0 C \\
-                \vdots & \vdots & \ddots \\
-                B A^k C & B A^{k-1} C & \cdots & B A^0 C \\
-                \vdots & \vdots & & \vdots & \ddots \\
-                B A^{N_t-1} C & B A^{N_t-2} C & \cdots & B A^{N_t-(k+1)} C & \cdots & B A^0 C
-                \end{bmatrix}
-                \begin{bmatrix}
-                m_0 \\
-                m_1 \\
-                \vdots \\
-                m_k \\
-                \vdots \\
-                m_{N_t-1}
-                \end{bmatrix}
-
-                \]
-
-            </li>
-        </ul>
-    </section>
-    <section data-visibility="uncounted" data-auto-animate>
-        <h4>Derivation of Block-Triangular Toeplitz Structure</h4>
-        <ul>
-            <li>
-                Define \(F_{ij} := B A^{i-j} C\), \(i,j=1,2,\ldots,N_t, i \ge j\). Then:
-                \[
-                \begin{bmatrix}
-                d_1 \\[2pt]
-                d_2 \\[6pt]
-                d_3 \\[1pt]
-                \vdots \\[3pt]
-                d_{N_t}
-                \end{bmatrix}
-                =
-                \begin{bmatrix}
-                F_{11} & 0 & 0 & \cdots & 0 \\[2pt]
-                F_{21} & F_{11} & 0 & \cdots & 0 \\
-                F_{31} & F_{21} & F_{11} & \ddots & \vdots \\
-                \vdots & \vdots & \ddots & \ddots & 0 \\[2pt]
-                F_{N_t,1} & F_{N_t-1,1} & \cdots & F_{21} & F_{11}
-                \end{bmatrix}
-                \begin{bmatrix}
-                m_0 \\[2pt]
-                m_1 \\[6pt]
-                m_2 \\[1pt]
-                \vdots \\[3pt]
-                m_{N_t-1}
-                \end{bmatrix}
-                \]
-            </li>
-            <li>
-                Time-invariant (autonomous) system:
-                \[
-                f(x(t), t) = f(x(t)) = y(t) \implies f(x(t+\tau)) = y(t + \tau)
-                \]
-            </li>
-            <li>
-                Leads to block-triangular Toeplitz structure (along with causality)
-            </li>
-        </ul>
+    <section data-auto-animate>
+        <h4>Convergence of Modal Solutions</h4>
+        <div class="r-hstack">
+            <div class="r-vstack">
+                <p class="caption" style="margin: 0; padding: 0;">Surface gravity wave mode</p>
+                <img data-src="proposal/images/pde/mode0_errorRate.svg" alt="Mode 0 Convergence" class="r-stretch">
+            </div>
+            <div class="r-vstack">
+                <p class="caption" style="margin: 0; padding: 0;">First acoustic gravity wave mode</p>
+                <img data-src="proposal/images/pde/mode1_errorRate.svg" alt="Mode 1 Convergence" class="r-stretch">
+            </div>
+        </div>
+        <p class="caption">Error of modes in a bounded compressible ocean domain: \(\Omega = (0, L) \times (-H,
+            0)\), \(L = 100\) km, \(H = 5000\)m. Numerical solutions to the modes are computed by prescribing boundary
+            data
+            \(p = \rho g \eta\) on \(\Gamma_s\) and sound-soft BC \(p=0\) on \(\Gamma_a\) for wavenumber \(k_n = n \pi /
+            L, n =
+            1\). Optimal convergence rates are
+            attained for \((\boldsymbol{d\mathcal{P}}_{\! r-1}, \mathcal{P}_r)\) elements for discontinuous velocity
+            \(\boldsymbol{u}\) and continuous
+            pressure \(p\) when \(\Delta t \sim h^{r/2}\).</p>
     </section>
 
-    <!-- 
-    \begin{itemize}
-	\itemsep 0pt
-	\item{Strong form of (non-dimensional) adjoint system ($\bs
-          \tau$ is adjoint velocity, $v$ is adjoint pressure):
-	\begin{alignat*}{3}
-		\frac{\p \bs \tau}{\p t} + c_2 \nabla v &= \bs 0 && \quad \text{in } \Omega \times (0,T), \\
-		\frac{\p v}{\p t} + c_1 \nabla \cdot \bs \tau &= 0 && \quad \text{in } \Omega \times (0,T) .
-	\end{alignat*}
-	}
-	\item{BCs with first-order ABC on $\Gamma_a$ ($\xi_s$ is the
-          adjoint gravity wave height):
-	\begin{alignat*}{3}
-		v &= \frac{1}{c_2} \xi_s && 
-	\quad \text{on } \Gamma_s \times (0,T) , \\
-	\frac{\p \xi_s}{\p t} &= c_1 c_3 \bs \tau \cdot \bs n && 
-	\quad \text{on } \Gamma_s \times (0,T) , \\
-	\bs \tau \cdot \bs n &= -\frac{1}{c_1} \mc B^* \noise^{-1} (\mc B p - d) && 
-	\quad \text{on } \Gamma_b \times (0,T) ,\footnotemark \\
-	\bs \tau \cdot \bs n &= -\sqrt{\frac{c_2}{c_1}} v && 
-	\quad \text{on } \Gamma_a \times (0,T) .
-	\end{alignat*}
-	}
-	\item{Terminal conditions (homogeneous).}
-\end{itemize}
-\footnotetext{for the Hessian, the source term is $-(1/c_1)\mc B^* \noise^{-1} \mc B p$}
 
-Note: PML formulation of the adjoint equations has an auxiliary differential equation (and auxiliary unknown) similar to the PML formulation of the forward problem.
-\vskip 5pt
+    
 
-    -->
     <section data-visibility="uncounted" data-auto-animate>
         <h4>Adjoint Problem</h4>
         <ul>
@@ -380,33 +188,7 @@ Note: PML formulation of the adjoint equations has an auxiliary differential equ
             <li>Terminal conditions (homogeneous).</li>
         </ul>
     </section>
-    <!-- 
-    \[
-	\mc H m := \left\{
-	\begin{aligned}
-		\alpha_1 m - \alpha_2 \grad^2 m - \alpha_3 \frac{\p^2 m}{\p t^2} - c_2 v
-		& \quad \text{on } \Gamma_b \times (0,T) , \\
-		\alpha_2 \frac{\p m}{\p \bs n}
-		& \quad \text{on } \partial \Gamma_b \times (0,T) , \\
-		0
-		& \quad \text{on } \Gamma_b \times \{ 0 \} , \\
-		\alpha_3 \frac{\p m}{\p t}
-		& \quad \text{on } \Gamma_b \times \{ T \} .
-	\end{aligned}
-	\right.
-	\]
-	with compatibility condition $m(\bs x,0) = 0, \bs x \in \Gamma_b$. 
-	}
-	\item
-	{
-	In summary, the Hessian action is obtained by the three-step procedure of
-\begin{enumerate}
-	\itemsep 3pt
-	\item Solving the forward problem for $(\bs u, p, \eta)$;
-	\item Solving the adjoint problem for $({\bs \tau}, v, \xi_s)$;
-	\item Evaluating the Hessian action on $m$, as defined above.
-\end{enumerate}
-    -->
+
     <section data-visibility="uncounted" data-auto-animate>
         <h4>Hessian Action</h4>
         <ul>
