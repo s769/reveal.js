@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Phase 3 (Online): Compute MAP Point and QoI <br> in Real Time</h4>
+        <!-- <p class="leftalign"><b class="color-emph">Test problem:</b> \(N_m = 263\text{K}, N_d = 49, N_t =
+            500\) (~132M parameters, ~25K data)
+            running
+            on 8 <em class="color-emph"><a href="https://docs.tacc.utexas.edu/hpc/lonestar6/">Lonestar6</a></em> nodes
+            (24 GPUs)
+        </p> -->
+        <!-- <p>\(
+            \mathbf{m}_{\text{map}}=\Gamma_{\!\text{prior}}\left(\mathbf{I} -
+            \mathbf{F}^*\textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\Gamma_{\!\text{prior}}\right)\mathbf{F}^*\Gamma_{\!\text{noise}}^{-1}\mathbf{d}
+            \)</p> -->
+   
+        <ul>
+            <li>Online computation:
+                \[\begin{align*}
+            \mathbf{m}_{\text{map}}&=\mathbf{G}^*\left(\mathbf{I} -
+            \textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\mathbf{G}^*\right)\Gamma_{\!\text{noise}}^{-1}\textcolor{BF5700}{\mathbf{d}},
+            \\
+            \mathbf{q} &= \mathbf{F}_{\!\text{pred}}\mathbf{m}_{\text{map}}
+            \end{align*}
+            \]
+            </li>
+            <li>Alternatively, define \(\mathbf{A} : \mathbf{d}\mapsto \mathbf{q}\) map from observation to QoI</li>
+            <ul>
+                <li>Matrix is size \(N_qN_t\times N_dN_t \sim\) 8GB for full CSZ</li>
+                <li>Observation to QoI calculation is a dense matvec that can be done on a laptop</li>
+            </ul>
+        </ul>
+        
+
+        <!-- <p class="footnote"> <em class="color-emph"><sup>&ast;</sup>For priors with spatial correlation
+                only, \(\Gamma_{\!\text{prior}}\mathbf{F}^*\) is also block-triangular Toeplitz.</em>
+        </p> -->
+
+    </section>
+
+</section>

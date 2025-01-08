@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+
+<section data-auto-animate>
+    <h4>Test Configuration (Config 1 Base)</h4>
+    <ul>
+        <li>Spatial domain size: 128 km &times; 128 km &times; 4 km \((x, y, z)\)</li>
+        <li>Spatial grid: 0.25 km &times; 0.25 km &times; 0.125 km \((x, y, z)\)<br>
+            <aside class="notes" aria-label="grid">
+            (this is the sea bottom mesh the parameter field is defined on, even if the FE code uses further refinement or high-order elements to resolve pressure and velocity)
+            </aside>
+        </li>
+        <li>Time domain: \((0, T)\); Simulation time \(T = 50\) s</li>
+        <li>Temporal discretization of parameters and data: \(N_t = 500\) (10 Hz)</li>
+        <li>~132M (spatiotemporal) parameters and ~25K data points</li>
+        <li>Quantity-of-interest (QOI): surface wave height in meters \((q)\)</li>
+        <li>QOI temporal discretization: \(N_t^q = 50\) (1 Hz)</li>
+        <li>Number of QOI spatial locations: \(N_q = 4 \times 4 = 16\)</li>
+    </ul>
+    <img data-src="JMM/images/test_config/sensor_qoi_locations.svg" alt="Sensor and QOI Locations" style="width: 50%;">
+</section>

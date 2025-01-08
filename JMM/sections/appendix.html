@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+
+<section>
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Weak Scaling to 4096 GPUs</h4>
+        <img data-src="JMM/images/matvec/weak_scaling_efficiency.svg" alt="Weak Scaling Efficiency" class="r-stretch">
+        <p class="caption">Weak scaling efficiency of the FFT-based Hessian action algorithm on up to 4096 GPUs on the
+            <a href="https://docs.nersc.gov/systems/perlmutter/architecture/" target="_blank" rel="noopener noreferrer">Perlmutter</a> system
+        </p>
+        <aside class="notes" aria-label="weak-scaling">
+            Largest size is \(N_d\): 25, \(N_m\): 163,840,000 (40,000 per GPU), \(N_t\): 1000, ~0.2s per matvec with
+            4096 GPUs
+        </aside>
+    </section>
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Comparison of Prior Solvers</h4>
+        <div class="r-hstack">
+            <img data-src="JMM/images/prior_spectra/prior_solvers.png" alt="Comparison of Prior Solvers" style="width: 70%;">
+            <table style="font-size: large;" class="center-table">
+                <tr>
+                    <td>Solver</td>
+                    <td>Setup Time (s)</td>
+                </tr>
+                <tr>
+                    <td>boomerAMG</td>
+                    <td>0.17</td>
+                </tr>
+                <tr>
+                    <td>boomerAMG+CG</td>
+                    <td>0.17</td>
+                </tr>
+                <tr>
+                    <td>cuSPARSE</td>
+                    <td>4.07</td>
+                </tr>
+                <tr>
+                    <td>PETSc Direct (CPU)</td>
+                    <td>3.46</td>
+                </tr>
+                <tr>
+                    <td>CHOLMOD</td>
+                    <td>0.49</td>
+                </tr>
+                <tr>
+                    <td>MKL-PARDISO</td>
+                    <td>1.15</td>
+                </tr>
+                <tr>
+                    <td>cuDSS</td>
+                    <td>1.18</td>
+                </tr>
+            </table>
+        </div>
+        <p class="caption">
+            <b class="color-emph">Left:</b> comparison of prior solve times; <b class="color-emph">Right:</b> comparison
+            of setup/factorization times for different prior solvers
+        </p>
+        <ul>
+            <li class="leftalign">cuDSS selected for overall performance and batching capabilities</li>
+        </ul>
+    </section>
+
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Spectral Analysis</h4>
+        <div class="r-hstack">
+            <img data-src="JMM/images/prior_spectra/evals_p2o.png" alt="Eigenvalues of \(\mathbf{F} \mathbf{F}^*\)"
+                style="width: 50%;">
+            <img data-src="JMM/images/prior_spectra/evals_K.png" alt="Eigenvalues of \(\mathbf{K}\)" style="width: 50%;">
+        </div>
+        <p class="caption"><b class="color-emph">Left:</b> Eigenvalues of \(\mathbf{F} \mathbf{F}^*\) for a
+            representative case; <b class="color-emph">Right:</b> Eigenvalues of \(\mathbf{K}\) for the same case</p>
+        <ul>
+
+            <li class="leftalign">Spectral decay of \(\mathbf{K}\) is not fast enough to use low-rank approximations
+            </li>
+            <li class="leftalign">Alternatives:
+                <ul>
+                    <li style="opacity: 50%;">Create a preconditioner for \(\mathbf{K}\) to use with CG</li>
+                    <li style="opacity: 50%;">Compress \(\mathbf{K}\) with other methods (e.g. H-matrix approximations)
+                    </li>
+                    <li>Pre-factorize and store \(\mathbf{K}\) (Cholesky or Eigendecomposition)</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Convergence of Modal Solutions</h4>
+        <ul>
+            <li>For wavenumber \(\kappa_n\) and angular frequency \(\omega\), the homogeneous solutions with source
+                \(\partial_tb = 0\) are:
+                \[
+                \begin{aligned}
+                p(x,y,t) &= \sin(k_n x) \sin(\omega t)
+                \left( \sinh(\kappa_n y) + \frac{g \kappa_n}{\omega^2} \cosh(\kappa_n y) \right) , \\
+                u_x(x,y,t) &= \frac{k_n p_0}{\rho \omega u_0}
+                \cos(k_n x) \cos(\omega t)
+                \left( \sinh(\kappa_n y) + \frac{g \kappa_n}{\omega^2} \cosh(\kappa_n y) \right) , \\
+                u_y(x,y,t) &= \frac{\kappa_n p_0}{\rho \omega u_0}
+                \sin(k_n x) \cos(\omega t)
+                \left( \cosh(\kappa_n y) + \frac{g \kappa_n}{\omega^2} \sinh(\kappa_n y) \right) , \\
+                \eta(x,t) &= \frac{\kappa_n p_0}{\rho \omega^2 l_0}
+                \sin(k_n x) \sin(\omega t) .
+                \end{aligned}
+                \]
+            </li>
+            <li>Dispersion relation: \(\omega^2 = g \kappa_n \tanh(\kappa_n H)\), \(k_n = \sqrt{\kappa_n^2 +
+                (\omega/c)^2}\)
+            </li>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Types of Modal Solutions</h4>
+        <ul>
+            <li>Surface-gravity wave mode: \(k_0 \gt 0\) (\(\kappa_0 \gt 0\))</li>
+            <li>Propagating acoustic-gravity modes: \(k_n \gt 0\) (\(|\kappa_n| \lt \omega/c\)),
+                \(n=1,\ldots,K\),
+                \(\lfloor K=\omega H / (\pi c) + 1/2 \rfloor\)</li>
+            <li>Decaying (evanescent) acoustic modes: \(k_n^2 \lt 0\) (\(|\kappa_n| \gt \omega/c\)),
+                \(n=K+1,\ldots\)
+            </li>
+            <li>For a given frequency \(\omega\), there are infinitely many \(\kappa_n\in \mathbb{C}, n=0,1,2,\dots\)
+                that satisfy the dispersion
+                relation</li>
+
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Convergence of Modal Solutions</h4>
+        <div class="r-hstack">
+            <div class="r-vstack">
+                <p class="caption" style="margin: 0; padding: 0;">Surface gravity wave mode</p>
+                <img data-src="JMM/images/pde/mode0_errorRate.svg" alt="Mode 0 Convergence" class="r-stretch">
+            </div>
+            <div class="r-vstack">
+                <p class="caption" style="margin: 0; padding: 0;">First acoustic gravity wave mode</p>
+                <img data-src="JMM/images/pde/mode1_errorRate.svg" alt="Mode 1 Convergence" class="r-stretch">
+            </div>
+        </div>
+        <p class="caption">Error of modes in a bounded compressible ocean domain: \(\Omega = (0, L) \times (-H,
+            0)\), \(L = 100\) km, \(H = 5000\)m. Numerical solutions to the modes are computed by prescribing boundary
+            data
+            \(p = \rho g \eta\) on \(\Gamma_s\) and sound-soft BC \(p=0\) on \(\Gamma_a\) for wavenumber \(k_n = n \pi /
+            L, n =
+            1\). Optimal convergence rates are
+            attained for \((\boldsymbol{d\mathcal{P}}_{\! r-1}, \mathcal{P}_r)\) elements for discontinuous velocity
+            \(\boldsymbol{u}\) and continuous
+            pressure \(p\) when \(\Delta t \sim h^{r/2}\).</p>
+    </section>
+
+
+    
+
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Adjoint Problem</h4>
+        <ul>
+            <li>Strong form of (non-dimensional) adjoint system (\(\boldsymbol{\tau}\) is adjoint velocity, \(v\) is
+                adjoint
+                pressure):
+                \[
+                \begin{align*}
+                \frac{\partial \boldsymbol{\tau}}{\partial t} + c_2 \nabla v &= \boldsymbol{0} && \text{in } \Omega
+                \times (0,T), \\
+                \frac{\partial v}{\partial t} + c_1 \nabla \cdot \boldsymbol{\tau} &= 0 && \text{in } \Omega \times
+                (0,T) .
+                \end{align*}
+                \]
+            </li>
+        </ul>
+    </section>
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Adjoint Problem</h4>
+        <ul>
+            <li>BCs with first-order ABC on \(\Gamma_a\) (\(\xi_s\) is the adjoint gravity wave height):
+                \[
+                \begin{align*}
+                v &= \frac{1}{c_2} \xi_s && \text{on } \Gamma_s \times (0,T) , \\
+                \frac{\partial \xi_s}{\partial t} &= c_1 c_3 \boldsymbol{\tau} \cdot \boldsymbol{n} && \text{on }
+                \Gamma_s \times (0,T) , \\
+                \boldsymbol{\tau} \cdot \boldsymbol{n} &= -\frac{1}{c_1} \mathcal{B}^* \Gamma_{\!\text{noise}}^{-1}
+                (\mathcal{B} p - d) && \text{on } \Gamma_b \times (0,T) , \\
+                \boldsymbol{\tau} \cdot \boldsymbol{n} &= -\sqrt{\frac{c_2}{c_1}} v && \text{on } \Gamma_a \times (0,T)
+                .
+                \end{align*}
+                \]
+            </li>
+            <li>Terminal conditions (homogeneous).</li>
+        </ul>
+    </section>
+
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Hessian Action</h4>
+        <ul>
+            <li>
+                \[
+                \mathcal{H} m := \left\{
+                \begin{aligned}
+                \alpha_1 m - \alpha_2 \nabla^2 m - \alpha_3 \frac{\partial^2 m}{\partial t^2} - c_2 v
+                & \quad \text{on } \Gamma_b \times (0,T) , \\
+                \alpha_2 \frac{\partial m}{\partial \boldsymbol{n}}
+                & \quad \text{on } \partial \Gamma_b \times (0,T) , \\
+                0
+                & \quad \text{on } \Gamma_b \times \{ 0 \} , \\
+                \alpha_3 \frac{\partial m}{\partial t}
+                & \quad \text{on } \Gamma_b \times \{ T \} .
+                \end{aligned}
+                \right.
+                \]
+                with compatibility condition \(m(\boldsymbol{x},0) = 0, \boldsymbol{x} \in \Gamma_b\).
+            </li>
+            <li>Steps to obtain Hessian action:
+                <ol>
+                    <li>Solve forward problem for \((\boldsymbol{u}, p, \eta)\)</li>
+                    <li>Solve adjoint problem for \((\boldsymbol{\tau}, v, \xi_s)\)</li>
+                    <li>Evaluate Hessian action on \(m\), as defined above</li>
+                </ol>
+            </li>
+        </ul>
+    </section>
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Forward/Adjoint Solver Scaling</h4>
+        <img data-src="JMM/images/pde/Weak_Scaling.svg" alt="Weak Scaling" class="r-stretch">
+    </section>
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Forward/Adjoint Solver Scaling</h4>
+        <img data-src="JMM/images/pde/Strong_Scaling.svg" alt="Strong Scaling" class="r-stretch">
+    </section>
+
+
+
+</section>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Fast p2o Map Applications</h4>
+        <ul>
+            <li>Regardless of the method used to carry out the inversion, there is a need for fast Hessian applications
+            </li>
+            <li>Most expensive part of Hessian application is the p2o operator (usually applied via forward/adjoint PDE
+                solves)</li>
+            <li><em class="color-emph">Autonomous Dynamical System: </em>evolution does not depend
+                explicitly on independent variable (e.g. time)
+                <ul>
+                    <li>Here: the mapping mapping \(m(x,t+\tau) \mapsto
+                        d(x,t+\tau)\) is the same as the mapping \(m(x,t)
+                        \mapsto d(x,t)\)</li>
+                </ul>
+            </li>
+            <li>
+                Exploit (time) <em class="color-emph">shift invariance</em> of autonomous dynamical systems
+                <ul>
+                    <li>Reduce computation and storage costs</li>
+                </ul>
+            </li>
+
+        </ul>
+    </section>
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4> Block-Triangular Toeplitz Structure</h4>
+
+        <ul>
+            <li>Consider linear time-invariant (LTI) system:
+                \[\footnotesize
+                \begin{align*}
+                \frac{\partial u}{\partial t} &= \mathcal{A} u + \mathcal{C} m \quad (+\text{BCs}) && \text{in } \Omega
+                \times (0,T), \\
+                u &= u_0 && \text{in } \Omega \times \{ 0 \}, \\
+                d &= \mathcal{B} u && \text{in } \Omega \times (0,T)\\
+                \end{align*}
+                \]
+            </li>
+            <li>Discretize (FE + explicit time-stepping):
+                \[\footnotesize
+                \begin{split}
+                u_1 &= A u_0 + C m_0 , \\
+                u_2 &= A u_1 + C m_1 , \\
+                &= A (A u_0 + C m_0) + C m_1
+                = A^2 u_0 + A^1 C m_0 + A^0 C m_1 , \\[-4pt]
+                \vdots \\[-12pt]
+                u_{k+1} &= A^{k+1} u_0 + \sum_{i=0}^k A^i C m_{k-i} , \\[-5pt]
+                d_{k+1} &= B u_{k+1}
+                \end{split}
+                \]
+            </li>
+        </ul>
+    </section>
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4> Block-Triangular Toeplitz Structure</h4>
+        <p>
+            \[\footnotesize
+
+            \begin{bmatrix}
+            d_1 \\
+            d_2 \\
+            \vdots \\
+            d_{k+1} \\
+            \vdots \\
+            d_{N_t}
+            \end{bmatrix}
+
+
+            =
+            \begin{bmatrix}
+            B A^0 C \\
+            B A^1 C & B A^0 C \\
+            \vdots & \vdots & \ddots \\
+            B A^k C & B A^{k-1} C & \cdots & B A^0 C \\
+            \vdots & \vdots & & \vdots & \ddots \\
+            B A^{N_t-1} C & B A^{N_t-2} C & \cdots & B A^{N_t-(k+1)} C & \cdots & B A^0 C
+            \end{bmatrix}
+            \begin{bmatrix}
+            m_0 \\
+            m_1 \\
+            \vdots \\
+            m_k \\
+            \vdots \\
+            m_{N_t-1}
+            \end{bmatrix}
+
+            \]
+        </p>
+        <p>
+            \[\footnotesize
+            \begin{bmatrix}
+            d_1 \\[2pt]
+            d_2 \\[6pt]
+            d_3 \\[1pt]
+            \vdots \\[3pt]
+            d_{N_t}
+            \end{bmatrix}
+            =
+            \begin{bmatrix}
+            F_{11} & 0 & 0 & \cdots & 0 \\[2pt]
+            F_{21} & F_{11} & 0 & \cdots & 0 \\
+            F_{31} & F_{21} & F_{11} & \ddots & \vdots \\
+            \vdots & \vdots & \ddots & \ddots & 0 \\[2pt]
+            F_{N_t,1} & F_{N_t-1,1} & \cdots & F_{21} & F_{11}
+            \end{bmatrix}
+            \begin{bmatrix}
+            m_0 \\[2pt]
+            m_1 \\[6pt]
+            m_2 \\[1pt]
+            \vdots \\[3pt]
+            m_{N_t-1}
+            \end{bmatrix}
+            \]
+        </p>
+        <p class="caption">Defining \(F_{ij} := B A^{i-j} C\), \(i,j=1,2,\ldots,N_t, i \ge j\) and assuming \(u_0=0\)
+            WLOG</p>
+    </section>
+    <section data-auto-animate>
+        <h4>Fast p2o Map Applications</h4>
+        <ul>
+            <li>
+                shift-invariance \(\Rightarrow\) \(\mathbf{F}\) is <em class="color-emph">block
+                    lower-triangular
+                    Toeplitz</em>
+            </li>
+        </ul>
+        <div data-external-replace="animation/block_toeplitz_anim.html"></div>
+        <ul>
+            <li>Only <b class="color-emph">one</b> block row of \(\mathbf{F}^*\) needs to be
+                computed/stored
+            </li>
+            <li>\(\mathcal{O}(N_dN_mN_t)\) storage vs. \(\mathcal{O}(N_dN_mN_t^2)\) (0.8 TB vs. 800 TB for CSZ)</li>
+            <li>\(N_d\) adjoint PDE solves instead of \(N_dN_t\) </li>
+            <ul>
+                <li>Adjoint PDE solved backwards in time with "source" at each observation point </li>
+            </ul>
+        </ul>
+
+    </section>
+    <section>
+        <h4>Distributed Matvec Algorithm: Summary</h4>
+        <div class="r-hstack">
+            <ul>
+                <li>
+                    <em class="color-emph">FFT</em> of input vector: \(O(N_mN_t\log N_t)\)
+                </li>
+                <li>
+                    <em class="color-emph">Matvec</em> in Fourier space: \(O(N_dN_mN_t)\)
+                </li>
+                <li>
+                    <em class="color-emph">IFFT</em> of output vector: \(O(N_dN_t\log N_t)\)
+                </li>
+                <li class="leftalign">Same algorithm for \(\mathbf{F}^*\) </li>
+                <ul>
+                    <li class="leftalign">Broadcast across processor rows and reduce up processor columns</li>
+                    <li class="leftalign">Conjugate transpose SBGEMV</li>
+                    <li class="leftalign"><b class="color-emph">No extra storage or communication needed</b></li>
+                </ul>
+                <li>Overall cost: \(O(N_dN_mN_t + (N_m+N_d)N_t\log N_t)\) (for single GPU)</li>
+                <li>Parallel complexity derivation is more involved and left to paper<sup><a
+                            href="https://arxiv.org/pdf/2407.13066">1</a></sup></li>
+                <li>Algorithm is <em class="color-emph">exact</em> and provides <b class="color-emph">\(\mathcal{O}(10^4)\) speedups</b> over PDE
+                    solve method for p2o applications</li>
+                <li>Open-source implementation on <a href="https://github.com/s769/FFTMatvec" target="_blank"
+                        rel="noopener noreferrer">GitHub</a></li>
+
+            </ul>
+        </div>
+        <p class="footnote"><a href="https://arxiv.org/pdf/2407.13066" target="_blank"
+                rel="noopener noreferrer"><sup>1</sup>Fast and Scalable FFT-Based
+                GPU-Accelerated Algorithms for Hessian Actions</a></p>
+    </section>
+
+
+
+
+    <section data-auto-animate>
+        <h4>Distributed Matvec Performance</h4>
+        <ul>
+
+        </ul>
+        <div class="container">
+            <div class="col">
+                <img data-src="JMM/images/matvec/roofline.svg" alt="Roofline Analysis"
+                    style="width: 100%; margin:0; padding:0;">
+            </div>
+            <div class="col">
+                <img data-src="JMM/images/matvec/single_gpu_scaling.svg" alt="Roofline Analysis"
+                    style="width: 100%;  margin:0; padding:0;">
+            </div>
+        </div>
+        <p class="caption">
+            <b class="color-emph">Left:</b> Roofline analysis of major kernels (memory-bound); <b
+                class="color-emph">Right:</b> Single GPU p2o matvec times
+        </p>
+        <ul>
+            <li>Using 4,096 GPUs on <a
+                    href="https://docs.nersc.gov/systems/perlmutter/architecture/"><em>Perlmutter</em></a>, a matvec
+                with <br> \(N_mN_t \sim 1.6\times 10^{11},
+                N_dN_t\sim2.5\times10^4\) is computed in ~0.2 s</li>
+        </ul>
+    </section>
+</section>
