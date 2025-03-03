@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Real-Time Inference and Prediction</h4>
+        <ul>
+            <li>Now we have a fast algorithm for applying \(\mathbf{F}\) and \(\mathbf{F}^*\) to vectors. How can we use
+                that to enable real-time inference?</li>
+            <li>
+                Split inversion into <b class="color-emph">Offline</b> and <b class="color-emph">Online</b>
+                phases:
+            </li>
+            <ul>
+                <li>
+                    <b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+                </li>
+
+                <li>
+                    <b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
+                    \(\Gamma_{\!\text{post}}\)
+                </li>
+                <li>
+                    <b class="color-emph
+                    ">Phase 3</b> (Offline): Compute QoI Uncertainty and Data-to-QoI map
+                </li>
+                <li>
+                    <b class="color-emph">Phase 4</b> (Online): Compute MAP point and QoI in real time
+                </li>
+            </ul>
+            <li>Offline/Online decomposition allows us to <em class="color-emph">exactly<sup>&ast;</sup></em> solve the
+                inference and prediction problems in \(\mathcal{O}(\text{seconds})\)
+                using the high-fidelity model.
+                <ul>
+                    <li><b class="color-emph">No surrogates or reduced-order models necessary</b></li>
+                </ul>
+            </li>
+            <li>
+                <b class="color-emph">Example:</b> Inverse problem with over 300M parameters and 66K data points solved in ~0.1s.
+            </li>
+        </ul>
+        <p class="footnote leftalign"><em class="color-emph"><sup>&ast;</sup>Exact up to discretization
+                errors</em></p>
+    </section>
+</section>

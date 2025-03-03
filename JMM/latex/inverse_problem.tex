@@ -1,0 +1,110 @@
+\begin{frame}
+    \frametitle{Goals}
+    \begin{itemize}
+        \item \textbf{Inverse Problem:} given pressure recordings from sensors on the seafloor, infer the earthquake-induced seafloor motion
+        \item \textbf{Prediction Problem:} Given inferred spatiotemporal seafloor motion, predict tsunami wave heights at sample locations/times
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bayesian Inverse Problem}
+    \begin{itemize}
+        \item \(m\): model parameters — spatiotemporal field: \(\frac{\partial b}{\partial t}(x,t)\)
+        \item \(d\): pressure obs. — pointwise in space and time: \(\left\{p(x_i, t)\right\}_{i=1}^{N_d}\)
+        \item \textbf{Parameter-to-Observable (p2o) Map:} \(\mathcal{F}: m(x,t) \mapsto d(x_i,t)\)
+        \begin{itemize}
+            \item Solve forward PDE using the given parameter field as the boundary condition
+            \item Extract pressure values at sensor locations
+        \end{itemize}
+        \item Bayesian inference assumes the parameter is a random variable distributed according to the \emph{posterior} distribution
+        \item We have a \emph{prior} distribution on the parameter that encodes our prior knowledge about the parameter field (e.g. smoothness, spatiotemporal correlation structure)
+        \item \textbf{Bayes Rule:}
+        \[
+        \frac{\text{d}\mu_{\text{post}}}{\text{d}\mu_{\text{prior}}} \propto \pi_{\text{like}}(d|m)
+        \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bayesian Inverse Problem}
+    \begin{itemize}
+        \item \textbf{Bayes Rule:}
+        \[
+        \frac{\text{d}\mu_{\text{post}}}{\text{d}\mu_{\text{prior}}} \propto \pi_{\text{like}}(d|m)
+        \]
+        \begin{itemize}
+            \item Radon-Nikodym derivative
+        \end{itemize}
+        \item \textbf{Likelihood:} \(\pi_{\text{like}}(d|m) \propto \exp\left(-\frac{1}{2} \|\mathcal{F}m - d\|_{\Gamma_{\!\text{noise}}^{-1}}^2\right)\)
+        \item \textbf{Gaussian Prior with Matérn Covariance:}
+        \[
+        m \sim \mathcal{N}(m_{\text{prior}}, \Gamma_{\!\text{prior}}), \quad \Gamma_{\!\text{prior}} \coloneqq \left( \alpha_1 I - \alpha_2 \Delta_{\text{2D}} - \alpha_3 \partial_t^2 \right)^{-\gamma}
+        \]
+        \begin{itemize}
+            \item \(\gamma \gt 3/2\) for bounded pointwise variance since parameter is a 2+1D field
+        \end{itemize}
+        \item \textbf{Additive Gaussian noise model:} \(d = \mathcal{F}m + \nu, \quad \nu \sim \mathcal{N}(0, \Gamma_{\!\text{noise}})\)
+    \end{itemize}
+    \footnotesize{\href{https://www.cambridge.org/core/journals/acta-numerica/article/inverse-problems-a-bayesian-perspective/587A3A0D480A1A7C2B1B284BCEDF7E23}{Stuart, A. M. (2010). Inverse problems: a Bayesian perspective. Acta numerica, 19, 451-559.}}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linear Inverse Problem, Gaussian Prior}
+    \textbf{Gaussian Prior with Matérn Covariance:}
+    \[
+    m \sim \mathcal{N}(m_{\text{prior}}, \Gamma_{\!\text{prior}}), \quad \Gamma_{\!\text{prior}} \coloneqq \left( \alpha_1 I - \alpha_2 \Delta_{\text{2D}} - \alpha_3 \partial_t^2 \right)^{-2}
+    \]
+    \textbf{Likelihood:}
+    \[
+    \pi_{\text{like}}(d|m) \propto \exp\left(-\frac{1}{2} \|\mathcal{F}m - d\|_{\Gamma_{\!\text{noise}}^{-1}}^2\right)
+    \]
+    \textbf{Observations:}
+    \[
+    d = \mathcal{F}m + \nu, \quad \nu \sim \mathcal{N}(0, \Gamma_{\!\text{noise}})
+    \]
+    \textbf{Posterior:}
+    \[
+    \begin{aligned}
+    \mu_{\text{post}} &= \mathcal{N}(m_{\text{map}}, \Gamma_{\!\text{post}}) \\
+    \Gamma_{\!\text{post}} &= \left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} \mathcal{F} + \Gamma_{\!\text{prior}}^{-1}\right)^{-1} \\
+    m_{\text{map}} &= \Gamma_{\!\text{post}}\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} d + \Gamma_{\!\text{prior}}^{-1} m_{\text{prior}}\right)
+    \end{aligned}
+    \]
+    \footnotesize{Posterior covariance does not depend on data. Subset of the Matérn family of covariance operators can be written as the inverse of an elliptic differential operator, with the coefficients \(\alpha_i\) chosen to impose the desired correlation and variance structure.}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bayesian Inference — the Usual Approach}
+    \begin{itemize}
+        \item \(\Gamma_{\!\text{post}}^{-1} \eqqcolon \mathcal{H}\) is the \textbf{Hessian} (of negative log-posterior)
+        \item Each matrix-free Hessian action requires \textbf{1 Forward} and \textbf{1 Adjoint} PDE solve
+        \item Relies on (randomized) low-rank decomposition of \(\mathbf{F}^* \Gamma_{\!\text{noise}}^{-1} \mathbf{F}\) and the Woodbury formula to invert \(\mathbf{H}\) in \(\mathcal{O}(\text{rank}(\mathbf{H}))\) PDE solves\footnote{\href{https://www.cambridge.org/core/journals/acta-numerica/article/learning-physicsbased-models-from-data-perspectives-from-inverse-problems-and-model-reduction/C072A4B417F8C3873ED75C1D63BBB31D}{Omar Ghattas, and Karen Willcox. "Learning physics-based models from data: perspectives from inverse problems and model reduction." Acta Numerica 30 (2021): 445-554.}}
+        \item Low-rank decomposition can be precomputed and rapidly applied with \(\mathcal{O}(\text{param. dim} \times \text{rank})\) linear algebra
+        \item Allows for fast computation of pointwise variances, sample draws, and expected information gain (for optimal sensor placement)
+    \end{itemize}
+    \footnotesize{By "rank", we mean "effective rank", the threshold beyond which the modes of the Hessian are not informed by the data.}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bayesian Inference — the Usual Approach}
+    \begin{itemize}
+        \item Challenges:
+        \begin{itemize}
+            \item For hyperbolic systems, \(\mathcal{H}\) can have high effective rank \(\Rightarrow\) many PDE solves
+            \item Cascadia Tsunami Problem:
+            \begin{itemize}
+                \item param. spatial DoFs: \(N_m \sim 10^6\), # of sensors: \(N_d \sim 10^2\), time steps: \(N_t \sim 10^3\)
+                \item \(\Rightarrow\) \(\text{dim}(\mathbf{m}) \sim 10^9, \text{dim}(\mathbf{d}) \sim 10^5\) \(\Rightarrow\) \(\text{rank}(\mathbf{H}) \gtrsim 10^5\)
+            \end{itemize}
+            \item ~1 hour / Hessian action \(\Rightarrow\) over \textbf{1 year} to find \(m_{\text{map}}\)
+            \item Useless. We need to find the MAP point in \textbf{seconds}
+        \end{itemize}
+        \item Traditional fix: use surrogates (e.g. reduced order models, neural networks)
+        \begin{itemize}
+            \item Very large \((10^9)\) parameter dimension
+            \item Kolmogorov N-width\footnote{Worst-case approximation error (over all parameter inputs) of the best \(N\)-dim linear subspace approximation to the PDE solution manifold (\href{https://www.sciencedirect.com/science/article/pii/S0893965919301983}{Greif and Urban 2019})} for wave equations decays like \(\mathcal{O}(N^{-1/2})\)
+            \item Hyperbolic forward PDE is intolerant of approximation errors (errors propagate rather than dissipate)
+            \item Surrogates cannot usually capture high frequency components of parameter; this error will be amplified in the inversion
+        \end{itemize}
+    \end{itemize}
+</end{frame>

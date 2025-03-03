@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Real-Time Inference and Prediction</h4>
+        <ul>
+            <li>Now we have a fast algorithm for applying \(\mathbf{F}\) and \(\mathbf{F}^*\) to vectors. How can we use
+                that to enable real-time inference?</li>
+            <li>
+                Split inversion into <b class="color-emph">Offline</b> and <b class="color-emph">Online</b>
+                phases:
+            </li>
+            <ul>
+                <li>
+                    <b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+                </li>
+
+                <li>
+                    <b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
+                    \(\Gamma_{\!\text{post}}\)
+                </li>
+                <li>
+                    <b class="color-emph
+                    ">Phase 3</b> (Offline): Compute QoI Uncertainty and Data-to-QoI map
+                </li>
+                <li>
+                    <b class="color-emph">Phase 4</b> (Online): Compute MAP point and QoI in real time
+                </li>
+            </ul>
+            <li>Offline/Online decomposition allows us to <em class="color-emph">exactly<sup>&ast;</sup></em> solve the
+                inference and prediction problems in \(\mathcal{O}(\text{seconds})\)
+                using the high-fidelity model.
+                <ul>
+                    <li><b class="color-emph">No surrogates or reduced-order models necessary</b></li>
+                </ul>
+            </li>
+        </ul>
+        <p class="footnote leftalign"><em class="color-emph"><sup>&ast;</sup>Exact up to discretization
+                errors</em></p>
+    </section>
+
+    <!-- <section data-auto-animate>
+        <h4>Real-Time Inference</h4>
+        <p>
+            <b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+        </p>
+        <ul>
+            <li>
+                Recall: \( \mathbf{H} = \mathbf{F}^* \Gamma_{\!\text{noise}}^{-1} \mathbf{F} +
+                \Gamma_{\!\text{prior}}^{-1}\)
+            </li>
+            <li>
+                Shift invariance \(\Rightarrow\) \(\mathbf{F}\) is <em class="color-emph">block
+                    lower-triangular
+                    Toeplitz</em>
+            </li>
+            <li>Only <b class="color-emph">one</b> block column of \(\mathbf{F}\) needs to be
+                computed/stored
+            </li>
+            <li>
+                Adjoint PDE solved backwards in time with "source" at each observation point (~100
+                sensors)
+            </li>
+        </ul>
+        <p>
+            \[
+            \mathbf{F} = \begin{bmatrix}
+            F_{11} & 0 & 0 & \cdots & 0\\
+            F_{21} & F_{11} & 0 & \cdots & 0\\
+            F_{31} & F_{21} & F_{11} & \cdots & 0\\
+            \vdots & \vdots & \vdots & \ddots & \vdots\\
+            F_{N_t,1} & F_{N_t-1,1} & F_{N_t-2,1} & \cdots & F_{11}
+            \end{bmatrix}, \quad F_{ij} \in \mathbb{R}^{N_d \times N_m}
+            \]
+        </p>
+        <aside class="notes" aria-label="causality">
+            causality is the reason for lower-triangularity
+        </aside>
+    </section> -->
+
+
+    <!-- <section data-auto-animate>
+        <h4>Real-Time Inference</h4>
+        <p class="leftalign">
+            <b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
+            \(\Gamma_{\!\text{post}}\) (through Sherman-Morrison-Woodbury formula)
+        </p>
+        <p class="leftalign">
+            <b class="color-emph">Phase 3</b> (Online): Compute MAP point in real time
+        </p>
+        <ul>
+            <li>
+                Both rely on <b class="color-emph"> fast applications </b> of \(\mathbf{F}\) and
+                \(\mathbf{F}^*\).
+            </li>
+            <li>
+                Block Toeplitz structure \(\Rightarrow\) FFT-based Hessian actions (algorithm implemented on
+                Multi-GPU
+                cluster)
+            </li>
+            <li>
+                ~<b class="color-emph">200,000x speedup</b> vs matrix-free Hessian action via
+                forward and adjoint
+                PDE
+                solves for ~132M parameters and ~25K data points<sup>1</sup>
+            </li>
+        </ul>
+        <p class="footnote"><sup>1</sup>8 <a
+                href="https://docs.tacc.utexas.edu/hpc/lonestar6/"><em>Lonestar6</em></a> NVIDIA A100 40GB
+            GPU nodes (3 GPUs/node) vs 2048 <a
+                href="https://docs.tacc.utexas.edu/hpc/frontera/"><em>Frontera</em></a> CLX nodes (56
+            cores/node). <br> <a href="https://arxiv.org/abs/2407.13066" target="_blank"
+                rel="noopener noreferrer">S. V., M. Fernando,
+                S. Henneking, &amp; O. Ghattas, (2024). Fast and
+                Scalable FFT-Based GPU-Accelerated Algorithms for Hessian Actions Arising in Linear Inverse
+                Problems Governed by Autonomous Dynamical Systems. ArXiv. /abs/2407.13066</a></p>
+
+        <aside class="notes" aria-label="shift-invariance">
+            Why not apply Toeplitz structure to forward solve? That works with the state dimension and
+            CFL-limited time stepping which are much larger. The p2o matvec algorithm is agnostic to all of
+            that.
+        </aside>
+    </section>
+    
+
+    <section data-auto-animate>
+        <h4>Real-Time Inference</h4>
+        <ul>
+            <li>
+                ~<b class="color-emph">44,000x speedup</b> vs matrix-free Hessian action via
+                forward and adjoint
+                PDE
+                solves for ~132M parameters and ~25K data points
+            </li>
+            <li>Has been scaled to 4,096 GPUs on <em class="color-emph">Perlmutter</em></li>
+            <li>Communication cost analysis and algorithm details in <a href="https://arxiv.org/pdf/2407.13066">paper</a></li>
+        </ul>
+        <div class="container">
+            <div class="col">
+                <img data-src="wccm_24/single-gpu-line.svg" alt="Single GPU Performance"
+                    style="width: 100%; margin:0; padding:0;">
+            </div>
+            <div class="col">
+                <img data-src="wccm_24/weak-scaling-gpu.svg" alt="Multi-GPU Performance"
+                    style="width: 100%;  margin:0; padding:0;">
+            </div>
+        </div>
+        <p class="caption">
+            <b class="color-emph">Left:</b> Single GPU performance; <b class="color-emph">Right:</b> Weak
+            scaling on up to 48 GPUs
+        </p>
+
+
+
+    </section> -->
+</section>
+<section>
+    <section data-auto-animate>
+        <h4>Phase 1: Constructing the p2o Map</h4>
+        <ul>
+            <li>Requires \(N_d\) adjoint PDE solves; solution vectors are of size \(N_mN_t\)</li>
+            <li>PDE solution vectors define block lower-triangular Toeplitz matrix</li>
+        </ul>
+        <img data-src="BGCE_prize/images/scaling/ElCap_Weak_Scaling.svg" alt="Strong Scaling" class="r-stretch">
+        <p class="caption">Weak scaling on <a
+                href="https://hpc.llnl.gov/documentation/user-guides/using-el-capitan-systems/hardware-overview"
+                target="_blank" rel="noopener noreferrer">El Capitan</a>.</p>
+        <p class="footnote"><sup>1</sup> Implemented by Stefan Henneking in collaboration with Veselin Dobrev, John
+            Camier, and Tzanio Kolev from the MFEM
+            team at LLNL. Special thanks to Pythagoras Watson and Livermore Computing.</p>
+    </section>
+</section>

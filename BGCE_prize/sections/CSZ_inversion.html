@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Incorporate Real CSZ Bathymetry in Mesh</h4>
+        <video data-src="proposal/images/meshes/CSZ-lat-lon-animation.mp4" style="width: 95%;" data-autoplay
+            loop></video>
+        <p class="caption">Animation showing <a
+                href="https://www.gebco.net/data_and_products/gridded_bathymetry_data/">GEBCO</a> bathymetry data and
+            mesh of a portion of the CSZ.</p>
+    </section>
+    <section data-auto-animate>
+        <h4>CSZ Partial Rupture Scenario</h4>
+        <video data-src="BGCE_prize/images/videos/CSZ-pr-source-latlon-10fps.mp4" style="width: 95%;" data-autoplay
+            loop></video>
+        <p class="caption">Rendering of data obtained from 3D Cascadia dynamic rupture simulation (Glehman et al.,
+            2024).</p>
+    </section>
+    <section data-auto-animate>
+        <h4>CSZ Partial Rupture Scenario</h4>
+        <video data-src="BGCE_prize/images/videos/CSZ-pr-udotn-275-vecs-ecef-10fps.mp4" style="width: 95%;"
+            data-autoplay loop></video>
+        <p class="caption">Rendering of the <em class="color-emph">seafloor pressure transients</em> and the <em
+                class="color-emph">surface wave heights</em> obtained from the coupled acoustic-gravity PDE forward
+            model.</p>
+    </section>
+    <section data-auto-animate>
+        <h4>CSZ Partial Rupture Inversion Configuration</h4>
+
+        <ul>
+            <li><span class="color-emph">Spatial resolution:</span> 350 m</li>
+            <li><span class="color-emph">Simulation time:</span> 240 s</li>
+            <li><span class="color-emph">Temporal parameter/data/QoI dim.:</span> 240 (1 Hz frequency)</li>
+            <li><span class="color-emph">Spatial parameter dim.:</span> 1,351,240</li>
+            <li><span class="color-emph">Number of sensors:</span> 275</li>
+            <li><span class="color-emph">Number of QoI spatial locations:</span> 8</li>
+            <li><span class="color-emph">Total parameter dim.:</span> 324,297,600</li>
+            <li><span class="color-emph">Total data dim.:</span> 66,000</li>
+            <li><span class="color-emph">Total QoI dim.:</span> 1,920</li>
+            <li><span class="color-emph">State dim.:</span> 2,093,400,025 spatial DOFs; 192,000 RK4 time steps
+            </li>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Eigenvalues of \(\mathbf{F}\mathbf{G}^*\)</h4>
+        <img data-src="BGCE_prize/images/results/evals.png" alt="Eigenvalues of \(\mathbf{F}\mathbf{G}^*\)"
+            class="r-stretch">
+        <p class="caption">Eigenvalues of the data-space prior-preconditioned Hessian of the data misfit.</p>
+    </section>
+    <section data-auto-animate>
+        <h4>Time and Memory Usage </h4>
+        <!-- \begin{table}[]
+		\centering
+		\resizebox{\textwidth}{!}{%
+		\begin{tabular}{lll}
+        \toprule
+        \textbf{Phase} & \textbf{Compute Time} & \textbf{Memory/Storage} \\
+        \midrule
+        Phase 1: $275$ adjoint PDE solves & 
+        $275 \times 30$~m  $\sim 138$~h & $275 \times 2.6$~GB  $\sim$715~GB \\
+        Phase 2: prior solves to form $\mathbf{G}^*$ & 
+        $275 \times 14$~s  $\sim 1$~h & $275 \times 2.6$~GB  $\sim$715~GB \\
+        Phase 2: compute and store $\mathbf{K}$ & 
+        $66\,000 \times 27$~ms  $\sim 30$~m & $66\,000^2 \times 8$~b $\sim$35~GB \\
+        \phantom{Phase 2:} factorize $\mathbf{K}$ & $5$~s & overwrites \(\mathbf{K}\) \\
+		Phase 3: compute $\Gamma_{\text{q}}$ & $4$~m & $1\,920^2 \times 8$~b $\sim$30 MB\\ 
+		Phase 3: compute $\mathbf{Q}$ & $5$~m & $20.8$~GB\\
+        \textbf{Phase 4: compute $\mathbf{m}_{\text{map}}$} & $<1$~s & $\mathbf{m}_{\text{map}}$: $2.6$~GB \\
+        \textbf{Phase 4: compute QoI} & $<1$~ms & $\mathbf{q}$: negligible \\
+        \bottomrule
+    \end{tabular}% -->
+        <table style="font-size: x-large;" id="data-table">
+            <tr>
+                <th>Phase</th>
+                <th style="text-align: center;">Compute Time</th>
+                <th style="text-align: center;">Memory/Storage</th>
+            </tr>
+            <tr>
+                <th>Phase 1: <br>275 adjoint PDE solves</th>
+                <th style="text-align: center;">275 \(\times\) 30 m <br>~138 h</th>
+                <th style="text-align: center;">275 \(\times\) 2.6 GB <br>~715 GB</th>
+            </tr>
+            <tr>
+                <th>Phase 2: <br>prior solves to form \(\mathbf{G}^*\)</th>
+                <th style="text-align: center;">275 \(\times\) 14 s <br>~1 h</th>
+                <th style="text-align: center;">275 \(\times\) 2.6 GB <br>~715 GB</th>
+            </tr>
+            <tr>
+                <th>Phase 2: compute <br>and store \({\mathbf{K}}\)</th>
+                <th style="text-align: center;">66,000 \(\times\) 27 ms <br>~30 m</th>
+                <th style="text-align: center;">66,000<sup>2</sup>\(\times\) 8 b <br>~35 GB</th>
+            </tr>
+            <tr>
+                <th>Phase 2: Factorize \({\mathbf{K}}\)</th>
+                <th style="text-align: center;">5 s</th>
+                <th style="text-align: center;">stored over \({\mathbf{K}}\)</th>
+            </tr>
+            <tr>
+                <th><span>Phase 3: compute \(\Gamma_{\text{q}}\)</span></th>
+                <th style="text-align: center;">4 m</th>
+                <th style="text-align: center;">1,920<sup>2</sup> \(\times\) 8 b <br>~30 MB</th>
+            </tr>
+            <tr>
+                <th><span>Phase 3: compute \(\mathbf{Q}\)</span></th>
+                <th style="text-align: center;">5 m</th>
+                <th style="text-align: center;">20.8 GB</th>
+            </tr>
+            <tr>
+                <th><span class="color-emph">Phase 4: compute \(\mathbf{m}_{\text{map}}\)</span></th>
+                <th style="text-align: center;">&lt;1 s</th>
+                <th style="text-align: center;">\(\mathbf{m}_{\text{map}}\): 2.6 GB</th>
+            </tr>
+            <tr>
+                <th><span class="color-emph">Phase 4: compute QoI</span></th>
+                <th style="text-align: center;">&lt;1 ms</th>
+                <th style="text-align: center;">\(\mathbf{q}\): negligible</th>
+            </tr>
+        </table>
+
+    </section>
+
+
+    <section data-auto-animate>
+        <h4>Online Compute Time Breakdown</h4>
+
+        <table style="font-size: xx-large;">
+            <tr>
+                <th>Step</th>
+                <th style="text-align: center;">Compute Time</th>
+            </tr>
+            <tr>
+                <th>2 \(\mathbf{G}^*\) matvecs</th>
+                <th style="text-align: center;">28 ms</th>
+            </tr>
+            <tr>
+                <th>1 \(\mathbf{F}\) matvec</th>
+                <th style="text-align: center;">13 ms</th>
+            </tr>
+            <tr>
+                <th>1 \(\mathbf{F}_{\!\text{q}}\) matvec</th>
+                <th style="text-align: center;">&lt;1 ms</th>
+            </tr>
+            <tr>
+                <th>1 \(\mathbf{K}\) solve</th>
+                <th style="text-align: center;">0.12 s</th>
+            </tr>
+            <tr>
+                <th><span class="color-emph">Total</span></th>
+                <th style="text-align: center;">0.16 s</th>
+            </tr>
+        </table>
+        <p style="text-align: left;">FFT-based p2o application (88 A100s) vs. PDE solves (512 A100s):</p>
+        <ul>
+            <li><b class="color-emph">~140,000 \(\times\) speedup</b></li>
+            <li><b class="color-emph">~800,000 \(\times\) reduction in GPU hours</b></li>
+        </ul>
+
+    </section>
+    <section data-auto-animate>
+        <h4>CSZ Partial Rupture: Inferred Parameter Field</h4>
+        <video data-src="BGCE_prize/images/videos/CSZ-pr-udotn-275-vecs-ecef-10fps.mp4" style="width: 95%;"
+            data-autoplay loop></video>
+        <p class="caption">Normal seafloor displacement (time-integrated parameter field). <br><b
+                class="color-emph">Left:</b> True field; <b class="color-emph">Right:</b>
+            Inferred mean from synthetic observations.</p>
+    </section>
+    <section data-auto-animate>
+        <h4>CSZ Partial Rupture: Surface Wave Reconstruction</h4>
+        <div class="r-hstack">
+            <img data-src="BGCE_prize/images/results/wave_true_with_sensors.jpeg" alt="True surface wave heights"
+                class="r-stretch">
+            <img data-src="BGCE_prize/images/results/wave_prior4_with_qois.jpeg" alt="Predicted surface wave heights"
+                class="r-stretch">
+        </div>
+        <p class="caption">Sea surface height anomaly (SSHA) at \(t = 240\) s. <br><b class="color-emph
+            ">Left:</b> True field with 275 sensor locations; <b class="color-emph">Right:</b> Reconstructed field
+            based on inferred mean of seafloor velocity from synthetic, sparse sea bottom pressure observations, with 8
+            QoI locations.</p>
+    </section>
+    <section data-auto-animate>
+        <h4>CSZ Partial Rupture: QoI Prediction</h4>
+        <img data-src="BGCE_prize/images/qoi_results/qois_6.svg " alt="QoI Prediction" class="r-stretch">
+    </section>
+
+
+
+</section>

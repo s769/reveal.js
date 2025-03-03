@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<section>
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Communication-Aware Partitioning</h4>
+        <ul>
+            <li><b class="color-emph"> 2D Partitioning:</b> \(p = r\times c\) grid of GPUs</li>
+            <li><b class="color-emph"> Goal:</b> Minimize communication costs</li>
+            <li><b class="color-emph"> Data-to-Parameter Ratio </b> \(N_d/N_m\) is key</li>
+            <li><b class="color-emph"> Cost Function:</b> <br>\(C(r;p,N_d/N_m) =
+            \)\(\frac{N_d}{N_m}\frac{1}{r}\log\frac{p}{r} + \frac{r}{p}\log r\)</li>
+        </ul>
+    </section>
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Communication-Aware Partitioning</h4>
+        <ul>
+            <li><b class="color-emph"> Cost Function:</b> <br>\(C(r;p,N_d/N_m) =
+            \)\(\frac{N_d}{N_m}\frac{1}{r}\log\frac{p}{r} + \frac{r}{p}\log r\)</li>
+            <li><b class="color-emph"> Algorithm</b> (\(k\) GPUs/node)</li>
+        </ul>
+        <ol>
+            <li>Compute \(\tilde{r} = \arg\min_r C(r;p,N_d/N_m)\)</li>
+            <li>If \(\tilde{r} = 1\text{ or } p,\) use \(r = \tilde{r}\)</li>
+            <li>Else, choose \(r\in \mathbb{Z}\) close to \(\tilde{r}\) so that \(r,\frac{p}{r} \in
+                \mathbb{Z}\)
+            </li>
+            <li>Try to ensure \(k|r\) and \(k|\frac{p}{r}\) (on-node vs. off-node)</li>
+        </ol>
+    </section>
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Communication-Aware Partitioning</h4>
+        <img src="siam_pp_24/grid-test.svg" alt="Communication-Aware Partitioning" style="width: 60%;">
+    </section>
+</section>

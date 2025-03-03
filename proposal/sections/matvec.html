@@ -341,20 +341,12 @@
 
 
     <section data-auto-animate>
-        <h4>Distributed Matvec Performance</h4>
+        <h4>Matvec Performance</h4>
         <ul>
 
         </ul>
-        <div class="container">
-            <div class="col">
-                <img data-src="proposal/images/matvec/roofline.svg" alt="Roofline Analysis"
-                    style="width: 100%; margin:0; padding:0;">
-            </div>
-            <div class="col">
-                <img data-src="proposal/images/matvec/single_gpu_scaling.svg" alt="Roofline Analysis"
-                    style="width: 100%;  margin:0; padding:0;">
-            </div>
-        </div>
+        <img data-src="BGCE_prize/images/scaling/scaling-roofline.svg" alt="Roofline Analysis and Scaling"
+            style="width: 100%; margin:0; padding:0;">
         <p class="caption">
             <b class="color-emph">Left:</b> Roofline analysis of major kernels (memory-bound); <b
                 class="color-emph">Right:</b> Single GPU p2o matvec times
@@ -365,5 +357,11 @@
                 with <br> \(N_mN_t \sim 1.6\times 10^{11},
                 N_dN_t\sim2.5\times10^4\) is computed in ~0.2 s</li>
         </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Matvec Timing Breakdown</h4>
+        <img data-src="BGCE_prize/images/scaling/scaling-bars.svg" alt="Matvec Timing Breakdown" class="r-stretch">
+        <p class="caption">Timing breakdown of the \(\mathbf{F}\) and \(\mathbf{F}^*\) matvecs. SBGEMV comprises the
+            majority of the time.</p>
     </section>
 </section>

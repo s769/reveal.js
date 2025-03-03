@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<section>
+    <section data-auto-animate>
+        <h4>Forward Problem</h4>
+        <img data-src="siam_pp_24/pde-domain-cropped.svg" alt="PDE Domain" class="r-stretch">
+        <p class="caption">Illustration of the PDE domain with boundary conditions</p>
+        <ul>
+            <li>Linearization of the conservation of mass and momentum around hydrostatic pressure in the compressible
+                ocean<sup><a href="https://link.springer.com/content/pdf/10.1007/s10596-015-9472-0.pdf" target="_blank"
+                        rel="noopener noreferrer">1</a></sup></li>
+            <li>Assumptions:
+                <ul>
+                    <li>Surface gravity wave height \(\eta \ll\) ocean depth \(\ll\) surface gravity wave length</li>
+                </ul>
+            </li>
+        </ul>
+        <p class="footnote"><a href="https://link.springer.com/content/pdf/10.1007/s10596-015-9472-0.pdf"
+                target="_blank" rel="noopener noreferrer"><sup>1</sup>Lotto and Dunham (2015)</a></p>
+    </section>
+    <section data-auto-animate>
+        <h4>Acoustic-Gravity Equations</h4>
+        <div class="container">
+            <div class="col">
+                <p>
+                    \[\begin{cases}
+                    \rho \frac{ \partial\boldsymbol{u}}{\partial t} + \nabla p = \boldsymbol{0},
+                    \frac{1}{K} \frac{ \partial p}{\partial t} + \nabla \cdot \boldsymbol{u} = 0, &
+                    \Omega \times (0,T)\nonumber\\
+                    p = \rho g \eta,
+                    \frac{ \partial\eta}{\partial t} = \boldsymbol{u} \cdot \hat{\boldsymbol{n}}, &
+                    \Gamma_s \times (0,T) \nonumber\\
+                    \boldsymbol{u} \cdot \hat{\boldsymbol{n}} = -\frac{\partial b}{\partial t},
+                    \text{\textcolor{BF5700}{&#8592; parameter}} & \Gamma_b
+                    \times (0,T) \nonumber\\
+                    \boldsymbol{u} \cdot \hat{\boldsymbol{n}} = Z^{-1} p, & \Gamma_a \times (0,T)\nonumber
+                    \end{cases}
+                    \]
+                </p>
+            </div>
+        </div>
+        <ul>
+            <li>Mixed formulation for <b class="color-emph">Velocity:</b> \(\boldsymbol{u}(x, t)\) and <b
+                    class="color-emph">Pressure:</b> \(p(x,
+                t)\)
+            </li>
+            <li>Boundary conditions:
+                <ul>
+                    <li>ODE type BC on sea surface for <b class="color-emph">Surface Gravity Wave Height:</b> \(\eta(x,
+                        t)\)
+                    </li>
+                    <li><b class="color-emph">Seafloor velocity:</b> \(-\partial_t b\) BC on bottom surface</li>
+                    <li>1<sup>st</sup> order absorbing BC (or PML) on lateral surface</li>
+                </ul>
+            </li>
+            <li> Homogeneous ICs</li>
+            <li><b class="color-emph">Observations</b> of pressure \(p\) at seafloor sensors </li>
+        </ul>
+
+
+        <p class="footnote">Bulk modulus \(K\), density \(\rho\), \(Z = \rho c\), \(c = \sqrt{K/\rho}\);
+            Implemented in <a href="https://mfem.org/" target="_blank" rel="noopener noreferrer">MFEM</a></p>
+        <aside class="notes" aria-label="physparams">
+            absorbing BCs on Gamma_a: 1st order, PML
+            <br>
+            Z is acoustic wave impedance; c is sound speed in seawater
+            <br>
+            bathymetry related to seafloor motion is the parameter
+        </aside>
+    </section>
+
+</section>
