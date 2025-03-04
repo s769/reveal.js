@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Cascadia Subduction Zone</h4>
+        <img data-src="proposal/images/meshes/CSZ-lat-lon-4k-with-labels-min.png" alt="CSZ GEBCO data" class="r-stretch">
+        <p class="caption"><a href="https://www.gebco.net/data_and_products/gridded_bathymetry_data/" target="_blank"
+                rel="noopener noreferrer">GEBCO</a>
+            bathymetry data of the Cascadia Subduction Zone (CSZ) with ~250m resolution</p>
+    </section>
+    <section data-auto-animate>
+        <h4>Cascadia Subduction Zone</h4>
+        <div class="r-hstack">
+            <img data-src="proposal/images/intro/ghost-forest.jpeg" alt="Neskowin Ghost Forest"
+                style="width: 40%; padding-right: 40px;">
+            <img data-src="proposal/images/intro/soil-layers.jpeg " alt="Soil Layers" style="width: 30%; padding-left: 10px;">
+        </div>
+        <p class="caption"><b class="color-emph">Left:</b> Neskowin Ghost Forest; <b class="color-emph">Right:</b> Soil
+            layers
+            in pit (Tofino, BC)</p>
+        <ul>
+            <aside class="notes" aria-label="ghost-forest">
+                <li>Ghost forests are remnants of coastal forests that have been submerged by a tsunami</li>
+                <li>Soil layers in pits can be used to identify past tsunamis</li>
+            </aside>
+            <li>Cascadia subduction zone has seen major ruptures in 1700 AD,
+                1310 AD, 810 AD, 400 AD, 170 BC and 600 BC</li>
+            <li>Current estimate: 37% probability of M8.2+ event within 50
+                years; 10-15% probability that entire Cascadia subduction zone
+                will rupture with an M9+ event</li>
+        </ul>
+    </section>
+    <!-- <section data-auto-animate>
+        <h4>Cascadia Subduction Zone Tsunami</h4>
+        <video data-src="proposal/images/intro/CSZ_eq.mp4" id="csz-eq" style="width: 75%;" data-autoplay loop></video>
+        <p class="footnote"> <a href="https://www.youtube.com/watch?v=WuTbDnd_8nA" target="_blank"
+                rel="noopener noreferrer">Source: Alaska Earthquake Center</a> </p>
+    </section> -->
+
+    <section data-auto-animate>
+        <h4>Cascadia Subduction Zone Tsunami</h4>
+        <video data-src="siam_pp_24/tsunami-clip-75speed.mp4" id="tsunami-clip" style="width: 95%;" data-autoplay
+            loop></video>
+        <p class="footnote"> <a href="https://www.youtube.com/watch?v=e5PJQW_6k6M" target="_blank"
+                rel="noopener noreferrer">Source: Washington State
+                Dept. of
+                Natural Resources</a> </p>
+    </section>
+    <section data-auto-animate>
+        <h4>Proposed Sensor Network</h4>
+        <img data-src="siam_pp_24/sensor-network.png" alt="Proposed Sensor Network" style="width: 75%;">
+        <p class="footnote"> <a href="http://cascadiaoffshore.org/story/White_Paper.html" target="_blank"
+                rel="noopener noreferrer">Source: Cascadia
+                Offshore
+                White Paper</a> </p>
+    </section>
+    <section data-auto-animate>
+        <h4>Cascadia Subduction Zone: Tsunami Early Warning</h4>
+        <ul>
+            <li>Predict tsunami wave propagation by <b class="color-emph">inversion of <u>near-field</u>
+                    pressure data</b>
+                recorded during a megathrust rupture</li>
+            <li>Quantify uncertainty in inverse solution via framework of <b class="color-emph">Bayesian
+                    inference</b></li>
+            <li>Invert for the spatiotemporal seafloor motion (time-dependent boundary condition) using a
+                (linearized) acoustic-gravity model in the (compressible) deep ocean</li>
+            <li>Challenges</li>
+            <ul>
+                <li>Forward problem involves 3D space + time</li>
+                <li>Parameter is a 2D space + time field</li>
+                <li>Hyperbolic forward PDEs don't easily lend themselves to surrogates</li>
+                <li>Inversion computation must be done in <b class="color-emph">real time</b> (i.e. seconds)
+                </li>
+            </ul>
+        </ul>
+    </section>
+
+</section>

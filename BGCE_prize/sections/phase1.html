@@ -160,14 +160,12 @@
     <section data-auto-animate>
         <h4>Phase 1: Constructing the p2o Map</h4>
         <ul>
-            <li>Requires \(N_d\) adjoint PDE solves; solution vectors are of size \(N_mN_t\)</li>
-            <li>PDE solution vectors define block lower-triangular Toeplitz matrix</li>
+            <li>Compute \(N_d\) adjoint PDE solutions to define \(\mathbf{F}\)</li>
         </ul>
-        <img data-src="BGCE_prize/images/scaling/ElCap_Weak_Scaling.svg" alt="Strong Scaling" class="r-stretch">
-        <p class="caption">Weak scaling on <a
-                href="https://hpc.llnl.gov/documentation/user-guides/using-el-capitan-systems/hardware-overview"
-                target="_blank" rel="noopener noreferrer">El Capitan</a>.</p>
-        <p class="footnote">Implemented by Stefan Henneking in collaboration with Veselin Dobrev, John
+        <img data-src="BGCE_prize/images/scaling/ElCap_Weak_Scaling.svg" alt="Strong Scaling" class="r-stretch" style="margin: 0; padding: 0;">
+        <p class="footnote">Weak scaling on <a
+            href="https://hpc.llnl.gov/documentation/user-guides/using-el-capitan-systems/hardware-overview"
+            target="_blank" rel="noopener noreferrer">El Capitan</a>. <br>Implemented by Stefan Henneking in collaboration with Veselin Dobrev, John
             Camier, and Tzanio Kolev from the MFEM
             team at LLNL. Special thanks to Pythagoras Watson and Livermore Computing.</p>
     </section>
