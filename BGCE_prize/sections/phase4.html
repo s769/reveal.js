@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <section>
     <section data-auto-animate>
-        <h4>Phase 4 (Online): Compute MAP Point and QoI <br> in Real Time</h4>
+        <h4>Phase 4 (Online): <br>Compute MAP Point and QoI in Real Time</h4>
         <!-- <p class="leftalign"><b class="color-emph">Test problem:</b> \(N_m = 263\text{K}, N_d = 49, N_t =
             500\) (~132M parameters, ~25K data)
             running
@@ -19,15 +19,11 @@
             \mathbf{m}_{\text{map}}&=\mathbf{G}^*\left(\mathbf{I} -
             \textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\mathbf{G}^*\right)\Gamma_{\!\text{noise}}^{-1}\mathbf{d},
             \\
-            \mathbf{q} &= \mathbf{F}_{\!\text{pred}}\mathbf{m}_{\text{map}}
+            \mathbf{q} &= \mathbf{F}_{q}\mathbf{m}_{\text{map}}
             \end{align*}
             \]
             </li>
-            <li>Alternatively, define \(\mathbf{A} : \mathbf{d}\mapsto \mathbf{q}\) map from observation to QoI</li>
-            <ul>
-                <li>Matrix is size \(N_qN_t\times N_dN_t \sim\) 8GB for full CSZ</li>
-                <li>Observation to QoI calculation is a dense matvec that can be done on a laptop</li>
-            </ul>
+            <li>QoI \(\mathbf{q}\) can be computed as \(\mathbf{F}_q \mathbf{m}\) or as \(\mathbf{Q}\mathbf{d}\)</li>
         </ul>
         
 

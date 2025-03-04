@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <section>
     <section data-auto-animate>
-        <h4>Phase 3 (offline): Quantifying Uncertainty</h4>
+        <h4>Phase 3 (offline): UQ and Data-to-QoI Map</h4>
         <ul>
             <li>Computing \(\Gamma_{\!\text{post}}\) is prohibitively expensive (size \(N_mN_t \times N_mN_t\))</li>
             <ul>
@@ -11,18 +11,23 @@
                 <li>Option: subsample diagonal of \(\Gamma_{\!\text{post}}\)</li>
             </ul>
             <li><b class="color-emph">Goal-oriented approach</b>: quantify uncertainty in QoI instead</li>
-            <li>\(\mathbf{q} \sim \mathcal{N}(\mathbf{F}_{\!\text{pred}}\mathbf{m}_{\text{map}},
-                \Gamma_{\!\text{pred}}), \
-                \Gamma_{\!\text{pred}} \coloneqq
-                \mathbf{F}_{\!\text{pred}}\Gamma_{\!\text{post}}\mathbf{F}^*_{\!\text{pred}} \sim N_qN_t\times N_qN_t\)
+            <li>\(\mathbf{q} \sim \mathcal{N}(\mathbf{F}_{q}\mathbf{m}_{\text{map}},
+                \Gamma_{q}), \
+                \Gamma_{q} \coloneqq
+                \mathbf{F}_{q}\Gamma_{\!\text{post}}\mathbf{F}^*_{q} \sim N_qN_t\times N_qN_t\)
             </li>
             <li>For the CSZ application, \(N_q \approx N_d\), so \(\Gamma_{\!\text{post}}\) can be feasibly computed </li>
             <ul>
-                <li>Defining \(\mathbf{G}_{\!\text{pred}}^* \coloneqq
-                    \Gamma_{\!\text{prior}}\mathbf{F}_{\!\text{pred}}^*\),
+                <li>Defining \(\mathbf{G}_{q}^* \coloneqq
+                    \Gamma_{\!\text{prior}}\mathbf{F}_{q}^*\),
                     we can use the prior trick again</li>
                 <li>Only need wave heights at a few key spatial locations/time points </li>
                 <li>QoI can be sampled at lower frequencies</li>
+            </ul>
+            <li>Precompute \(\mathbf{Q} : \mathbf{d}\mapsto \mathbf{q}\) map from observation to QoI</li>
+            <ul>
+                <li>Matrix is size \(N_qN_t\times N_dN_t \sim\) 8GB for full CSZ</li>
+                <li>Observation to QoI calculation is a dense matvec that can be done on a laptop</li>
             </ul>
         </ul>
     </section>
@@ -85,7 +90,7 @@
                 interest (QoI) of
                 surface-gravity wave
                 <ul>
-                    <li>\(\Gamma_{\!\text{pred}} \coloneqq
+                    <li>\(\Gamma_{q} \coloneqq
                         \mathbf{F}_{\text{pred}}\Gamma_{\!\text{post}}\mathbf{F}_{\text{pred}}^* \in
                         \mathbb{R}^{N_q\times N_q}\)</li>
                     <li>\(\mathbf{F}_{\text{pred}}\) has a similar block-triangular Toeplitz structure to
