@@ -2,19 +2,19 @@
 <section>
     <section data-auto-animate>
         <h4>Incorporate Real CSZ Bathymetry in Mesh</h4>
-        <img data-src="NUG/images/CSZ-3D-mesh-test-patch.png" class="r-stretch">
+        <img data-src="NUG/images/CSZ-3D-mesh-test-patch.png" class="r-stretch" data-preview-image>
         <p class="caption">Representative patch of 3D bathymetry-conforming hexahedral mesh used for PDE solves.</p>
     </section>
     <section data-auto-animate>
         <h4>CSZ Margin-Wide Rupture Scenario</h4>
-        <video data-src="NUG/images/videos/CSZ-mw-source-latlon-10fps.mp4" class="r-stretch" data-autoplay loop></video>
+        <video data-src="NUG/images/videos/CSZ-mw-source-latlon-10fps.mp4" class="r-stretch" data-autoplay loop data-preview-video></video>
         <p class="caption">Rendering of data obtained from 3D Cascadia dynamic rupture simulation (<a href="https://eartharxiv.org/repository/view/7544/" target="_blank" rel="noopener noreferrer">Glehman et al.,
             2025</a>). Special thanks to Alice Gabriel (UCSD) for providing the source data.</p>
     </section>
     <section data-auto-animate>
         <h4>CSZ Margin-Wide Rupture Scenario</h4>
         <video data-src="NUG/images/videos/CSZ-mw-bottom-pressure-and-surface-wave-ecef-10fps.mp4" class="r-stretch"
-            data-autoplay loop></video>
+            data-autoplay loop data-preview-video></video>
         <p class="caption">Rendering of the <em class="color-emph">seafloor pressure transients</em> and the <em
                 class="color-emph">surface wave heights</em> obtained from the coupled acoustic-gravity PDE forward
             model.</p>
@@ -38,7 +38,7 @@
     </section>
     <section data-auto-animate>
         <h4>Compute Time Usage</h4>
-        <img data-src="NUG/images/results/workflow_table.svg" alt="Compute Time Usage" class="r-stretch">
+        <img data-src="NUG/images/results/workflow_table.svg" alt="Compute Time Usage" class="r-stretch" data-preview-image>
         <p class="caption"> Compute time report for each phase of the inversion. Phase 1 used 40GB GPUs; Phases 2-4
             used 80GB GPUs on <a href="https://docs.nersc.gov/systems/perlmutter/architecture/" target="_blank"
                 rel="noopener noreferrer">Perlmutter</a>. <b class="color-emph">2025 ACM Gordon Bell Finalist:</b> <a
@@ -50,7 +50,7 @@
     <section data-auto-animate>
         <h4>CSZ Partial Rupture: Inferred Parameter Field</h4>
         <video data-src="NUG/images/videos/CSZ-mw-true-un-vs-inferred-un.mp4" class="r-stretch" data-autoplay
-            loop></video>
+            loop data-preview-video></video>
         <p class="caption">Normal seafloor displacement (time-integrated parameter field). <br><b
                 class="color-emph">Left:</b> True field; <b class="color-emph">Right:</b>
             Inferred mean from synthetic observations.</p>
@@ -59,9 +59,9 @@
         <h4>CSZ Margin-Wide Rupture: Parameter Inference</h4>
         <div class="r-hstack r-stretch">
             <img data-src="NUG/images/results/CSZ-mw-udotn-600-vecs-true-ecef-420s.jpeg" alt="True seafloor uplift"
-                style="padding-right:10px;">
+                style="padding-right:10px;" data-preview-image>
             <img data-src="NUG/images/results/CSZ-mw-udotn-600-vecs-inferred-ecef-420s.jpeg"
-                alt="Inferred seafloor uplift" style="padding-left:10px;">
+                alt="Inferred seafloor uplift" style="padding-left:10px;" data-preview-image>
         </div>
         <p class="caption">Total (normal) seafloor displacement field at \(t = 420\) s. <br><b class="color-emph
             ">Left:</b> True field; <b class="color-emph">Right:</b> Inferred field.</p>
@@ -70,9 +70,9 @@
         <h4>CSZ Margin-Wide Rupture: Parameter Inference</h4>
         <div class="r-hstack r-stretch">
             <img data-src="NUG/images/results/mw_pressure_true_120s_sensor_labels.jpeg"
-                alt="True seafloor pressure field" style="padding-right:10px;">
+                alt="True seafloor pressure field" style="padding-right:10px;" data-preview-image>
             <img data-src="NUG/images/results/mw_udotn_UQ_var4_420s.jpeg" alt="Standard deviation in seafloor uplift"
-                style="padding-left:10px;">
+                style="padding-left:10px;" data-preview-image>
         </div>
         <p class="caption"><b class="color-emph
             ">Left:</b> True seafloor pressure field with 600 sensor locations; <b class="color-emph">Right:</b>
@@ -82,8 +82,8 @@
         <h4>CSZ Margin-Wide Rupture: Tsunami Wave Prediction</h4>
         <div class="r-hstack r-stretch">
             <img data-src="NUG/images/results/mw_ssha_inferred_420s_cs2_QoI_labels.jpeg"
-                alt="Inferred sea surface height anomaly" style="padding-right:10px;">
-            <img data-src="NUG/images/qoi_results/q_map.svg " alt="QoI Prediction" style="padding-left:10px;">
+                alt="Inferred sea surface height anomaly" style="padding-right:10px;" data-preview-image>
+            <img data-src="NUG/images/qoi_results/q_map.svg " alt="QoI Prediction" style="padding-left:10px;" data-preview-image>
         </div>
         <p class="caption">QoI: Sea surface wave height. <br><b class="color-emph
             ">Left:</b> Inferred field at \(t = 420\) s with QoI locations; <b class="color-emph">Right:</b> Predicted surface wave
