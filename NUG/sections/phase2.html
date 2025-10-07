@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Phase 2: Compute Compact Representation of
+            \(\Gamma_{\!\text{post}}\)</h4>
+        <ul>
+            <li class="leftalign"><b class="color-emph">Sherman-Morrison-Woodbury formula</b> applied to
+                \(\Gamma_{\!\text{post}}\):
+                \[
+                \begin{alignat*}{2}
+                \Gamma_{\!\text{post}}&=&&\left(\mathbf{F}^* \Gamma_{\!\text{noise}}^{-1} \mathbf{F} +
+                \Gamma_{\!\text{prior}}^{-1}\right)^{-1}\\
+                &=\Gamma_{\!\text{prior}}\Big(I -
+                \mathbf{F}^*&&\underbrace{\textcolor{BF5700}{\Big(\Gamma_{\!\text{noise}}
+                +
+                \mathbf{F}\Gamma_{\!\text{prior}}\mathbf{F}^*\Big)}}_{}^{\textcolor{BF5700}{\mathbf{K}}}\vphantom{a}^{-1}\mathbf{F}\Gamma_{\!\text{prior}}\Big)
+
+                \end{alignat*}
+                \]
+            </li>
+            <li>Inversion operation shifted from a matrix of size \(N_mN_t\times N_mN_t\) to a matrix of size
+                \(N_dN_t\times N_dN_t\) <span class="color-emph">\((N_mN_t \sim 10^9, N_dN_t \sim 10^5)\)</span></li>
+            <li>\(\textcolor{BF5700}{\mathbf{K}}\) is a dense matrix (with no obvious structure) of size <br> \(\sim
+                10^5\times 10^5
+                \Rightarrow\) compute Cholesky/eigenvalue decomposition</li>
+            <li>For priors with only spatial correlation, \(\Gamma_{\!\text{prior}}\) is <em
+                    class="color-emph">block-diagonal</em> <br>\(\Rightarrow \mathbf{G}^* \coloneqq
+                \Gamma_{\!\text{prior}}\mathbf{F}^*\) is also a block-triangular Toeplitz matrix</li>
+        </ul>
+    </section>
+    <!-- <section data-auto-animate>
+        <h4>Phase 2: Compute Compact Representation of
+            \(\Gamma_{\!\text{post}}\)</h4>
+        <ul>
+            <li class="leftalign"><b class="color-emph">Sherman-Morrison-Woodbury formula</b> applied to
+                \(\Gamma_{\!\text{post}}\):
+                \[
+                \begin{align*}
+                \Gamma_{\!\text{post}}&=\Gamma_{\!\text{prior}}\Big(I -
+                \mathbf{F}^*\underbrace{\textcolor{BF5700}{\Big(\Gamma_{\!\text{noise}}
+                +
+                \mathbf{F}\Gamma_{\!\text{prior}}\mathbf{F}^*\Big)}}_{}^{\textcolor{BF5700}{\mathbf{K}}}\vphantom{a}^{-1}\mathbf{F}\Gamma_{\!\text{prior}}\Big)
+
+                \end{align*}
+                \]
+            </li>
+            <li>For priors with only spatial correlation, \(\Gamma_{\!\text{prior}}\) is <em
+                    class="color-emph">block-diagonal</em> <br>\(\Rightarrow \mathbf{G}^* \coloneqq
+                \Gamma_{\!\text{prior}}\mathbf{F}^*\) is also a block-triangular Toeplitz matrix</li>
+            <li>\(\mathbf{G}^*\) is computed by prior-solving the adjoint PDE solution vectors that define
+                \(\mathbf{F}^*\)
+            </li>
+            <li>Prior solves done with <a href="https://developer.nvidia.com/cudss" target="_blank"
+                    rel="noopener noreferrer">cuDSS</a> (sparse direct solver)</li>
+            <ul>
+                <li>Batch solve over timesteps</li>
+                <li>cuDSS selected after comparing performance of different solvers</li>
+            </ul>
+
+        </ul>
+        <aside class="notes" aria-label="prior Toeplitz">
+            <li class="leftalign">Alternatives:
+                <ul>
+                    <li style="opacity: 50%;">Create a preconditioner for \(\mathbf{K}\) to use with CG</li>
+                    <li style="opacity: 50%;">Compress \(\mathbf{K}\) with other methods (e.g. H-matrix approximations,
+                        pseudo-differential operator, randomized algorithms)
+                    </li>
+                    <li>Pre-factorize and store \(\mathbf{K}\) (Cholesky or Eigendecomposition)</li>
+                </ul>
+            </li>
+        </aside>o
+
+    </section> -->
+</section>

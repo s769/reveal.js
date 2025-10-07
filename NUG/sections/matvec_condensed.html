@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Fast p2o Map Applications</h4>
+        <ul>
+            <li>There is a need for fast Hessian applications to enable real-time inference and prediction</li>
+            <li>Most expensive part of Hessian application is the p2o operator (usually applied via forward/adjoint PDE
+                solves)</li>
+            <li><em class="color-emph">Autonomous Dynamical System: </em>evolution does not depend
+                explicitly on independent variable (e.g. time)
+                <ul>
+                    <li>Discrete p2o map is a <em class="color-emph">block lower-triangular Toeplitz</em> matrix</li>
+                    <p>
+                        \[\footnotesize
+                        \begin{bmatrix}
+                        d_1 \\[2pt]
+                        d_2 \\[6pt]
+                        d_3 \\[1pt]
+                        \vdots \\[3pt]
+                        d_{N_t}
+                        \end{bmatrix}
+                        =
+                        \begin{bmatrix}
+                        F_{11} & 0 & 0 & \cdots & 0 \\[2pt]
+                        F_{21} & F_{11} & 0 & \cdots & 0 \\
+                        F_{31} & F_{21} & F_{11} & \ddots & \vdots \\
+                        \vdots & \vdots & \ddots & \ddots & 0 \\[2pt]
+                        F_{N_t,1} & F_{N_t-1,1} & \cdots & F_{21} & F_{11}
+                        \end{bmatrix}
+                        \begin{bmatrix}
+                        m_0 \\[2pt]
+                        m_1 \\[6pt]
+                        m_2 \\[1pt]
+                        \vdots \\[3pt]
+                        m_{N_t-1}
+                        \end{bmatrix}
+                        \]
+                    </p>
+                    <li>Exploiting this structure greatly reduces computation/storage costs in p2o map actions</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4><b class="color-emph">FFTMatvec</b> Overview</h4>
+        <div class="r-hstack">
+            <ul>
+                <li>FFT-based, GPU-accelerated algorithm for fast p2o
+                    applications
+                </li>
+                <li>Block-Toeplitz matrix in Fourier space becomes <em class="color-emph">block-diagonal</em>
+                    <p>
+                        \[
+                        \mathbf{m} \xrightarrow{\text{FFT}} \hat{\mathbf{m}} \xrightarrow{\text{SBGEMV}} \hat{\mathbf{d}} \xrightarrow{\text{IFFT}} \mathbf{d}
+                        \]
+                    </p>
+                </li>
+                <li class="leftalign">Same algorithm for \(\mathbf{F}^*\!: \mathbf{d} \mapsto \mathbf{m}\) </li>
+                <ul>
+                    <li class="leftalign">Conjugate transpose SBGEMV used (Fourier space block-diagonal matvec)</li>
+                    <li class="leftalign"><b class="color-emph">No extra storage or communication needed</b></li>
+                </ul>
+                <li>Cost: \(O(N_dN_mN_t + (N_m+N_d)N_t\log N_t)\) (for single GPU)</li>
+                <li>Algorithm is <em class="color-emph">exact</em> and provides \(\sim 200,000\times\) speedups over PDE
+                    solve method for p2o applications</li>
+                <li>Open-source, performance-portable, mixed-precision implementation on <a
+                        href="https://github.com/s769/FFTMatvec" target="_blank" rel="noopener noreferrer">GitHub</a>.
+                    <a href="https://youtu.be/hc81_WzGF_Q" target="_blank" rel="noopener noreferrer">Algorithm
+                        animation</a>.
+                </li>
+            </ul>
+        </div>
+        <p class="footnote">Papers: <a href="https://arxiv.org/pdf/2407.13066" target="_blank"
+                rel="noopener noreferrer">FFTMatvec Algorithm</a> (V., M. Fernando, S. Henneking, O. Ghattas, SISC), <br> <a href="https://arxiv.org/pdf/2508.10202"
+                target="_blank" rel="noopener noreferrer">Performance Portability and Mixed Precision</a> (V., K. Świrydowicz, N. Wolfe, O. Ghattas, P3HPC@SC25)
+        </p>
+    </section>
+
+
+
+
+    <section data-auto-animate>
+        <h4>Matvec Performance</h4>
+        <ul>
+
+        </ul>
+        <div class="r-hstack r-stretch">
+            <img data-src="NUG/images/scaling/mp_single_gpu.svg" alt="Multi-Platform Matvec Performance"
+                style="width: 50%; margin: 0; padding-right: 10px;">
+            <img data-src="NUG/images/scaling/single_gpu_line_scaling.svg" alt="A100 Single GPU Scaling"
+                style="width: 50%; margin: 0; padding-left: 10px;">
+        </div>
+        <p class="caption">
+            <b class="color-emph">Left:</b> Matvec performance on multiple GPU architectures; <b
+                class="color-emph">Right:</b> Single GPU p2o matvec scaling (A100)
+        </p>
+        <ul>
+            <li>Using 4,096 GPUs on <a href="https://docs.nersc.gov/systems/perlmutter/architecture/">Perlmutter</a>, a
+                matvec
+                with <br> \(N_mN_t \sim 1.6\times 10^{11},
+                N_dN_t\sim2.5\times10^4\) is computed in ~0.2 s</li>
+        </ul>
+    </section>
+</section>

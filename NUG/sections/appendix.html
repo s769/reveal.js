@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<section>
+    <section data-visibility="uncounted">
+        <h4>Phase 2: Compute Compact Representation of
+            \(\Gamma_{\!\text{post}}\)</h4>
+        <ul>
+            <li class="leftalign"><b class="color-emph">Sherman-Morrison-Woodbury formula</b> applied to
+                \(\Gamma_{\!\text{post}}\):
+                \[
+                \begin{alignat*}{2}
+                \Gamma_{\!\text{post}}&=&&\left(\mathbf{F}^* \Gamma_{\!\text{noise}}^{-1} \mathbf{F} +
+                \Gamma_{\!\text{prior}}^{-1}\right)^{-1}\\
+                &=\Gamma_{\!\text{prior}}\Big(I -
+                \mathbf{F}^*&&\underbrace{\textcolor{BF5700}{\Big(\Gamma_{\!\text{noise}}
+                +
+                \mathbf{F}\Gamma_{\!\text{prior}}\mathbf{F}^*\Big)}}_{}^{\textcolor{BF5700}{\mathbf{K}}}\vphantom{a}^{-1}\mathbf{F}\Gamma_{\!\text{prior}}\Big)
+
+                \end{alignat*}
+                \]
+            </li>
+            <li>Inversion operation shifted from a matrix of size \(N_mN_t\times N_mN_t\) to a matrix of size
+                \(N_dN_t\times N_dN_t\) <span class="color-emph">\((N_mN_t \sim 10^9, N_dN_t \sim 10^5)\)</span></li>
+            <li>\(\textcolor{BF5700}{\mathbf{K}}\) is a dense matrix (with no obvious structure) of size <br> \(\sim
+                10^5\times 10^5
+                \Rightarrow\) compute Cholesky/eigenvalue decomposition</li>
+            <li>For priors with only spatial correlation, \(\Gamma_{\!\text{prior}}\) is <em
+                    class="color-emph">block-diagonal</em> <br>\(\Rightarrow \mathbf{G}^* \coloneqq
+                \Gamma_{\!\text{prior}}\mathbf{F}^*\) is also a block-triangular Toeplitz matrix</li>
+        </ul>
+    </section>
+    <section data-auto-animate data-visibility="uncounted">
+        <h4>Phase 3 (offline): UQ and Data-to-QoI Map</h4>
+        <ul>
+            <li>Computing \(\Gamma_{\!\text{post}}\) is prohibitively expensive (size \(N_mN_t \times N_mN_t\))</li>
+            <ul>
+                <li>Even computing the full diagonal of \(\Gamma_{\!\text{post}}\) requires \(N_mN_t\) matrix actions
+                </li>
+                <li>\(\mathbf{G}^*\) trick can't be fully exploited; prior solves are expensive</li>
+                <li>Option: subsample diagonal of \(\Gamma_{\!\text{post}}\)</li>
+            </ul>
+            <li><b class="color-emph">Goal-oriented approach</b>: quantify uncertainty in QoI instead</li>
+            <li>\(\mathbf{q} \sim \mathcal{N}(\mathbf{F}_{q}\mathbf{m}_{\text{map}},
+                \Gamma_{q}), \
+                \Gamma_{q} \coloneqq
+                \mathbf{F}_{q}\Gamma_{\!\text{post}}\mathbf{F}^*_{q} \sim N_qN_t\times N_qN_t\)
+            </li>
+            <li>For the CSZ application, \(N_q \approx N_d\), so \(\Gamma_{\!\text{post}}\) can be feasibly computed </li>
+            <ul>
+                <li>Defining \(\mathbf{G}_{q}^* \coloneqq
+                    \Gamma_{\!\text{prior}}\mathbf{F}_{q}^*\),
+                    we can use the prior trick again</li>
+                <li>Only need wave heights at a few key spatial locations/time points </li>
+                <li>QoI can be sampled at lower frequencies</li>
+            </ul>
+            <li>Precompute \(\mathbf{Q} : \mathbf{d}\mapsto \mathbf{q}\) map from observation to QoI</li>
+            <ul>
+                <li>Matrix is size \(N_qN_t\times N_dN_t \sim\) 8GB for full CSZ</li>
+                <li>Observation to QoI calculation is a dense matvec that can be done on a laptop</li>
+            </ul>
+        </ul>
+    </section>
+    <section data-auto-animate data-visibility="uncounted">
+        <h4>Phase 4 (Online): <br>Compute MAP Point and QoI in Real Time</h4>
+        <!-- <p class="leftalign"><b class="color-emph">Test problem:</b> \(N_m = 263\text{K}, N_d = 49, N_t =
+            500\) (~132M parameters, ~25K data)
+            running
+            on 8 <em class="color-emph"><a href="https://docs.tacc.utexas.edu/hpc/lonestar6/">Lonestar6</a></em> nodes
+            (24 GPUs)
+        </p> -->
+        <!-- <p>\(
+            \mathbf{m}_{\text{map}}=\Gamma_{\!\text{prior}}\left(\mathbf{I} -
+            \mathbf{F}^*\textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\Gamma_{\!\text{prior}}\right)\mathbf{F}^*\Gamma_{\!\text{noise}}^{-1}\mathbf{d}
+            \)</p> -->
+   
+        <ul>
+            <li>Online computation:
+                \[\begin{align*}
+            \mathbf{m}_{\text{map}}&=\mathbf{G}^*\left(\mathbf{I} -
+            \textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\mathbf{G}^*\right)\Gamma_{\!\text{noise}}^{-1}\mathbf{d},
+            \\
+            \mathbf{q} &= \mathbf{F}_{q}\mathbf{m}_{\text{map}}
+            \end{align*}
+            \]
+            </li>
+            <li>QoI \(\mathbf{q}\) can be computed as \(\mathbf{F}_q \mathbf{m}\) or as \(\mathbf{Q}\mathbf{d}\)</li>
+        </ul>
+        
+
+        <!-- <p class="footnote"> <em class="color-emph"><sup>&ast;</sup>For priors with spatial correlation
+                only, \(\Gamma_{\!\text{prior}}\mathbf{F}^*\) is also block-triangular Toeplitz.</em>
+        </p> -->
+
+    </section>
+
+</section>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>NERSC's Role</h4>
+        <ul>
+            <li>The entire end-to-end Bayesian inference and prediction framework was executed on <a
+                    href="https://docs.nersc.gov/systems/perlmutter/architecture/" target="_blank"
+                    rel="noopener noreferrer">Perlmutter</a>.</li>
+            <li>The offline phase required over 70k node hours, granted through an <a
+                    href="https://science.osti.gov/ascr/Facilities/Accessing-ASCR-Facilities/ALCC" target="_blank"
+                    rel="noopener noreferrer">ALCC</a> and High-Impact Science at Scale allocations.</li>
+            <li>New NVIDIA libraries including <a href="https://docs.nvidia.com/cuda/cudss/" target="_blank"
+                    rel="noopener noreferrer">cuDSS</a> and <a href="https://docs.nvidia.com/cuda/cusolvermp/"
+                    target="_blank" rel="noopener noreferrer">cuSOLVERMp</a> were utilized in the full-scale
+                inversion/prediction.
+            </li>
+            <li>Over 10TB of data was precomputed in the offline phase.</li>
+            <li>Development and testing of the real-time inversion framework was also done on Perlmutter.</li>
+            <li>Special thanks to NERSC staff (Amanda Dufek and Muaaz Awan) who were helpful for full-system scaling
+                runs.</li>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Next Steps</h4>
+        <ul>
+            <li>Test framework on other regions of interest (e.g., Japan)</li>
+            <li>Optimal sensor placement strategies (goal-oriented)</li>
+            <li>Data-driven priors to improve inference in areas uninformed by data</li>
+            <li>Goal-oriented dimension-reduction strategies</li>
+            <li>Optimize for new GPU architectures (Doudna)</li>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Relevant Works</h4>
+        <!-- make a 2 column table one for the paper and one for the qr code -->
+        <div class="r-vstack">
+            <div class="r-hstack" style="margin-bottom: 10px;">
+                <p style="font-size: large; text-align: left; width: 1000px"><a href="https://arxiv.org/abs/2504.16344" target="_blank" rel="noopener noreferrer">Henneking, S.,
+                    Venkat, S., Dobrev, V., Camier, J., Kolev, T., Fernando, M., Gabriel A. A. &amp; Ghattas, O. (2025). Real-time
+                    Bayesian inference at extreme scale: A digital twin for tsunami early warning applied to the
+                    Cascadia subduction zone. 2025 ACM Gordon Bell Finalist to appear in the Proceedings of SC25.</a></p>
+                <img src="NUG/images/paper_qrs/gb.svg" alt="QR Code to Paper" style="width: 150px; text-align: right; margin: 0px;">
+            </div>
+            <div class="r-hstack" style="margin-bottom: 10px; margin-top: 10px;">
+                <p style="font-size: large; text-align: left; width: 1000px"><a href="https://arxiv.org/pdf/2501.14911" target="_blank" rel="noopener noreferrer">Henneking, S.,
+                    Venkat, S., &amp; Ghattas, O. (2025). Goal-Oriented Real-Time Bayesian Inference for Linear Autonomous
+                    Dynamical Systems With Application to Digital Twins for Tsunami Early Warning. Submitted to the
+                    Journal of Computational Physics.</a></p>
+                <img src="NUG/images/paper_qrs/jcp.svg" alt="QR Code to Paper" style="width: 150px; text-align: right; margin: 0px;">
+            </div>
+            <div class="r-hstack" style="margin-bottom: 10px; margin-top: 10px;">
+                <p style="font-size: large; text-align: left; width: 1000px"><a href="https://arxiv.org/pdf/2407.13066" target="_blank" rel="noopener noreferrer">Venkat, S.,
+                    Fernando, M., Henneking, S., &amp; Ghattas, O. (2024). Fast and scalable FFT-based GPU-accelerated
+                    algorithms for Hessian actions arising in linear inverse problems governed by autonomous dynamical
+                    systems. To appear in the SIAM Journal on Scientific Computing.</a></p>
+                <img src="NUG/images/paper_qrs/fft_matvec_algo.svg" alt="QR Code to Paper" style="width: 150px; text-align: right; margin: 0px;">
+            </div>
+            <div class="r-hstack" style="margin-top: 10px;">
+                <p style="font-size: large; text-align: left; width: 1000px"><a href="https://arxiv.org/pdf/2508.10202" target="_blank" rel="noopener noreferrer">Venkat, S.,
+                    Swirydowicz, K., Wolfe, N., &amp; Ghattas, O. (2025). Mixed-Precision Performance Portability of
+                    FFT-Based GPU-Accelerated Algorithms for Block-Triangular Toeplitz Matrices. To appear in the
+                    Proceedings of SC25 Workshops.</a></p>
+                <img src="NUG/images/paper_qrs/fft_matvec_mp.svg" alt="QR Code to Paper" style="width: 150px; text-align: right; margin: 0px;">
+            </div>
+        </div>
+    </section>
+    <section data-auto-animate>
+        <h4>Closing Remarks</h4>
+
+        <ul class="hand-bullet-list" style="columns: 2; -webkit-columns: 2; -moz-columns: 2">
+            <li>Summary
+                <ul>
+                    <li>
+                        Framework for <em class="color-emph">real-time, extreme-scale, exact</em> Bayesian inference and
+                        prediction
+                    </li>
+                    <li>
+                        Fast matvec algorithm speeds up Hessian action by over <b class="color-emph">200,000x</b>
+                    </li>
+                    <li>
+                        <b class="color-emph">Exact</b> inference and prediction over 1B parameters and 250K data
+                        points for a real rupture scenario in under <b class="color-emph">0.2s</b> on 512 GPUs on <a
+                            href="https://docs.nersc.gov/systems/perlmutter/architecture/" target="_blank"
+                            rel="noopener noreferrer">Perlmutter</a>
+                        &rarr; <em class="color-emph">2025 ACM Gordon Bell Finalist</em>.
+                    </li>
+
+                </ul>
+            </li>
+            <li>Acknowledgements
+                <ul>
+                    <li><a href="https://docs.nersc.gov/systems/perlmutter/architecture/" target="_blank"
+                            rel="noopener noreferrer">NERSC Perlmutter</a>
+                    </li>
+                    <li>Collaborators: Alice Gabriel (UCSD), MFEM Team (LLNL), Noah Wolfe and Kasia Świrydowicz (AMD)
+                    </li>
+                    <li>NSF Graduate Research Fellowship grant: DGE 2137420</li>
+                    <li>CSEM Fellowship</li>
+
+                    <br>
+                </ul>
+            </li>
+        </ul>
+
+        <div class="container">
+            <div class="col">
+                <img data-src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" class="myimg95">
+            </div>
+            <div class="col">
+                <img data-src="NUG/images/qr-nug.svg" alt="https://s769.github.io/reveal.js/NUG.html"
+                    style="width: 40%; padding: 0; margin: 0;">
+            </div>
+            <div class="col">
+                <img data-src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
+            </div>
+        </div>
+    </section>
+    <section data-background-video="NUG/images/videos/CSZ_Tsunami_Video_NVIDIA_blog.mp4" data-background-video-loop>
+    </section>
+    <!-- <section data-auto-animate>
+        <h4>Future Work</h4>
+        <ul>
+            <li>Linear Solver for \(\mathbf{K}\)</li>
+            <li>Test on Cascadia meshes</li>
+            <li>Try different sampling methods for posterior variance</li>
+
+
+        </ul>
+    </section> -->
+    <!-- <section>
+        <h4>Thank You</h4>
+        <div class="container">
+            <div class="col1">
+                <img data-src="siam_pp_24/Oden-logo-cropped.svg" alt="Oden Institute" class="myimg95">
+            </div>
+            <div class="col2">
+                <img data-src="siam_pp_24/Optimus-2-cropped.svg" alt="Optimus" class="myimg80">
+            </div>
+        </div>
+    </section> -->
+</section>
