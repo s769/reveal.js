@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Goals:</h4>
+        <ul>
+            <li><b class="color-emph">Inverse Problem:</b> given pressure recordings from sensors on the seafloor, infer
+                infer the earthquake-induced seafloor motion</li>
+            <li><b class="color-emph">Prediction Problem:</b> Given inferred spatiotemporal seafloor motion,
+                predict tsunami wave heights at sample locations/times</li>
+        </ul>
+    </section>
+    <!-- <section data-auto-animate>
+        <h4>Bayesian Inverse Problem</h4>
+        <ul>
+            <li>
+                \(m\): model parameters &mdash; spatiotemporal field: \(\frac{\partial b}{\partial t}
+                (x,t)\) </li>
+            <li>\(d\): pressure obs. &mdash; pointwise in space and time: \(\left\{p(x_i,
+                t)\right\}_{i=1}^{N_d}\)
+            </li>
+            <li>
+                <b class="color-emph">Parameter-to-Observable (p2o) Map: </b>\(\mathcal{F}:
+                m(x,t) \mapsto
+                d(x_i,t)\)
+                <ul>
+                    <li>Solve forward PDE using the given parameter field as the boundary condition.</li>
+                    <li>Extract pressure values at sensor locations</li>
+                </ul>
+            </li>
+
+            <li>
+                Bayesian inference assumes the parameter is a random variable distributed according to the <em
+                    class="color-emph">posterior</em> distribution
+            </li>
+            <li>
+                We have a <em class="color-emph">prior</em> distribution on the parameter that encodes our prior
+                knowledge about the parameter field (e.g. smoothness, spatiotemporal correlation structure)
+            </li>
+            <li>
+                <b class="color-emph">Bayes Rule:
+                </b>
+                \[\frac{\text{d}\mu_{\text{post}}}{\text{d}\mu_{\text{prior}}} \propto
+                \pi_{\text{like}}(d|m) \]
+            </li>
+        </ul>
+    </section> -->
+    <section data-auto-animate>
+        <h4>Bayesian Inverse Problem</h4>
+        <ul>
+            <li>
+                <b class="color-emph">Bayes Rule:
+                </b>
+                \[\frac{\text{d}\mu_{\text{post}}}{\text{d}\mu_{\text{prior}}} \propto
+                \pi_{\text{like}}(d|m) \]
+                <ul>
+                    <li>Radon-Nikodym derivative</li>
+                </ul>
+            </li>
+            <li>
+                <b class="color-emph">Likelihood: </b>\(\pi_{\text{like}}(d|m) \propto \exp\left(-\frac{1}{2}
+                \|\mathcal{F}m - d\|_{\Gamma_{\!\text{noise}}^{-1}}^2\right)\)
+            </li>
+            <li>
+                <b class="color-emph">Gaussian Prior with Mat&eacute;rn Covariance:</b>\[m \sim
+                \mathcal{N}(m_{\text{prior}},
+                \Gamma_{\!\text{prior}}), \quad \Gamma_{\!\text{prior}} \coloneqq \left(
+                \alpha_1 I -
+                \alpha_2 \Delta_{\text{2D}} -
+                \alpha_3 \partial_t^2
+                \right)^{-\gamma}\]
+                <ul>
+                    <li>
+                        \(\gamma \gt 3/2\) for bounded pointwise variance since parameter is a 2+1D field
+                    </li>
+                </ul>
+            </li>
+            <li><b class="color-emph">Additive Gaussian noise model:</b> \(d = \mathcal{F}m + \nu, \quad \nu \sim
+                \mathcal{N}(0,
+                \Gamma_{\!\text{noise}})\)</li>
+        </ul>
+        <p class="footnote"><a
+                href="https://www.cambridge.org/core/journals/acta-numerica/article/inverse-problems-a-bayesian-perspective/587A3A0D480A1A7C2B1B284BCEDF7E23"
+                target="_blank" rel="noopener noreferrer">Stuart, A. M. (2010). Inverse problems: a Bayesian
+                perspective. Acta numerica, 19, 451-559.</a></p>
+
+    </section>
+    <section data-auto-animate>
+        <h4>Linear Inverse Problem, Gaussian Prior</h4>
+        <p class="leftalign">
+            <b class="color-emph">Gaussian Prior with Mat&eacute;rn Covariance:</b>\[m \sim
+            \mathcal{N}(m_{\text{prior}},
+            \Gamma_{\!\text{prior}}), \quad \Gamma_{\!\text{prior}} \coloneqq \left(
+            \alpha_1 I -
+            \alpha_2 \Delta_{\text{2D}} -
+            \alpha_3 \partial_t^2
+            \right)^{-2}\]
+
+        </p>
+        <p class="leftalign">
+            <b class="color-emph">Likelihood: </b>\(\pi_{\text{like}}(d|m) \propto \exp\left(-\frac{1}{2}
+            \|\mathcal{F}m - d\|_{\Gamma_{\!\text{noise}}^{-1}}^2\right)\)
+        </p>
+
+        <p class="leftalign">
+            <b class="color-emph">Observations: </b>\(d = \mathcal{F}m + \nu, \quad \nu \sim
+            \mathcal{N}(0,
+            \Gamma_{\!\text{noise}})\)
+        </p>
+
+        <p class="leftalign">
+            <b class="color-emph">Posterior: </b>
+        <div class="box" , style="background-color: blanchedalmond; border: 1px solid black; border-radius: 25px;">
+            <p>
+                \[\begin{align*}
+                \mu_{\text{post}} &= \mathcal{N}(m_{\text{map}},
+                \Gamma_{\!\text{post}}) \\
+                \Gamma_{\!\text{post}}&=\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} \mathcal{F} +
+                \Gamma_{\!\text{prior}}^{-1}\right)^{-1}\\
+                m_{\text{map}}&=\Gamma_{\!\text{post}}\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} d +
+                \Gamma_{\!\text{prior}}^{-1} m_{\text{prior}}\right)
+                \end{align*}\]
+            </p>
+        </div>
+        </p>
+        <!-- <p class="leftalign">
+            Want to find \(m_{\text{map}}\) and \(\Gamma_{\!\text{post}}\) in <b class="color-emph">real
+                time</b>
+        </p> -->
+
+        <!-- <p class="footnote">
+            <a
+                href="https://www.cambridge.org/core/journals/acta-numerica/article/inverse-problems-a-bayesian-perspective/587A3A0D480A1A7C2B1B284BCEDF7E23?utm_campaign=shareaholic&utm_medium=copy_link&utm_source=bookmark">
+                Stuart, Andrew M. "Inverse problems: a Bayesian perspective." Acta numerica 19 (2010):
+                451-559.
+            </a>
+        </p> -->
+        <aside class="notes" aria-label="postcov">
+            Posterior covariance does not depend on data.
+            subset of the Matern family of covariance operators can be written as the inverse of an elliptic different
+            operator, with the coefficients \(\alpha_i\) chosen to impose the desired correlation and variance structure
+        </aside>
+        <!-- <p class="footnote">Script = infinite-dimensional; boldface = discrete in space and time</p> -->
+    </section>
+    <!-- <section data-auto-animate>
+        <h4>Linear Inverse Problem, Gaussian Prior</h4>
+        \[\begin{align*}
+        \Gamma_{\!\text{post}}&=\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} \mathcal{F} +
+        \Gamma_{\!\text{prior}}^{-1}\right)^{-1}\\
+        m_{\text{map}}&=\Gamma_{\!\text{post}}\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} d +
+        \Gamma_{\!\text{prior}}^{-1} m_{\text{prior}}\right)
+        \end{align*}\]
+
+    </section> -->
+    <section data-auto-animate>
+        <h4>Bayesian Inference &mdash; the Usual Approach</h4>
+        <ul class="spaced-ul">
+            <li>
+                \(\Gamma_{\!\text{post}}^{-1} \eqqcolon \mathcal{H} \) is the <b class="color-emph">Hessian</b>
+                (of
+                negative log-posterior)
+            </li>
+            <li>
+                Each matrix-free Hessian action requires <b class="color-emph">1 Forward</b>
+                and
+                <b class="color-emph">1 Adjoint</b> PDE solve
+            </li>
+            <!-- <li>
+                Finding \( m_{\text{map}} \) with CG requires
+                \(\text{rank}(\mathcal{H})\)
+                Hessian actions<sup>1</sup>
+            </li> -->
+            <li>
+                Relies on (randomized) low-rank decomposition of \(\mathbf{F}^* \Gamma_{\!\text{noise}}^{-1}
+                \mathbf{F}\) and the Woodbury formula to invert \(\mathbf{H}\) in
+                \(\mathcal{O}(\text{rank}(\mathbf{H}))\) PDE solves<a
+                href="https://www.cambridge.org/core/journals/acta-numerica/article/learning-physicsbased-models-from-data-perspectives-from-inverse-problems-and-model-reduction/C072A4B417F8C3873ED75C1D63BBB31D?utm_campaign=shareaholic&utm_medium=copy_link&utm_source=bookmark">
+                <sup>1</sup></a>
+            </li>
+            <li>
+                Low-rank decomposition can be precomputed and rapidly applied with \(\mathcal{O}(\text{param. dim}
+                \times \text{rank})\) linear algebra
+            </li>
+            <li>
+                Allows for fast computation of pointwise variances, sample draws, and expected information gain (for
+                optimal sensor placement)
+            </li>
+        </ul>
+        <p class="footnote" style="padding: 0;">
+            <a
+                href="https://www.cambridge.org/core/journals/acta-numerica/article/learning-physicsbased-models-from-data-perspectives-from-inverse-problems-and-model-reduction/C072A4B417F8C3873ED75C1D63BBB31D?utm_campaign=shareaholic&utm_medium=copy_link&utm_source=bookmark">
+                <sup>1</sup>Omar Ghattas, and Karen Willcox. "Learning physics-based models from data:
+                perspectives
+                from
+                inverse problems and model reduction." Acta Numerica 30 (2021): 445-554.</a> By "rank", we mean
+            "effective rank", the threshold beyond which the modes of the Hessian are not informed by the data and the
+            prior.
+        </p>
+        <aside class="notes" aria-label="state dims for PDE">
+            PDE solve deals with 3D space-time state
+            dimension \(\sim 10^{11}\) and has CFL
+            constrained timestep.
+            <br>
+            1 hr time is actually benchmarked on optimized scalable FEM code
+            <br>
+            when we say rank of Hessian, we mean "effective rank" since it will be numerically full rank but
+            you cant hope to reconstruct all high order modes from sparse data so the "rank" is the threshold beyond
+            which the modes of the Hessian are not informed by the data and the prior
+        </aside>
+    </section>
+    <section data-auto-animate>
+        <h4>Bayesian Inference &mdash; the Usual Approach</h4>
+        <ul>
+            <li>Challenges:</li>
+            <ul>
+                <li>
+                    For hyperbolic systems, \(\mathcal{H}\) can have high effective rank \(\Rightarrow\) many PDE solves
+                </li>
+                <li>
+                    Cascadia Tsunami Problem:
+                    <ul>
+                        <li>param. spatial DoFs: \(N_m\sim
+                            10^6\),
+                            # of sensors: \(N_d\sim 10^2\), time steps: \(N_t\sim 10^3\)</li>
+                        <li>\(\Rightarrow\)
+                            \(\text{dim}(\mathbf{m}) \sim 10^{9}, \text{dim}(\mathbf{d}) \sim 10^5\)
+                            \(\Rightarrow\) \(\text{rank}(\mathbf{H}) \gtrsim 10^4\)</li>
+
+                    </ul>
+                </li>
+                <li>
+                    ~1 hour / Hessian action \(\Rightarrow\) over <b class="color-emph"> 50
+                        years
+                    </b> to find \(m_{\text{map}}\)
+                </li>
+                <li style="padding-bottom: 0;">
+                    Useless. We need to find the MAP point in <b class="color-emph">seconds</b>
+                </li>
+            </ul>
+            <li>Traditional fix: use surrogates (e.g. reduced order models, neural networks)</li>
+
+            <ul>
+                <li>Very large \((10^9)\) parameter dimension</li>
+                <li>Kolmogorov N-width<sup>1</sup> for wave equations decays like
+                    \(\mathcal{O}(N^{-1/2})\) </li>
+                <li>Hyperbolic forward PDE is intolerant of approximation errors (errors propagate rather than
+                    dissipate)</li>
+                <li>Surrogates cannot usually capture high frequency components of parameter; this error will be
+                    amplified in the inversion</li>
+            </ul>
+        </ul>
+        <p class="footnote"><sup>1</sup>Worst-case approximation error (over all parameter inputs) of
+            the best \(N\)-dim linear subspace approximation to the PDE solution manifold (<a
+                href="https://www.sciencedirect.com/science/article/pii/S0893965919301983" target="_blank"
+                rel="noopener noreferrer">Greif and Urban 2019</a>)</p>
+    </section>
+
+</section>
