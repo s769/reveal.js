@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Fast p2o Map Applications</h4>
+        <ul>
+            <li>There is a need for fast Hessian applications to enable real-time inference and prediction</li>
+            <li>Most expensive part of Hessian application is the p2o operator (usually applied via forward/adjoint PDE
+                solves)</li>
+            <li><em class="color-emph">Autonomous Dynamical System: </em>evolution does not depend
+                explicitly on independent variable (e.g. time)
+                <ul>
+                    <li>Here: the mapping mapping \(m(x,t+\tau) \mapsto
+                        d(x,t+\tau)\) is the same as the mapping \(m(x,t)
+                        \mapsto d(x,t)\)</li>
+                </ul>
+            </li>
+            <li>
+                Exploit (time) <em class="color-emph">shift invariance</em> of autonomous dynamical systems
+                <ul>
+                    <li>Reduce computation and storage costs</li>
+                </ul>
+            </li>
+
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4><b class="color-emph">FFTMatvec</b> Overview</h4>
+        <div class="r-hstack">
+            <ul>
+                <li>FFT-based, GPU-accelerated algorithm for fast p2o
+                    applications
+                    <ol>
+                        <li>Broadcast and add zero-padding to input vector \(\mathbf{m}\)</li>
+                        <li>Compute FFT of input vector \(\mathbf{m}\mapsto\hat{\mathbf{m}}\)</li>
+                        <li>Compute block-diagonal Fourier space matvec \(\hat{\mathbf{m}}\mapsto\hat{\mathbf{d}}\)
+                        </li>
+                        <li>Compute IFFT of output vector \(\hat{\mathbf{d}}\mapsto\mathbf{d}\)</li>
+                        <li>Remove padding and compute reduction on output vector \(\mathbf{d}\)</li>
+                    </ol>
+                </li>
+                <li class="leftalign">Same algorithm for \(\mathbf{F}^*: \mathbf{d} \mapsto \mathbf{m}\) </li>
+                <ul>
+                    <li class="leftalign">Conjugate transpose SBGEMV in Step 3</li>
+                    <li class="leftalign"><b class="color-emph">No extra storage or communication needed</b></li>
+                </ul>
+                <li>Cost: \(O(N_dN_mN_t + (N_m+N_d)N_t\log N_t)\) (for single GPU)</li>
+                <li>Algorithm is <em class="color-emph">exact</em> and provides \(\sim 200,000\times\) speedups over PDE
+                    solve method for p2o applications</li>
+                <li>Open-source, performance-portable, mixed-precision implementation on <a
+                        href="https://github.com/s769/FFTMatvec" target="_blank" rel="noopener noreferrer">GitHub</a>
+                </li>
+            </ul>
+        </div>
+        <p class="footnote">Papers: <a href="https://arxiv.org/pdf/2407.13066" target="_blank"
+                rel="noopener noreferrer">FFTMatvec Algorithm</a> (SISC), <a href="https://arxiv.org/pdf/2508.10202"
+                target="_blank" rel="noopener noreferrer">Performance Portability and Mixed Precision</a> (P3HPC@SC25)
+        </p>
+    </section>
+
+
+
+
+    <section data-auto-animate>
+        <h4>Matvec Performance</h4>
+        <ul>
+
+        </ul>
+        <div class="r-hstack">
+            <img data-src="NUG/images/scaling/mp_single_gpu.svg" alt="Multi-Platform Matvec Performance"
+                style="width: 50%; margin: 0; padding-right: 10px;">
+            <img data-src="NUG/images/scaling/single_gpu_line_scaling.svg" alt="A100 Single GPU Scaling"
+                style="width: 50%; margin: 0; padding-left: 10px;">
+        </div>
+        <p class="caption">
+            <b class="color-emph">Left:</b> Matvec performance on multiple GPU architectures; <b
+                class="color-emph">Right:</b> Single GPU p2o matvec scaling (A100)
+        </p>
+    </section>
+    <section data-auto-animate>
+        <h4>Communication-Aware Partitioning</h4>
+        <img data-src="NUG/images/scaling/grid_scaling_amd.svg" alt="Multi-GPU Scaling Study Results"
+            class="r-stretch" style="width: 85%;" data-preview-image>
+        <p class="caption">For all tests, local sizes \(N_m = 5,000p, N_d=100, N_t=1,000\) (\(p\) is number of GPUs).
+        </p>
+    </section>
+</section>

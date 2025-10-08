@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<section>
+    <section data-visibility="uncounted">
+        <h4>Phase 2: Compute Compact Representation of
+            \(\Gamma_{\!\text{post}}\)</h4>
+        <ul>
+            <li class="leftalign"><b class="color-emph">Sherman-Morrison-Woodbury formula</b> applied to
+                \(\Gamma_{\!\text{post}}\):
+                \[
+                \begin{alignat*}{2}
+                \Gamma_{\!\text{post}}&=&&\left(\mathbf{F}^* \Gamma_{\!\text{noise}}^{-1} \mathbf{F} +
+                \Gamma_{\!\text{prior}}^{-1}\right)^{-1}\\
+                &=\Gamma_{\!\text{prior}}\Big(I -
+                \mathbf{F}^*&&\underbrace{\textcolor{BF5700}{\Big(\Gamma_{\!\text{noise}}
+                +
+                \mathbf{F}\Gamma_{\!\text{prior}}\mathbf{F}^*\Big)}}_{}^{\textcolor{BF5700}{\mathbf{K}}}\vphantom{a}^{-1}\mathbf{F}\Gamma_{\!\text{prior}}\Big)
+
+                \end{alignat*}
+                \]
+            </li>
+            <li>Inversion operation shifted from a matrix of size \(N_mN_t\times N_mN_t\) to a matrix of size
+                \(N_dN_t\times N_dN_t\) <span class="color-emph">\((N_mN_t \sim 10^9, N_dN_t \sim 10^5)\)</span></li>
+            <li>\(\textcolor{BF5700}{\mathbf{K}}\) is a dense matrix (with no obvious structure) of size <br> \(\sim
+                10^5\times 10^5
+                \Rightarrow\) compute Cholesky/eigenvalue decomposition</li>
+            <li>For priors with only spatial correlation, \(\Gamma_{\!\text{prior}}\) is <em
+                    class="color-emph">block-diagonal</em> <br>\(\Rightarrow \mathbf{G}^* \coloneqq
+                \Gamma_{\!\text{prior}}\mathbf{F}^*\) is also a block-triangular Toeplitz matrix</li>
+        </ul>
+    </section>
+    <section data-auto-animate data-visibility="uncounted">
+        <h4>Phase 3 (offline): UQ and Data-to-QoI Map</h4>
+        <ul>
+            <li>Computing \(\Gamma_{\!\text{post}}\) is prohibitively expensive (size \(N_mN_t \times N_mN_t\))</li>
+            <ul>
+                <li>Even computing the full diagonal of \(\Gamma_{\!\text{post}}\) requires \(N_mN_t\) matrix actions
+                </li>
+                <li>\(\mathbf{G}^*\) trick can't be fully exploited; prior solves are expensive</li>
+                <li>Option: subsample diagonal of \(\Gamma_{\!\text{post}}\)</li>
+            </ul>
+            <li><b class="color-emph">Goal-oriented approach</b>: quantify uncertainty in QoI instead</li>
+            <li>\(\mathbf{q} \sim \mathcal{N}(\mathbf{F}_{q}\mathbf{m}_{\text{map}},
+                \Gamma_{q}), \
+                \Gamma_{q} \coloneqq
+                \mathbf{F}_{q}\Gamma_{\!\text{post}}\mathbf{F}^*_{q} \sim N_qN_t\times N_qN_t\)
+            </li>
+            <li>For the CSZ application, \(N_q \approx N_d\), so \(\Gamma_{\!\text{post}}\) can be feasibly computed
+            </li>
+            <ul>
+                <li>Defining \(\mathbf{G}_{q}^* \coloneqq
+                    \Gamma_{\!\text{prior}}\mathbf{F}_{q}^*\),
+                    we can use the prior trick again</li>
+                <li>Only need wave heights at a few key spatial locations/time points </li>
+                <li>QoI can be sampled at lower frequencies</li>
+            </ul>
+            <li>Precompute \(\mathbf{Q} : \mathbf{d}\mapsto \mathbf{q}\) map from observation to QoI</li>
+            <ul>
+                <li>Matrix is size \(N_qN_t\times N_dN_t \sim\) 8GB for full CSZ</li>
+                <li>Observation to QoI calculation is a dense matvec that can be done on a laptop</li>
+            </ul>
+        </ul>
+    </section>
+    <section data-auto-animate data-visibility="uncounted">
+        <h4>Phase 4 (Online): <br>Compute MAP Point and QoI in Real Time</h4>
+        <!-- <p class="leftalign"><b class="color-emph">Test problem:</b> \(N_m = 263\text{K}, N_d = 49, N_t =
+            500\) (~132M parameters, ~25K data)
+            running
+            on 8 <em class="color-emph"><a href="https://docs.tacc.utexas.edu/hpc/lonestar6/">Lonestar6</a></em> nodes
+            (24 GPUs)
+        </p> -->
+        <!-- <p>\(
+            \mathbf{m}_{\text{map}}=\Gamma_{\!\text{prior}}\left(\mathbf{I} -
+            \mathbf{F}^*\textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\Gamma_{\!\text{prior}}\right)\mathbf{F}^*\Gamma_{\!\text{noise}}^{-1}\mathbf{d}
+            \)</p> -->
+
+        <ul>
+            <li>Online computation:
+                \[\begin{align*}
+                \mathbf{m}_{\text{map}}&=\mathbf{G}^*\left(\mathbf{I} -
+                \textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\mathbf{G}^*\right)\Gamma_{\!\text{noise}}^{-1}\mathbf{d},
+                \\
+                \mathbf{q} &= \mathbf{F}_{q}\mathbf{m}_{\text{map}}
+                \end{align*}
+                \]
+            </li>
+            <li>QoI \(\mathbf{q}\) can be computed as \(\mathbf{F}_q \mathbf{m}\) or as \(\mathbf{Q}\mathbf{d}\)</li>
+        </ul>
+
+
+        <!-- <p class="footnote"> <em class="color-emph"><sup>&ast;</sup>For priors with spatial correlation
+                only, \(\Gamma_{\!\text{prior}}\mathbf{F}^*\) is also block-triangular Toeplitz.</em>
+        </p> -->
+
+    </section>
+
+    <!-- \item Time-stepping operator:
+\bes
+    \left[
+    \vb u_\delta \ \vb p_\delta
+    \right]^T
+    = \vb M^{-1}
+    \left(
+    - \vb A
+    \left[
+    \vb u \ \vb p
+    \right]_i^T
+    +
+    \left[
+    \vb f \ \vb g
+    \right]_i^T
+    \right) ,
+\ees
+where $\left[ \vb u \ \vb p \right]_i^T$ and $\left[ \vb f \ \vb g \right]_i^T$ are respectively the state and right-hand-side (RHS) vectors at time instance $i$, and $\left[ \vb u_\delta \ \vb p_\delta \right]$ is the state increment used by RK4. \vspace{10pt}
+\item The mass matrix $\vb M$ and stiffness matrix $\vb A$ are discretizations of the block operators $M$ and $A$ defined by:
+\bes
+    \! \! \! \! \left( \!
+    M \!
+    \left[
+    \begin{array}{@{}c@{}}
+        \vec u \\
+        p
+    \end{array}
+    \right] \! , \!
+    \left[
+    \begin{array}{@{}c@{}}
+        \vec \tau \\
+        v
+    \end{array}
+    \right]
+    \right)
+    \coloneq
+    \left[
+    \begin{array}{@{}cc@{}}
+        (\rho \vec u, \vec \tau) & 0 \\
+        0 & \! \! \! (K^{-1} p, v) + \lb(\rho g)^{-1} p, v \rb_{\p \Omega_{\text s}} \\
+    \end{array}
+    \right]
+    \! \!
+\ees
+and
+\bes
+    \left( \!
+    A \!
+    \left[
+    \begin{array}{@{}c@{}}
+        \vec u \\
+        p
+    \end{array}
+    \right] \! , \! 
+    \left[
+    \begin{array}{@{}c@{}}
+        \vec \tau \\
+        v
+    \end{array}
+    \right]
+    \right)
+    \coloneq
+    \left[
+    \begin{array}{@{}cc@{}}
+        0 & (\nabla p, \vec \tau) \\
+        -(\vec u, \nabla v) & \lb (\rho c)^{-1} p, v \rb_{\p \Omega_{\text a}} \\
+    \end{array}
+    \right] ,
+\ees
+where $\vec u, \vec \tau \in (L^2(\Omega))^d$ and $p, v \in H^1(\Omega)$; $(\cdot, \cdot)$ denotes the (component-wise) $L^2(\Omega)$ inner product, and $\lb \cdot, \cdot \rb_{\p \Omega}$ is the $L^2(\p \Omega)$ inner product over (part of) the boundary $\p \Omega$.
+\end{itemize} -->
+
+
+    <section data-auto-animate data-visibility="uncounted">
+        <h4>RK4 Time Stepping</h4>
+        <ul>
+            <li style="font-size: xx-large;">
+                \[\footnotesize
+                [\mathbf{u}_\delta\ p_\delta]^T = \mathbf{M}^{-1}
+                \left(
+                - \mathbf{A}
+                [\mathbf{u} \ p]_i^T
+                +
+                [\mathbf{f} \ \mathbf{g}]_i^T
+                \right),
+                \]
+                where \([\mathbf{u} \ p]_i^T\) and \([\mathbf{f} \ \mathbf{g}]_i^T\) are respectively the state and
+                RHS vectors at time instance \(i\), and \([\mathbf{u}_\delta \ p_\delta]^T\) is the RK4
+                state increment.
+            </li>
+            <li style="font-size: xx-large;">
+                The mass matrix \(\mathbf{M}\) and stiffness matrix \(\mathbf{A}\) are discretizations of the block
+                operators \(M\) and \(A\) defined by:
+                \[\footnotesize
+                \begin{aligned}
+                \left( M \begin{bmatrix} \vec{u} \\ p \end{bmatrix}, \begin{bmatrix} \vec{\tau} \\ v \end{bmatrix}
+                \right)
+                &\coloneqq
+                \left[
+                \begin{array}{cc}
+                (\rho \vec{u}, \vec{\tau}) & 0 \\
+                0 & (K^{-1} p, v) + \langle(\rho g)^{-1} p, v \rangle_{\partial \Omega_{\text{s}}}
+                \end{array}
+                \right],\\
+                \left( A \begin{bmatrix} \vec{u} \\ p \end{bmatrix}, \begin{bmatrix} \vec{\tau} \\ v \end{bmatrix}
+                \right)
+                &\coloneqq
+                \left[
+                \begin{array}{cc}
+                0 & (\nabla p, \vec{\tau}) \\
+                -(\vec{u}, \nabla v) & \langle (\rho c)^{-1} p, v \rangle_{\partial \Omega_{\text{a}}}
+                \end{array}
+                \right],
+                \end{aligned}
+                \]
+                where \(\vec{u}, \vec{\tau} \in (L^2(\Omega))^d\) and \(p, v \in H^1(\Omega)\); \((\cdot, \cdot)\)
+                denotes the (component-wise) \(L^2(\Omega)\) inner product, and \(\langle \cdot, \cdot \rangle_{\partial
+                \Omega}\) is the \(L^2(\partial \Omega)\) inner product over (part of) the boundary \(\partial \Omega\).
+            </li>
+        </ul>
+    </section>
+
+    <section data-auto-animate data-visibility="uncounted">
+        <h4>Convergence of Modal Solutions</h4>
+        <ul>
+            <li>For wavenumber \(\kappa_n\) and angular frequency \(\omega\), the homogeneous solutions with source
+                \(\partial_tb = 0\) are:
+                \[
+                \begin{aligned}
+                p(x,y,t) &= \sin(k_n x) \sin(\omega t)
+                \left( \sinh(\kappa_n y) + \frac{g \kappa_n}{\omega^2} \cosh(\kappa_n y) \right) , \\
+                u_x(x,y,t) &= \frac{k_n p_0}{\rho \omega u_0}
+                \cos(k_n x) \cos(\omega t)
+                \left( \sinh(\kappa_n y) + \frac{g \kappa_n}{\omega^2} \cosh(\kappa_n y) \right) , \\
+                u_y(x,y,t) &= \frac{\kappa_n p_0}{\rho \omega u_0}
+                \sin(k_n x) \cos(\omega t)
+                \left( \cosh(\kappa_n y) + \frac{g \kappa_n}{\omega^2} \sinh(\kappa_n y) \right) , \\
+                \eta(x,t) &= \frac{\kappa_n p_0}{\rho \omega^2 l_0}
+                \sin(k_n x) \sin(\omega t) .
+                \end{aligned}
+                \]
+            </li>
+            <li>Dispersion relation: \(\omega^2 = g \kappa_n \tanh(\kappa_n H)\), \(k_n = \sqrt{\kappa_n^2 +
+                (\omega/c)^2}\)
+            </li>
+        </ul>
+    </section>
+    <section data-auto-animate data-visibility="uncounted">
+        <h4>Types of Modal Solutions</h4>
+        <ul>
+            <li>Surface-gravity wave mode: \(k_0 \gt 0\) (\(\kappa_0 \gt 0\))</li>
+            <li>Propagating acoustic-gravity modes: \(k_n \gt 0\) (\(|\kappa_n| \lt \omega/c\)),
+                \(n=1,\ldots,K\),
+                \(\lfloor K=\omega H / (\pi c) + 1/2 \rfloor\)</li>
+            <li>Decaying (evanescent) acoustic modes: \(k_n^2 \lt 0\) (\(|\kappa_n| \gt \omega/c\)),
+                \(n=K+1,\ldots\)
+            </li>
+            <li>For a given frequency \(\omega\), there are infinitely many \(\kappa_n\in \mathbb{C}, n=0,1,2,\dots\)
+                that satisfy the dispersion
+                relation</li>
+
+        </ul>
+    </section>
+    <section data-auto-animate data-visibility="uncounted">
+        <h4>Convergence of Modal Solutions</h4>
+        <div class="r-hstack">
+            <div class="r-vstack">
+                <p class="caption" style="margin: 0; padding: 0;">Surface gravity wave mode</p>
+                <img data-src="proposal/images/pde/mode0_errorRate.svg" alt="Mode 0 Convergence" class="r-stretch"
+                    data-preview-image>
+            </div>
+            <div class="r-vstack">
+                <p class="caption" style="margin: 0; padding: 0;">First acoustic gravity wave mode</p>
+                <img data-src="proposal/images/pde/mode1_errorRate.svg" alt="Mode 1 Convergence" class="r-stretch"
+                    data-preview-image>
+            </div>
+        </div>
+        <p class="caption">Error of modes in a bounded compressible ocean domain: \(\Omega = (0, L) \times (-H,
+            0)\), \(L = 100\) km, \(H = 5000\)m. Numerical solutions to the modes are computed by prescribing boundary
+            data
+            \(p = \rho g \eta\) on \(\Gamma_s\) and sound-soft BC \(p=0\) on \(\Gamma_a\) for wavenumber \(k_n = n \pi /
+            L, n =
+            1\). Optimal convergence rates are
+            attained for \((\boldsymbol{d\mathcal{P}}_{\! r-1}, \mathcal{P}_r)\) elements for discontinuous velocity
+            \(\boldsymbol{u}\) and continuous
+            pressure \(p\) when \(\Delta t \sim h^{r/2}\).</p>
+    </section>
+
+
+
+
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Adjoint Problem</h4>
+        <ul>
+            <li>Strong form of (non-dimensional) adjoint system (\(\boldsymbol{\tau}\) is adjoint velocity, \(v\) is
+                adjoint
+                pressure):
+                \[
+                \begin{align*}
+                \frac{\partial \boldsymbol{\tau}}{\partial t} + c_2 \nabla v &= \boldsymbol{0} && \text{in } \Omega
+                \times (0,T), \\
+                \frac{\partial v}{\partial t} + c_1 \nabla \cdot \boldsymbol{\tau} &= 0 && \text{in } \Omega \times
+                (0,T) .
+                \end{align*}
+                \]
+            </li>
+        </ul>
+    </section>
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Adjoint Problem</h4>
+        <ul>
+            <li>BCs with first-order ABC on \(\Gamma_a\) (\(\xi_s\) is the adjoint gravity wave height):
+                \[
+                \begin{align*}
+                v &= \frac{1}{c_2} \xi_s && \text{on } \Gamma_s \times (0,T) , \\
+                \frac{\partial \xi_s}{\partial t} &= c_1 c_3 \boldsymbol{\tau} \cdot \boldsymbol{n} && \text{on }
+                \Gamma_s \times (0,T) , \\
+                \boldsymbol{\tau} \cdot \boldsymbol{n} &= -\frac{1}{c_1} \mathcal{B}^* \Gamma_{\!\text{noise}}^{-1}
+                (\mathcal{B} p - d) && \text{on } \Gamma_b \times (0,T) , \\
+                \boldsymbol{\tau} \cdot \boldsymbol{n} &= -\sqrt{\frac{c_2}{c_1}} v && \text{on } \Gamma_a \times (0,T)
+                .
+                \end{align*}
+                \]
+            </li>
+            <li>Terminal conditions (homogeneous).</li>
+        </ul>
+    </section>
+
+    <section data-visibility="uncounted" data-auto-animate>
+        <h4>Hessian Action</h4>
+        <ul>
+            <li>
+                \[
+                \mathcal{H} m := \left\{
+                \begin{aligned}
+                \alpha_1 m - \alpha_2 \nabla^2 m - \alpha_3 \frac{\partial^2 m}{\partial t^2} - c_2 v
+                & \quad \text{on } \Gamma_b \times (0,T) , \\
+                \alpha_2 \frac{\partial m}{\partial \boldsymbol{n}}
+                & \quad \text{on } \partial \Gamma_b \times (0,T) , \\
+                0
+                & \quad \text{on } \Gamma_b \times \{ 0 \} , \\
+                \alpha_3 \frac{\partial m}{\partial t}
+                & \quad \text{on } \Gamma_b \times \{ T \} .
+                \end{aligned}
+                \right.
+                \]
+                with compatibility condition \(m(\boldsymbol{x},0) = 0, \boldsymbol{x} \in \Gamma_b\).
+            </li>
+            <li>Steps to obtain Hessian action:
+                <ol>
+                    <li>Solve forward problem for \((\boldsymbol{u}, p, \eta)\)</li>
+                    <li>Solve adjoint problem for \((\boldsymbol{\tau}, v, \xi_s)\)</li>
+                    <li>Evaluate Hessian action on \(m\), as defined above</li>
+                </ol>
+            </li>
+        </ul>
+    </section>
+
+
+
+</section>
