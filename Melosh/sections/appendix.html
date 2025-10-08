@@ -96,21 +96,21 @@
     <section data-auto-animate data-visibility="uncounted">
         <h4>RK4 Time Stepping</h4>
         <ul>
-            <li style="font-size: xx-large;">
+            <li style="font-size: xx-large;" class="small-pad-math">Time-stepping operator:
                 \[\footnotesize
-                [\mathbf{u}_\delta\ p_\delta]^T = \mathbf{M}^{-1}
+                [\mathbf{u}_\delta\ \mathbf{p}_\delta]^T = \mathbf{M}^{-1}
                 \left(
                 - \mathbf{A}
-                [\mathbf{u} \ p]_i^T
+                [\mathbf{u} \ \mathbf{p}]_i^T
                 +
                 [\mathbf{f} \ \mathbf{g}]_i^T
                 \right),
                 \]
-                where \([\mathbf{u} \ p]_i^T\) and \([\mathbf{f} \ \mathbf{g}]_i^T\) are respectively the state and
-                RHS vectors at time instance \(i\), and \([\mathbf{u}_\delta \ p_\delta]^T\) is the RK4
+                where \([\mathbf{u} \ \mathbf{p}]_i^T\) and \([\mathbf{f} \ \mathbf{g}]_i^T\) are respectively the state and
+                RHS vectors at time instance \(i\), and \([\mathbf{u}_\delta \ \mathbf{p}_\delta]^T\) is the RK4
                 state increment.
             </li>
-            <li style="font-size: xx-large;">
+            <li style="font-size: xx-large;" class="small-pad-math">
                 The mass matrix \(\mathbf{M}\) and stiffness matrix \(\mathbf{A}\) are discretizations of the block
                 operators \(M\) and \(A\) defined by:
                 \[\footnotesize
@@ -304,6 +304,13 @@
                 </ol>
             </li>
         </ul>
+    </section>
+    <section data-auto-animate data-visibility="uncounted">
+        <h4>FFTMatvec Animation</h4>
+        <iframe class="r-stretch" src="https://www.youtube.com/embed/hc81_WzGF_Q?si=L45rptDgF5MGZmkj"
+            title="YouTube video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </section>
 
 

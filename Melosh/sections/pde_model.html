@@ -20,46 +20,53 @@
     </section> -->
     <section data-auto-animate>
         <h4>Acoustic-Gravity Equations</h4>
-        <div class="container">
-            <div class="col">
-                <p>
-                    \[\begin{cases}
-                    \rho \frac{ \partial\boldsymbol{u}}{\partial t} + \nabla p = \boldsymbol{0},
-                    \frac{1}{K} \frac{ \partial p}{\partial t} + \nabla \cdot \boldsymbol{u} = 0, &
-                    \Omega \times (0,T)\nonumber\\
-                    p = \rho g \eta,
-                    \frac{ \partial\eta}{\partial t} = \boldsymbol{u} \cdot \hat{\boldsymbol{n}}, &
-                    \Gamma_s \times (0,T) \nonumber\\
-                    \boldsymbol{u} \cdot \hat{\boldsymbol{n}} = -\frac{\partial b}{\partial t},
-                    \text{\textcolor{BF5700}{&#8592; parameter}} & \Gamma_b
-                    \times (0,T) \nonumber\\
-                    \boldsymbol{u} \cdot \hat{\boldsymbol{n}} = Z^{-1} p, & \Gamma_a \times (0,T)\nonumber
-                    \end{cases}
-                    \]
-                </p>
-            </div>
-        </div>
         <ul>
-            <li>Mixed formulation for <b class="color-emph">Velocity:</b> \(\boldsymbol{u}(x, t)\) and <b
-                    class="color-emph">Pressure:</b> \(p(x,
-                t)\)
+            <!-- p = \rho g \eta,
+                
+                
+                \boldsymbol{u} \cdot \hat{\boldsymbol{n}} = Z^{-1} p, & \Gamma_a \times (0,T)\nonumber -->
+            <li class="small-pad-math"> Mixed formulation for velocity and pressure unknowns<a
+                href="https://link.springer.com/content/pdf/10.1007/s10596-015-9472-0.pdf" target="_blank"
+                rel="noopener noreferrer">:<sup>1</sup></a>
+                \[\footnotesize
+                \begin{aligned}
+                \rho \frac{ \partial\vec{u}}{\partial t} + \nabla p &= \vec{0}, \\
+                \frac{1}{K} \frac{ \partial p}{\partial t} + \nabla \cdot \vec{u} &= 0,
+                \Omega \times (0,T)
+                \end{aligned}
+                \]
             </li>
             <li>Boundary conditions:
                 <ul>
-                    <li>ODE type BC on sea surface for <b class="color-emph">Surface Gravity Wave Height:</b> \(\eta(x,
-                        t)\)
+                    <li class="small-pad-math">ODE type BC (sea surface):
+                        \[\small
+                        p = \rho g \eta,
+                        \frac{ \partial\eta}{\partial t} = \vec{u} \cdot \hat{\vec{n}} \text{ on }
+                        \Gamma_\text{surface} \times (0,T)
+                        \]
                     </li>
-                    <li><b class="color-emph">Seafloor velocity:</b> \(-\partial_t b\) BC on bottom surface</li>
-                    <li>1<sup>st</sup> order absorbing BC (or PML) on lateral surface</li>
+                    <li class="small-pad-math">Seafloor velocity (boundary source):
+                        \[\small
+                        \vec{u} \cdot \hat{\vec{n}} = -\frac{\partial b}{\partial t} \text{ on }
+                        \Gamma_{\text{bottom}}
+                        \times (0,T) \]
+                    </li>
+                    <li class="small-pad-math">First order absorbing BC (outgoing waves):
+                        \[\small
+                        \vec{u} \cdot \hat{\vec{n}} = -\frac{1}{\rho c} p, \text{ on
+                        }\Gamma_\text{lateral} \times (0,T), c = \sqrt{K/\rho}
+                        \]
+                    </li>
                 </ul>
             </li>
-            <li> Homogeneous ICs</li>
-            <li><b class="color-emph">Observations</b> of pressure \(p\) at seafloor sensors </li>
+            <li> Homogeneous initial conditions</li>
         </ul>
 
 
-        <p class="footnote">Bulk modulus \(K\), density \(\rho\), \(Z = \rho c\), \(c = \sqrt{K/\rho}\);
-            Implemented in <a href="https://mfem.org/" target="_blank" rel="noopener noreferrer">MFEM</a></p>
+        <p class="footnote">Implemented in <a href="https://mfem.org/" target="_blank"
+                rel="noopener noreferrer">MFEM</a> with high-order finite elements and RK4 time-stepping. <a
+                href="https://link.springer.com/content/pdf/10.1007/s10596-015-9472-0.pdf" target="_blank"
+                rel="noopener noreferrer"><sup>1</sup>Lotto and Dunham (2015)</a></p>
         <aside class="notes" aria-label="physparams">
             absorbing BCs on Gamma_a: 1st order, PML
             <br>
@@ -71,36 +78,37 @@
     <section data-auto-animate>
         <h4>Weak Formulation</h4>
         <ul>
-            <li>
-                Find
-                \(\boldsymbol{u} \in \mathcal{U},\, p \in \mathcal{V}\), such that
+            <li class="small-pad-math">
+                Multiply with
+                test functions \((\vec \tau, v)\) and integrate-by-parts the second equation; the ODE boundary condition
+                is imposed weakly:<br> Find \(\vec{u} \in \mathcal{U},\, p \in \mathcal{V}\), such that
                 \[
                 \begin{aligned}
                 &\int_0^T \! \! \! \int_\Omega
-                \left[ \rho\frac{\partial \boldsymbol{u}}{\partial{t}} \cdot \boldsymbol{v} +
-                \nabla p \cdot \boldsymbol{v} \right] \text{d} x \text{d} t
+                \left[ \rho\frac{\partial \vec{u}}{\partial{t}} \cdot \vec{\tau} +
+                \nabla p \cdot \vec{\tau} \right] \text{d} \vec{x} \text{d} t
                 = 0 \, , \quad
-                \boldsymbol{v} \in \mathcal{U}, \\
+                \vec{\tau} \in \mathcal{U}, \\
                 &\int_0^T \! \! \! \int_\Omega
-                \left[ \frac{1}{K}\frac{\partial p}{\partial t} q - \boldsymbol{u} \cdot \nabla{q} \right] \text{d}
-                x \text{d} t \,
+                \left[ \frac{1}{K}\frac{\partial p}{\partial t} v - \vec{u} \cdot \nabla{v} \right] \text{d}
+                \vec{x} \text{d} t \,
                 +\int_0^T \! \! \! \int_{\Gamma_s}
-                \frac{1}{\rho g} \frac{\partial p}{\partial t} q
-                \text{d} x \text{d} t
+                \frac{1}{\rho g} \frac{\partial p}{\partial t} v
+                \text{d} \vec{x} \text{d} t
                 \\
                 +&\int_0^T \! \! \! \int_{\Gamma_a}
-                \frac{1}{\rho c} p q
-                \text{d} x \text{d} t
+                \frac{1}{\rho c} p v
+                \text{d} \vec{x} \text{d} t
                 =
                 \int_0^T \! \! \! \int_{\Gamma_b}
-                \frac{\partial b}{\partial t} q
-                \text{d} x \text{d} t
+                \frac{\partial b}{\partial t} v
+                \text{d} \vec{x} \text{d} t
                 \, , \quad
-                q \in \mathcal{V},
+                v \in \mathcal{V},
                 \end{aligned}
                 \]
             </li>
-            <li>Function spaces: \(\mathcal{U} = \boldsymbol{L^2}(\Omega) \times L^2(0,T)\), \(\mathcal{V} = H^1(\Omega)
+            <li>Function spaces: \(\mathcal{U} = (L^2(\Omega))^d \times L^2(0,T)\),<br>\(\mathcal{V} = H^1(\Omega)
                 \times
                 L^2(0,T)\) (+ homogeneous ICs)</li>
             <li>Surface gravity wave height \(\eta\) recovered from surface BCs</li>

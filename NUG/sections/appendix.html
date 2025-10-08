@@ -44,7 +44,8 @@
                 \Gamma_{q} \coloneqq
                 \mathbf{F}_{q}\Gamma_{\!\text{post}}\mathbf{F}^*_{q} \sim N_qN_t\times N_qN_t\)
             </li>
-            <li>For the CSZ application, \(N_q \approx N_d\), so \(\Gamma_{\!\text{post}}\) can be feasibly computed </li>
+            <li>For the CSZ application, \(N_q \approx N_d\), so \(\Gamma_{\!\text{post}}\) can be feasibly computed
+            </li>
             <ul>
                 <li>Defining \(\mathbf{G}_{q}^* \coloneqq
                     \Gamma_{\!\text{prior}}\mathbf{F}_{q}^*\),
@@ -71,25 +72,32 @@
             \mathbf{m}_{\text{map}}=\Gamma_{\!\text{prior}}\left(\mathbf{I} -
             \mathbf{F}^*\textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\Gamma_{\!\text{prior}}\right)\mathbf{F}^*\Gamma_{\!\text{noise}}^{-1}\mathbf{d}
             \)</p> -->
-   
+
         <ul>
             <li>Online computation:
                 \[\begin{align*}
-            \mathbf{m}_{\text{map}}&=\mathbf{G}^*\left(\mathbf{I} -
-            \textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\mathbf{G}^*\right)\Gamma_{\!\text{noise}}^{-1}\mathbf{d},
-            \\
-            \mathbf{q} &= \mathbf{F}_{q}\mathbf{m}_{\text{map}}
-            \end{align*}
-            \]
+                \mathbf{m}_{\text{map}}&=\mathbf{G}^*\left(\mathbf{I} -
+                \textcolor{BF5700}{\mathbf{K}}^{-1}\mathbf{F}\mathbf{G}^*\right)\Gamma_{\!\text{noise}}^{-1}\mathbf{d},
+                \\
+                \mathbf{q} &= \mathbf{F}_{q}\mathbf{m}_{\text{map}}
+                \end{align*}
+                \]
             </li>
             <li>QoI \(\mathbf{q}\) can be computed as \(\mathbf{F}_q \mathbf{m}\) or as \(\mathbf{Q}\mathbf{d}\)</li>
         </ul>
-        
+
 
         <!-- <p class="footnote"> <em class="color-emph"><sup>&ast;</sup>For priors with spatial correlation
                 only, \(\Gamma_{\!\text{prior}}\mathbf{F}^*\) is also block-triangular Toeplitz.</em>
         </p> -->
-
+        <a href="https://youtu.be/hc81_WzGF_Q" target="_blank" rel="noopener noreferrer">Algorithm
+            animation</a>.
     </section>
-
+    <section data-auto-animate data-visibility="uncounted">
+        <h4>FFTMatvec Animation</h4>
+        <iframe class="r-stretch" src="https://www.youtube.com/embed/hc81_WzGF_Q?si=L45rptDgF5MGZmkj"
+            title="YouTube video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </section>
 </section>
