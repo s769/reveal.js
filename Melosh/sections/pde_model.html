@@ -70,36 +70,36 @@
     </section>
     <section data-auto-animate>
         <h4>Weak Formulation</h4>
-        <p>
-            \[
-            \begin{aligned}
-            &\text{Find }
-            \boldsymbol{u} \in \mathcal{U},\, p \in \mathcal{V}, \text{such that} \\
-            &\int_0^T \! \! \! \int_\Omega
-            \left[ \rho\frac{\partial \boldsymbol{u}}{\partial{t}} \cdot \boldsymbol{v} +
-            \nabla p \cdot \boldsymbol{v} \right] \text{d} x \text{d} t
-            = 0 \, , \quad
-            \boldsymbol{v} \in \mathcal{U}, \\
-            &\int_0^T \! \! \! \int_\Omega
-            \left[ \frac{1}{K}\frac{\partial p}{\partial t} q - \boldsymbol{u} \cdot \nabla{q} \right] \text{d}
-            x \text{d} t \,
-            +\int_0^T \! \! \! \int_{\Gamma_s}
-            \frac{1}{\rho g} \frac{\partial p}{\partial t} q
-            \text{d} x \text{d} t 
-            \\
-            +&\int_0^T \! \! \! \int_{\Gamma_a}
-            \frac{1}{\rho c} p q
-            \text{d} x \text{d} t
-            =
-            \int_0^T \! \! \! \int_{\Gamma_b}
-            \frac{\partial b}{\partial t} q
-            \text{d} x \text{d} t
-            \, , \quad
-             q \in \mathcal{V},
-            \end{aligned}
-            \]
-        </p>
         <ul>
+            <li>
+                Find
+                \(\boldsymbol{u} \in \mathcal{U},\, p \in \mathcal{V}\), such that
+                \[
+                \begin{aligned}
+                &\int_0^T \! \! \! \int_\Omega
+                \left[ \rho\frac{\partial \boldsymbol{u}}{\partial{t}} \cdot \boldsymbol{v} +
+                \nabla p \cdot \boldsymbol{v} \right] \text{d} x \text{d} t
+                = 0 \, , \quad
+                \boldsymbol{v} \in \mathcal{U}, \\
+                &\int_0^T \! \! \! \int_\Omega
+                \left[ \frac{1}{K}\frac{\partial p}{\partial t} q - \boldsymbol{u} \cdot \nabla{q} \right] \text{d}
+                x \text{d} t \,
+                +\int_0^T \! \! \! \int_{\Gamma_s}
+                \frac{1}{\rho g} \frac{\partial p}{\partial t} q
+                \text{d} x \text{d} t
+                \\
+                +&\int_0^T \! \! \! \int_{\Gamma_a}
+                \frac{1}{\rho c} p q
+                \text{d} x \text{d} t
+                =
+                \int_0^T \! \! \! \int_{\Gamma_b}
+                \frac{\partial b}{\partial t} q
+                \text{d} x \text{d} t
+                \, , \quad
+                q \in \mathcal{V},
+                \end{aligned}
+                \]
+            </li>
             <li>Function spaces: \(\mathcal{U} = \boldsymbol{L^2}(\Omega) \times L^2(0,T)\), \(\mathcal{V} = H^1(\Omega)
                 \times
                 L^2(0,T)\) (+ homogeneous ICs)</li>

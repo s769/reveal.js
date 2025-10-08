@@ -93,79 +93,6 @@
 
     </section>
 
-    <!-- \item Time-stepping operator:
-\bes
-    \left[
-    \vb u_\delta \ \vb p_\delta
-    \right]^T
-    = \vb M^{-1}
-    \left(
-    - \vb A
-    \left[
-    \vb u \ \vb p
-    \right]_i^T
-    +
-    \left[
-    \vb f \ \vb g
-    \right]_i^T
-    \right) ,
-\ees
-where $\left[ \vb u \ \vb p \right]_i^T$ and $\left[ \vb f \ \vb g \right]_i^T$ are respectively the state and right-hand-side (RHS) vectors at time instance $i$, and $\left[ \vb u_\delta \ \vb p_\delta \right]$ is the state increment used by RK4. \vspace{10pt}
-\item The mass matrix $\vb M$ and stiffness matrix $\vb A$ are discretizations of the block operators $M$ and $A$ defined by:
-\bes
-    \! \! \! \! \left( \!
-    M \!
-    \left[
-    \begin{array}{@{}c@{}}
-        \vec u \\
-        p
-    \end{array}
-    \right] \! , \!
-    \left[
-    \begin{array}{@{}c@{}}
-        \vec \tau \\
-        v
-    \end{array}
-    \right]
-    \right)
-    \coloneq
-    \left[
-    \begin{array}{@{}cc@{}}
-        (\rho \vec u, \vec \tau) & 0 \\
-        0 & \! \! \! (K^{-1} p, v) + \lb(\rho g)^{-1} p, v \rb_{\p \Omega_{\text s}} \\
-    \end{array}
-    \right]
-    \! \!
-\ees
-and
-\bes
-    \left( \!
-    A \!
-    \left[
-    \begin{array}{@{}c@{}}
-        \vec u \\
-        p
-    \end{array}
-    \right] \! , \! 
-    \left[
-    \begin{array}{@{}c@{}}
-        \vec \tau \\
-        v
-    \end{array}
-    \right]
-    \right)
-    \coloneq
-    \left[
-    \begin{array}{@{}cc@{}}
-        0 & (\nabla p, \vec \tau) \\
-        -(\vec u, \nabla v) & \lb (\rho c)^{-1} p, v \rb_{\p \Omega_{\text a}} \\
-    \end{array}
-    \right] ,
-\ees
-where $\vec u, \vec \tau \in (L^2(\Omega))^d$ and $p, v \in H^1(\Omega)$; $(\cdot, \cdot)$ denotes the (component-wise) $L^2(\Omega)$ inner product, and $\lb \cdot, \cdot \rb_{\p \Omega}$ is the $L^2(\p \Omega)$ inner product over (part of) the boundary $\p \Omega$.
-\end{itemize} -->
-
-
     <section data-auto-animate data-visibility="uncounted">
         <h4>RK4 Time Stepping</h4>
         <ul>
@@ -319,6 +246,34 @@ where $\vec u, \vec \tau \in (L^2(\Omega))^d$ and $p, v \in H^1(\Omega)$; $(\cdo
             </li>
             <li>Terminal conditions (homogeneous).</li>
         </ul>
+    </section>
+
+    <section data-auto-animate data-visibility="uncounted">
+        <h4>Weak Adjoint Formulation</h4>
+        <ul>
+            <li>Find \((\boldsymbol{\tau}, v) \in \mathcal{U} \times \mathcal{V}\) such that for all
+                \((\boldsymbol{\sigma}, q) \in \mathcal{U} \times \mathcal{V}\):
+                \[\footnotesize
+                \begin{aligned}
+                &\int_0^T \int_\Omega \left( \frac{\partial \boldsymbol{\tau}}{\partial t} \cdot \boldsymbol{\sigma} +
+                c_2 \nabla v \cdot \boldsymbol{\sigma} \right) \, d\boldsymbol{x} \, dt = 0, \\
+                &\int_0^T \int_\Omega \left( \frac{\partial v}{\partial t} q - c_1 \boldsymbol{\tau} \cdot \nabla q
+                \right) \, d\boldsymbol{x} \, dt
+                + \int_0^T \int_{\Gamma_s} \frac{c_2}{c_3} \frac{\partial v}{\partial t} q \, d\boldsymbol{x} \, dt
+                - \int_0^T \int_{\Gamma_a} \sqrt{c_1 c_2} v q \, d\boldsymbol{x} \, dt \\
+                &\quad = \int_0^T \int_{\Gamma_b} \mathcal{B}^* \Gamma_{\text{noise}}^{-1} (\mathcal{B} p - d) q \,
+                d\boldsymbol{x} \, dt,
+                \end{aligned}
+                \]
+                with \(\mathcal{U} = \boldsymbol{L^2}(\Omega) \times L^2(0,T)\), \(\mathcal{V} = H^1(\Omega)
+                \times
+                L^2(0,T)\) defined as for the forward problem but prescribing
+                homogeneous terminal conditions instead of initial conditions. The
+                adjoint surface height \(\xi_s\) can be recovered from the adjoint pressure \(v\) via the surface
+                boundary condition.
+            </li>
+        </ul>
+
     </section>
 
     <section data-visibility="uncounted" data-auto-animate>
