@@ -115,27 +115,27 @@
                 operators \(M\) and \(A\) defined by:
                 \[\footnotesize
                 \begin{aligned}
-                \left( M \begin{bmatrix} \vec{u} \\ p \end{bmatrix}, \begin{bmatrix} \vec{\tau} \\ v \end{bmatrix}
+                \left( M \begin{bmatrix} \vec{u} \\ p \end{bmatrix}, \begin{bmatrix} \vec{\tau} \\ w \end{bmatrix}
                 \right)
                 &\coloneqq
                 \left[
                 \begin{array}{cc}
                 (\rho \vec{u}, \vec{\tau}) & 0 \\
-                0 & (K^{-1} p, v) + \langle(\rho g)^{-1} p, v \rangle_{\partial \Omega_{\text{s}}}
+                0 & (K^{-1} p, w) + \langle(\rho g)^{-1} p, w \rangle_{\partial \Omega_{\text{s}}}
                 \end{array}
                 \right],\\
-                \left( A \begin{bmatrix} \vec{u} \\ p \end{bmatrix}, \begin{bmatrix} \vec{\tau} \\ v \end{bmatrix}
+                \left( A \begin{bmatrix} \vec{u} \\ p \end{bmatrix}, \begin{bmatrix} \vec{\tau} \\ w \end{bmatrix}
                 \right)
                 &\coloneqq
                 \left[
                 \begin{array}{cc}
                 0 & (\nabla p, \vec{\tau}) \\
-                -(\vec{u}, \nabla v) & \langle (\rho c)^{-1} p, v \rangle_{\partial \Omega_{\text{a}}}
+                -(\vec{u}, \nabla w) & \langle (\rho c)^{-1} p, w \rangle_{\partial \Omega_{\text{a}}}
                 \end{array}
                 \right],
                 \end{aligned}
                 \]
-                where \(\vec{u}, \vec{\tau} \in (L^2(\Omega))^d\) and \(p, v \in H^1(\Omega)\); \((\cdot, \cdot)\)
+                where \(\vec{u}, \vec{\tau} \in (L^2(\Omega))^d\) and \(p, w \in H^1(\Omega)\); \((\cdot, \cdot)\)
                 denotes the (component-wise) \(L^2(\Omega)\) inner product, and \(\langle \cdot, \cdot \rangle_{\partial
                 \Omega}\) is the \(L^2(\partial \Omega)\) inner product over (part of) the boundary \(\partial \Omega\).
             </li>
@@ -203,8 +203,8 @@
             \(p = \rho g \eta\) on \(\Gamma_s\) and sound-soft BC \(p=0\) on \(\Gamma_a\) for wavenumber \(k_n = n \pi /
             L, n =
             1\). Optimal convergence rates are
-            attained for \((\boldsymbol{d\mathcal{P}}_{\! r-1}, \mathcal{P}_r)\) elements for discontinuous velocity
-            \(\boldsymbol{u}\) and continuous
+            attained for \((\vec{d\mathcal{P}}_{\! r-1}, \mathcal{P}_r)\) elements for discontinuous velocity
+            \(\vec{u}\) and continuous
             pressure \(p\) when \(\Delta t \sim h^{r/2}\).</p>
     </section>
 
@@ -214,14 +214,14 @@
     <section data-visibility="uncounted" data-auto-animate>
         <h4>Adjoint Problem</h4>
         <ul>
-            <li>Strong form of (non-dimensional) adjoint system (\(\boldsymbol{\tau}\) is adjoint velocity, \(v\) is
+            <li>Strong form of (non-dimensional) adjoint system (\(\vec{\tau}\) is adjoint velocity, \(w\) is
                 adjoint
                 pressure):
                 \[
                 \begin{align*}
-                \frac{\partial \boldsymbol{\tau}}{\partial t} + c_2 \nabla v &= \boldsymbol{0} && \text{in } \Omega
+                \frac{\partial \vec{\tau}}{\partial t} + c_2 \nabla w &= \vec{0} && \text{in } \Omega
                 \times (0,T), \\
-                \frac{\partial v}{\partial t} + c_1 \nabla \cdot \boldsymbol{\tau} &= 0 && \text{in } \Omega \times
+                \frac{\partial w}{\partial t} + c_1 \nabla \cdot \vec{\tau} &= 0 && \text{in } \Omega \times
                 (0,T) .
                 \end{align*}
                 \]
@@ -231,15 +231,15 @@
     <section data-visibility="uncounted" data-auto-animate>
         <h4>Adjoint Problem</h4>
         <ul>
-            <li>BCs with first-order ABC on \(\Gamma_a\) (\(\xi_s\) is the adjoint gravity wave height):
+            <li>BCs with first-order ABC on \(\Gamma_{\text{lateral}}\) (\(\xi_s\) is the adjoint gravity wave height):
                 \[
                 \begin{align*}
-                v &= \frac{1}{c_2} \xi_s && \text{on } \Gamma_s \times (0,T) , \\
-                \frac{\partial \xi_s}{\partial t} &= c_1 c_3 \boldsymbol{\tau} \cdot \boldsymbol{n} && \text{on }
-                \Gamma_s \times (0,T) , \\
-                \boldsymbol{\tau} \cdot \boldsymbol{n} &= -\frac{1}{c_1} \mathcal{B}^* \Gamma_{\!\text{noise}}^{-1}
-                (\mathcal{B} p - d) && \text{on } \Gamma_b \times (0,T) , \\
-                \boldsymbol{\tau} \cdot \boldsymbol{n} &= -\sqrt{\frac{c_2}{c_1}} v && \text{on } \Gamma_a \times (0,T)
+                w &= \frac{1}{c_2} \xi_s && \text{on } \Gamma_{\text{surface}} \times (0,T) , \\
+                \frac{\partial \xi_s}{\partial t} &= c_1 c_3 \vec{\tau} \cdot \vec{n} && \text{on }
+                \Gamma_{\text{surface}} \times (0,T) , \\
+                \vec{\tau} \cdot \vec{n} &= -\frac{1}{c_1} \mathcal{B}^* \Gamma_{\!\text{noise}}^{-1}
+                (\mathcal{B} p - d) && \text{on } \Gamma_{\text{bottom}} \times (0,T) , \\
+                \vec{\tau} \cdot \vec{n} &= -\sqrt{\frac{c_2}{c_1}} w && \text{on } \Gamma_{\text{lateral}} \times (0,T)
                 .
                 \end{align*}
                 \]
@@ -251,25 +251,25 @@
     <section data-auto-animate data-visibility="uncounted">
         <h4>Weak Adjoint Formulation</h4>
         <ul>
-            <li>Find \((\boldsymbol{\tau}, v) \in \mathcal{U} \times \mathcal{V}\) such that for all
-                \((\boldsymbol{\sigma}, q) \in \mathcal{U} \times \mathcal{V}\):
+            <li>Find \((\vec{\tau}, w) \in \mathcal{U} \times \mathcal{V}\) such that for all
+                \((\vec{\sigma}, q) \in \mathcal{U} \times \mathcal{V}\):
                 \[\footnotesize
                 \begin{aligned}
-                &\int_0^T \int_\Omega \left( \frac{\partial \boldsymbol{\tau}}{\partial t} \cdot \boldsymbol{\sigma} +
-                c_2 \nabla v \cdot \boldsymbol{\sigma} \right) \, d\boldsymbol{x} \, dt = 0, \\
-                &\int_0^T \int_\Omega \left( \frac{\partial v}{\partial t} q - c_1 \boldsymbol{\tau} \cdot \nabla q
-                \right) \, d\boldsymbol{x} \, dt
-                + \int_0^T \int_{\Gamma_s} \frac{c_2}{c_3} \frac{\partial v}{\partial t} q \, d\boldsymbol{x} \, dt
-                - \int_0^T \int_{\Gamma_a} \sqrt{c_1 c_2} v q \, d\boldsymbol{x} \, dt \\
-                &\quad = \int_0^T \int_{\Gamma_b} \mathcal{B}^* \Gamma_{\text{noise}}^{-1} (\mathcal{B} p - d) q \,
-                d\boldsymbol{x} \, dt,
+                &\int_0^T \int_\Omega \left( \frac{\partial \vec{\tau}}{\partial t} \cdot \vec{\sigma} +
+                c_2 \nabla w \cdot \vec{\sigma} \right) \, d\vec{x} \, dt = 0, \\
+                &\int_0^T \int_\Omega \left( \frac{\partial w}{\partial t} q - c_1 \vec{\tau} \cdot \nabla q
+                \right) \, d\vec{x} \, dt
+                + \int_0^T \int_{\Gamma_{\text{surface}}} \frac{c_2}{c_3} \frac{\partial w}{\partial t} q \, d\vec{x} \, dt\\
+                - &\int_0^T \int_{\Gamma_{\text{lateral}}} \sqrt{c_1 c_2} w q \, d\vec{x} \, dt 
+                \quad = \int_0^T \int_{\Gamma_{\text{bottom}}} \mathcal{B}^* \Gamma_{\text{noise}}^{-1} (\mathcal{B} p - d) q \,
+                d\vec{x} \, dt,
                 \end{aligned}
                 \]
-                with \(\mathcal{U} = \boldsymbol{L^2}(\Omega) \times L^2(0,T)\), \(\mathcal{V} = H^1(\Omega)
+                with \(\mathcal{U} = (L^2(\Omega))^d \times L^2(0,T)\), \(\mathcal{V} = H^1(\Omega)
                 \times
                 L^2(0,T)\) defined as for the forward problem but prescribing
                 homogeneous terminal conditions instead of initial conditions. The
-                adjoint surface height \(\xi_s\) can be recovered from the adjoint pressure \(v\) via the surface
+                adjoint surface height \(\xi_s\) can be recovered from the adjoint pressure \(w\) via the surface
                 boundary condition.
             </li>
         </ul>
@@ -283,23 +283,23 @@
                 \[
                 \mathcal{H} m := \left\{
                 \begin{aligned}
-                \alpha_1 m - \alpha_2 \nabla^2 m - \alpha_3 \frac{\partial^2 m}{\partial t^2} - c_2 v
-                & \quad \text{on } \Gamma_b \times (0,T) , \\
-                \alpha_2 \frac{\partial m}{\partial \boldsymbol{n}}
-                & \quad \text{on } \partial \Gamma_b \times (0,T) , \\
+                \alpha_1 m - \alpha_2 \nabla^2 m - \alpha_3 \frac{\partial^2 m}{\partial t^2} - c_2 w
+                & \quad \text{on } \Gamma_{\text{bottom}} \times (0,T) , \\
+                \alpha_2 \frac{\partial m}{\partial \vec{n}}
+                & \quad \text{on } \partial \Gamma_{\text{bottom}} \times (0,T) , \\
                 0
-                & \quad \text{on } \Gamma_b \times \{ 0 \} , \\
+                & \quad \text{on } \Gamma_{\text{bottom}} \times \{ 0 \} , \\
                 \alpha_3 \frac{\partial m}{\partial t}
-                & \quad \text{on } \Gamma_b \times \{ T \} .
+                & \quad \text{on } \Gamma_{\text{bottom}} \times \{ T \} .
                 \end{aligned}
                 \right.
                 \]
-                with compatibility condition \(m(\boldsymbol{x},0) = 0, \boldsymbol{x} \in \Gamma_b\).
+                with compatibility condition \(m(\vec{x},0) = 0, \vec{x} \in \Gamma_{\text{bottom}}\).
             </li>
             <li>Steps to obtain Hessian action:
                 <ol>
-                    <li>Solve forward problem for \((\boldsymbol{u}, p, \eta)\)</li>
-                    <li>Solve adjoint problem for \((\boldsymbol{\tau}, v, \xi_s)\)</li>
+                    <li>Solve forward problem for \((\vec{u}, p, \eta)\)</li>
+                    <li>Solve adjoint problem for \((\vec{\tau}, w, \xi_s)\)</li>
                     <li>Evaluate Hessian action on \(m\), as defined above</li>
                 </ol>
             </li>
