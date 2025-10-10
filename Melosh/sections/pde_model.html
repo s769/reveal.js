@@ -41,19 +41,19 @@
                     <li class="small-pad-math">ODE type BC (sea surface):
                         \[\small
                         p = \rho g \eta,
-                        \frac{ \partial\eta}{\partial t} = \vec{u} \cdot \hat{\vec{n}} \text{ on }
+                        \frac{ \partial\eta}{\partial t} = \vec{u} \cdot \vec{n} \text{ on }
                         \Gamma_\text{surface} \times (0,T)
                         \]
                     </li>
                     <li class="small-pad-math">Seafloor velocity (boundary source):
                         \[\small
-                        \vec{u} \cdot \hat{\vec{n}} = -\frac{\partial b}{\partial t} \text{ on }
+                        \vec{u} \cdot \vec{n} = -\frac{\partial b}{\partial t} \text{ on }
                         \Gamma_{\text{bottom}}
                         \times (0,T) \]
                     </li>
                     <li class="small-pad-math">First order absorbing BC (outgoing waves):
                         \[\small
-                        \vec{u} \cdot \hat{\vec{n}} = -\frac{1}{\rho c} p, \text{ on
+                        \vec{u} \cdot \vec{n} = -\frac{1}{\rho c} p, \text{ on
                         }\Gamma_\text{lateral} \times (0,T), c = \sqrt{K/\rho}
                         \]
                     </li>
@@ -63,8 +63,7 @@
         </ul>
 
 
-        <p class="footnote">Implemented in <a href="https://mfem.org/" target="_blank"
-                rel="noopener noreferrer">MFEM</a> with high-order finite elements and RK4 time-stepping. <a
+        <p class="footnote"><a
                 href="https://link.springer.com/content/pdf/10.1007/s10596-015-9472-0.pdf" target="_blank"
                 rel="noopener noreferrer"><sup>1</sup>Lotto and Dunham (2015)</a></p>
         <aside class="notes" aria-label="physparams">
@@ -82,7 +81,7 @@
                 Multiply with
                 test functions \((\vec \tau, v)\) and integrate-by-parts the second equation; the ODE boundary condition
                 is imposed weakly:<br> Find \(\vec{u} \in \mathcal{U},\, p \in \mathcal{V}\), such that
-                \[
+                \[\footnotesize
                 \begin{aligned}
                 &\int_0^T \! \! \! \int_\Omega
                 \left[ \rho\frac{\partial \vec{u}}{\partial{t}} \cdot \vec{\tau} +
@@ -112,6 +111,8 @@
                 \times
                 L^2(0,T)\) (+ homogeneous ICs)</li>
             <li>Surface gravity wave height \(\eta\) recovered from surface BCs</li>
+            <li>Implemented in <a href="https://mfem.org/" target="_blank"
+                rel="noopener noreferrer">MFEM</a> with high-order finite elements and RK4 time-stepping.</li>
         </ul>
         <aside class="notes" aria-label="weakform">
             <p>Nonstandard weak form allows traces of pressure to be taken on boundaries</p>

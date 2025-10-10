@@ -106,7 +106,8 @@
                 [\mathbf{f} \ \mathbf{g}]_i^T
                 \right),
                 \]
-                where \([\mathbf{u} \ \mathbf{p}]_i^T\) and \([\mathbf{f} \ \mathbf{g}]_i^T\) are respectively the state and
+                where \([\mathbf{u} \ \mathbf{p}]_i^T\) and \([\mathbf{f} \ \mathbf{g}]_i^T\) are respectively the state
+                and
                 RHS vectors at time instance \(i\), and \([\mathbf{u}_\delta \ \mathbf{p}_\delta]^T\) is the RK4
                 state increment.
             </li>
@@ -259,9 +260,11 @@
                 c_2 \nabla w \cdot \vec{\sigma} \right) \, d\vec{x} \, dt = 0, \\
                 &\int_0^T \int_\Omega \left( \frac{\partial w}{\partial t} q - c_1 \vec{\tau} \cdot \nabla q
                 \right) \, d\vec{x} \, dt
-                + \int_0^T \int_{\Gamma_{\text{surface}}} \frac{c_2}{c_3} \frac{\partial w}{\partial t} q \, d\vec{x} \, dt\\
-                - &\int_0^T \int_{\Gamma_{\text{lateral}}} \sqrt{c_1 c_2} w q \, d\vec{x} \, dt 
-                \quad = \int_0^T \int_{\Gamma_{\text{bottom}}} \mathcal{B}^* \Gamma_{\text{noise}}^{-1} (\mathcal{B} p - d) q \,
+                + \int_0^T \int_{\Gamma_{\text{surface}}} \frac{c_2}{c_3} \frac{\partial w}{\partial t} q \, d\vec{x} \,
+                dt\\
+                - &\int_0^T \int_{\Gamma_{\text{lateral}}} \sqrt{c_1 c_2} w q \, d\vec{x} \, dt
+                \quad = \int_0^T \int_{\Gamma_{\text{bottom}}} \mathcal{B}^* \Gamma_{\text{noise}}^{-1} (\mathcal{B} p -
+                d) q \,
                 d\vec{x} \, dt,
                 \end{aligned}
                 \]
@@ -278,24 +281,25 @@
 
     <section data-visibility="uncounted" data-auto-animate>
         <h4>Hessian Action</h4>
+        <p>
+            \[
+            \mathcal{H} m := \left\{
+            \begin{aligned}
+            \alpha_1 m - \alpha_2 \nabla^2 m - \alpha_3 \frac{\partial^2 m}{\partial t^2} - c_2 w
+            & \quad \text{on } \Gamma_{\text{bottom}} \times (0,T) , \\
+            \alpha_2 \frac{\partial m}{\partial \vec{n}}
+            & \quad \text{on } \partial \Gamma_{\text{bottom}} \times (0,T) , \\
+            0
+            & \quad \text{on } \Gamma_{\text{bottom}} \times \{ 0 \} , \\
+            \alpha_3 \frac{\partial m}{\partial t}
+            & \quad \text{on } \Gamma_{\text{bottom}} \times \{ T \} .
+            \end{aligned}
+            \right.
+            \]
+            with compatibility condition \(m(\vec{x},0) = 0, \vec{x} \in \Gamma_{\text{bottom}}\).
+        </p>
         <ul>
-            <li>
-                \[
-                \mathcal{H} m := \left\{
-                \begin{aligned}
-                \alpha_1 m - \alpha_2 \nabla^2 m - \alpha_3 \frac{\partial^2 m}{\partial t^2} - c_2 w
-                & \quad \text{on } \Gamma_{\text{bottom}} \times (0,T) , \\
-                \alpha_2 \frac{\partial m}{\partial \vec{n}}
-                & \quad \text{on } \partial \Gamma_{\text{bottom}} \times (0,T) , \\
-                0
-                & \quad \text{on } \Gamma_{\text{bottom}} \times \{ 0 \} , \\
-                \alpha_3 \frac{\partial m}{\partial t}
-                & \quad \text{on } \Gamma_{\text{bottom}} \times \{ T \} .
-                \end{aligned}
-                \right.
-                \]
-                with compatibility condition \(m(\vec{x},0) = 0, \vec{x} \in \Gamma_{\text{bottom}}\).
-            </li>
+
             <li>Steps to obtain Hessian action:
                 <ol>
                     <li>Solve forward problem for \((\vec{u}, p, \eta)\)</li>

@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <section>
     <section data-auto-animate>
-        <h4>Goals:</h4>
+        <h4>Goals</h4>
         <ul>
-            <li><b class="color-emph">Inverse Problem:</b> given pressure recordings from sensors on the seafloor, infer
-                infer the earthquake-induced seafloor motion</li>
+            <li><b class="color-emph">Inverse Problem:</b> Given pressure recordings from sensors on the seafloor, infer
+                the earthquake-induced seafloor motion</li>
             <li><b class="color-emph">Prediction Problem:</b> Given inferred spatiotemporal seafloor motion,
                 predict tsunami wave heights at sample locations/times</li>
         </ul>
     </section>
-    <!-- <section data-auto-animate>
+    <section data-auto-animate>
         <h4>Bayesian Inverse Problem</h4>
         <ul>
             <li>
@@ -43,8 +43,8 @@
                 \pi_{\text{like}}(d|m) \]
             </li>
         </ul>
-    </section> -->
-    <section data-auto-animate>
+    </section>
+    <!-- <section data-auto-animate>
         <h4>Bayesian Inverse Problem</h4>
         <ul>
             <li>
@@ -83,7 +83,7 @@
                 target="_blank" rel="noopener noreferrer">Stuart, A. M. (2010). Inverse problems: a Bayesian
                 perspective. Acta numerica, 19, 451-559.</a></p>
 
-    </section>
+    </section> -->
     <section data-auto-animate>
         <h4>Linear Inverse Problem, Gaussian Prior</h4>
         <p class="leftalign">
@@ -134,10 +134,17 @@
                 451-559.
             </a>
         </p> -->
+        <p class="footnote"><a
+                href="https://www.cambridge.org/core/journals/acta-numerica/article/inverse-problems-a-bayesian-perspective/587A3A0D480A1A7C2B1B284BCEDF7E23"
+                target="_blank" rel="noopener noreferrer">Stuart, A. M. (2010). Inverse problems: a Bayesian
+                perspective. Acta numerica, 19, 451-559.</a></p>
+
         <aside class="notes" aria-label="postcov">
             Posterior covariance does not depend on data.
             subset of the Matern family of covariance operators can be written as the inverse of an elliptic different
             operator, with the coefficients \(\alpha_i\) chosen to impose the desired correlation and variance structure
+            <br>
+            \(\gamma \gt 3/2\) for bounded pointwise variance since parameter is a 2+1D field
         </aside>
         <!-- <p class="footnote">Script = infinite-dimensional; boldface = discrete in space and time</p> -->
     </section>

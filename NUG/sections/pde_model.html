@@ -41,19 +41,19 @@
                     <li class="small-pad-math">ODE type BC (sea surface):
                         \[\small
                         p = \rho g \eta,
-                        \frac{ \partial\eta}{\partial t} = \vec{u} \cdot \hat{\vec{n}} \text{ on }
+                        \frac{ \partial\eta}{\partial t} = \vec{u} \cdot \vec{n} \text{ on }
                         \Gamma_\text{surface} \times (0,T)
                         \]
                     </li>
                     <li class="small-pad-math">Seafloor velocity (boundary source):
                         \[\small
-                        \vec{u} \cdot \hat{\vec{n}} = -\frac{\partial b}{\partial t} \text{ on }
+                        \vec{u} \cdot \vec{n} = -\frac{\partial b}{\partial t} \text{ on }
                         \Gamma_{\text{bottom}}
                         \times (0,T) \]
                     </li>
                     <li class="small-pad-math">First order absorbing BC (outgoing waves):
                         \[\small
-                        \vec{u} \cdot \hat{\vec{n}} = -\frac{1}{\rho c} p, \text{ on
+                        \vec{u} \cdot \vec{n} = -\frac{1}{\rho c} p, \text{ on
                         }\Gamma_\text{lateral} \times (0,T), c = \sqrt{K/\rho}
                         \]
                     </li>
