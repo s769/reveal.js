@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Optimal Experimental Design (OED)</h4>
+        <ul>
+            <li>Initial candidate set: $N_d = 600$ sensors.</li>
+            <li>Cost constraints limit realistic deployment to ~150-200 sensors.</li>
+        </ul>
+
+        <div class="box"
+            style="background-color: blanchedalmond; border: 1px solid black; border-radius: 20px; padding:15px; margin: 20px 0;">
+            <b class="color-emph">Goal</b>
+            <p>Select the optimal subset $S$ ($|S| \leq B$) that provides maximum information about the uncertain
+                parameters $\mathbf{m}$ or the QoI $\mathbf{q}$.</p>
+        </div>
+
+        <p class="leftalign"><b class="color-emph">Notation:</b></p>
+        <ul>
+            <li class="small-pad-math">Subscript $S$ (e.g., $\mathbf{F}_S, (\Gamma_{\!\text{post}})_S$) <span
+                    class="color-emph">restricts</span> to the sensors in $S$.</li>
+            <li>For $\mathbf{F}_S$, $\mathbf{K}_S$, etc. $\Rightarrow$ <span class="color-emph">select</span> the
+                associated
+                block rows/columns.</li>
+            <li>Other operators such as $(\Gamma_{\!\text{post}})_S$ and $(K^{-1})_S$ must be <span
+                    class="color-emph">computed
+                    using their definitions</span>, restricting to the sensors in $S$. </li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Expected Information Gain & D-Optimality</h4>
+        <ul>
+            <li><b class="color-emph">Objective:</b> Maximize expected information gain from prior to posterior.</li>
+            <li>For linear-Gaussian inverse problems, this equals the <b class="color-emph">D-optimal design
+                    criterion</b>.</li>
+            <li>We evaluate two criteria:
+                <ul>
+                    <li class="small-pad-math"><b class="color-emph">Standard:</b> Uses parameter posterior covariance
+                        $(\Gamma_{\!\text{post}})_S$</li>
+                    <li class="small-pad-math"><b class="color-emph">Goal-oriented:</b> Uses QoI posterior covariance
+                        $(\Gamma_{\!\text{post}(q)})_S$</li>
+                </ul>
+            </li>
+        </ul>
+        <br>
+        <p class="small-pad-math"><b class="color-emph">Standard D-optimal criterion:</b> Minimize log-determinant of
+            posterior covariance.
+        </p>
+        <p class="small-pad-math">\[ S_{\text{opt}} = \arg\min_{S, |S| \le B} \log\det((\Gamma_{\!\text{post}})_S) \]
+        </p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Standard D-optimal Design</h4>
+        <p class="leftalign">Use the <i>matrix determinant lemma</i> for a computable form:</p>
+        <div class="small-pad-math">
+            \[\footnotesize
+            \begin{align*}
+            \det((\Gamma_{\!\text{post}})_S) & = \det\left(\Gamma_{\!\text{prior}} -
+            \mathbf{G}_S^*\mathbf{K}_S^{-1}\mathbf{G}_S\right) \\
+            & = \det(\Gamma_{\!\text{prior}})\det\left(\mathbf{I} -
+            \Gamma_{\!\text{prior}}^{-1}\mathbf{G}_S^*\mathbf{K}_S^{-1}\mathbf{G}_S\right) \\
+            & = \det(\Gamma_{\!\text{prior}})\det\left(\mathbf{I} -
+            \mathbf{K}_S^{-1}\mathbf{G}_S\Gamma_{\!\text{prior}}^{-1}\mathbf{G}_S^*\right) \\
+            & = \det(\Gamma_{\!\text{prior}})\det(\mathbf{K}_S^{-1})\det\left(\mathbf{K}_S -
+            \mathbf{G}_S\Gamma_{\!\text{prior}}^{-1}\mathbf{G}_S^*\right) \\
+            & = \det(\Gamma_{\!\text{prior}})\det(\mathbf{K}_S^{-1})\det\left((\Gamma_{\!\text{noise}})_S\right)
+            \end{align*}
+            \]
+        </div>
+        <div class="box"
+            style="background-color: blanchedalmond; border: 1px solid black; border-radius: 20px; padding:15px; margin-top: 15px;">
+            <b class="color-emph">Computable Objective Function</b>
+            <p class="small-pad-math">\[ S_{\text{opt}} = \arg\max_{S, |S| \le B} \log\det(\mathbf{K}_S) \]</p>
+        </div>
+        <p class="footnote">Assuming $\Gamma_{\text{noise}} = \gamma^2\mathbf{I}$</p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Standard D-optimal Design: Greedy Algorithm</h4>
+        <ul>
+            <li>Combinatorial optimization is NP-hard $\rightarrow$ use a greedy approximation.</li>
+        </ul>
+        <p class="leftalign"><b class="color-emph">Algorithm Outline:</b></p>
+        <ol>
+            <li>Initialize $S = \emptyset$.</li>
+            <li class="small-pad-math">For $k = 1$ to $B$, <br>find $i^* = \arg\max_{i \notin S} \left[
+                \log\det(\mathbf{K}_{S \cup \{i\}}) - \log\det(\mathbf{K}_S) \right]$</li>
+            <li>Add best sensor: $S \leftarrow S \cup \{i^*\}$.</li>
+        </ol>
+
+        <p class="leftalign" style="margin-top: 20px;"><b class="color-emph">Efficient Computation:</b></p>
+        <ul>
+            <li class="small-pad-math">Use <span class="color-emph">Schur complement</span>: $\text{Gain}(i) = \log
+                \det(\mathbf{K}_{ii} -
+                \mathbf{K}_{iS} \mathbf{K}_S^{-1} \mathbf{K}_{Si})$</li>
+            <li class="small-pad-math">Avoid $\mathbf{K}_S^{-1}$ via <span class="color-emph">Cholesky updates</span>
+                ($\mathbf{K}_S=\mathbf{L}_S
+                \mathbf{L}_S^\top$).</li>
+            <li>Evaluating candidate sensors $i$ is <span class="color-emph">embarrassingly parallel</span>.
+            </li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Goal-oriented D-optimal Design</h4>
+        <p class="small-pad-math"><b class="color-emph">Criterion:</b> $S_{\text{opt}} = \arg\min_{S, |S| \le B}
+            \log\det((\Gamma_{\!\text{post}(q)})_S)$</p>
+
+        <p class="leftalign">Matrix determinant lemma yields the computable form:</p>
+        <div class="small-pad-math">
+            \[\footnotesize
+            \begin{align*}
+            &\det((\Gamma_{\!\text{post}(q)})_S)\\
+            = &\det\left(\mathbf{F}_q \mathbf{G}_q^* - \mathbf{F}_q \mathbf{G}_S^*
+            \mathbf{K}_S^{-1} \mathbf{G}_S \mathbf{F}_q^*\right) \\
+            = &\det(\mathbf{F}_q \mathbf{G}_q^*) \det\left(\mathbf{I} - (\mathbf{G}_S \mathbf{F}_q^*) (\mathbf{F}_q
+            \mathbf{G}_q^*)^{-1} (\mathbf{F}_q \mathbf{G}_S^*) \mathbf{K}_S^{-1}\right) \\
+            = &\det(\mathbf{F}_q \mathbf{G}_q^*) \det\left(\mathbf{I} - (\mathbf{F}_q \mathbf{G}_q^*)^{-1} \left[
+            (\mathbf{F}_q \mathbf{G}_S^*) \mathbf{K}_S^{-1} (\mathbf{G}_S \mathbf{F}_q^*) \right]\right)
+            \end{align*}
+            \]
+        </div>
+
+        <div class="box"
+            style="background-color: blanchedalmond; border: 1px solid black; border-radius: 20px; padding:15px; margin-top: 15px;">
+            <b class="color-emph">Computable Objective Function</b>
+            <p class="small-pad-math">\[\small
+                S_{\text{opt}} = \arg\max_{S, |S| \le B} -\log \det\left(\mathbf{I} - (\mathbf{F}_q \mathbf{G}_q^*)^{-1}
+                \left[ (\mathbf{F}_q \mathbf{G}_S^*) \mathbf{K}_S^{-1} (\mathbf{G}_S \mathbf{F}_q^*) \right] \right)
+                \]</p>
+        </div>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Goal-oriented D-optimal Design: Algorithm</h4>
+        <p class="leftalign">Uses the identical greedy iterative structure, but maximizes the <br> goal-oriented
+            objective
+            $J_g(S)$.</p>
+
+        <p class="leftalign" style="margin-top: 20px;"><b class="color-emph">Efficient Score Calculation</b> (for
+            candidate $i$):</p>
+        <ol style="font-size: 0.9em;">
+            <li class="small-pad-math">Compute Cholesky factor $\mathbf{L}_{S \cup \{i\}}$ via fast Schur update.</li>
+            <li class="small-pad-math">Construct $\mathbf{Y}_{S \cup \{i\}} = \mathbf{G}_{S \cup \{i\}} \mathbf{F}_q^*$.
+            </li>
+            <li class="small-pad-math">Solve $\mathbf{K}_{S \cup \{i\}} \mathbf{X} = \mathbf{Y}_{S \cup \{i\}}$ for
+                $\mathbf{X}$.</li>
+            <li class="small-pad-math">Compute core matrix $\mathbf{M}_{\text{core}} = \mathbf{Y}_{S \cup \{i\}}^*
+                \mathbf{X}$.</li>
+            <li class="small-pad-math">Score $= -\log\det(\mathbf{I} - (\mathbf{F}_q \mathbf{G}_q^*)^{-1}
+                \mathbf{M}_{\text{core}})$.</li>
+        </ol>
+        <p style="font-size: 0.8em; margin-top: 15px;"><i>Note: Computationally heavier than standard case, but
+                effectively parallelizable.</i></p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Greedy Algorithm: Key Properties</h4>
+        <ul>
+            <li class="small-pad-math"><b class="color-emph">Precomputation:</b> All relevant operators ($\mathbf{K},
+                (\mathbf{F}_q\mathbf{G}_q^*)^{-1}, \mathbf{F}_q\mathbf{G}^*$) are precomputed/stored as dense matrices
+                via fast FFT-based algorithms.<sup><a href="https://epubs.siam.org/doi/abs/10.1137/24M1683172"
+                        target="_blank" rel="noopener noreferrer">1</a>,<a
+                        href="https://dl.acm.org/doi/full/10.1145/3731599.3767490" target="_blank"
+                        rel="noopener noreferrer">2</a></sup></li>
+            <li><b class="color-emph">Submodularity:</b> Both objectives exhibit submodularity (diminishing returns).
+            </li>
+            <li><b class="color-emph">Theoretical Guarantee:</b> Greedy selection achieves at least a <br> $(1 -
+                1/e)$-approximation ($\sim$63%)
+                of the true optimal solution.</li>
+        </ul>
+        <p class="footnote"><a href="https://epubs.siam.org/doi/abs/10.1137/24M1683172" target="_blank"
+                rel="noopener noreferrer"><sup>1</sup>FFTMatvec Algorithm</a> (V., M. Fernando, S. Henneking, O.
+            Ghattas,
+            SISC, 2025)<br>
+            <a href="https://dl.acm.org/doi/full/10.1145/3731599.3767490" target="_blank"
+                rel="noopener noreferrer"><sup>2</sup>Performance
+                Portability and Mixed Precision</a> (V., K. Świrydowicz, N. Wolfe, O. Ghattas, SC Workshops, 2025)
+        </p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Numerical Results: Optimal Sensor Placement</h4>
+        <video data-src="SIAM_PP_26/images/oed/comparative_sensor_selection.mp4" alt="Sensor Placement Animation"
+            class="r-stretch" data-autoplay loop data-preview-video></video>
+        <p class="caption">
+            <span class="color-emph">Greedy sensor placement animation</span> for standard D-optimal (left) and
+            goal-oriented (right) for $B=175$. <br>
+            Goal-oriented places more sensors near QoI locations (yellow stars). Computed on 16 A100 GPUs.
+        </p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Numerical Results: Objective Function Comparison</h4>
+        <img data-src="SIAM_PP_26/images/oed/oed_comparison_plot.svg" alt="OED Objective Function Comparison"
+            class="r-stretch" data-preview-image>
+        <p class="caption">
+            <span class="color-emph">Comparison of objective function values</span> for standard and goal-oriented
+            sensor placement strategies. Computed
+            on 1 A100 GPU.
+        </p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Numerical Results: Objective Function Comparison</h4>
+        <img data-src="SIAM_PP_26/images/oed/oed_histogram_comparison.svg" alt="Comparative OED Histogram"
+            class="r-stretch" data-preview-image>
+        <p class="caption">
+            <span class="color-emph">Histogram comparison</span> of optimal configurations with 100 random
+            configurations. Here \(B=175\), and 100
+            random configurations are used. Computed on 16 A100 GPUs.
+        </p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Numerical Results: Uncertainty Reduction</h4>
+        <video data-src="SIAM_PP_26/images/oed/oed_variance_animation.mp4" alt="Standard Deviation Reduction animation"
+            class="r-stretch" data-autoplay loop data-preview-video></video>
+        <p class="caption">
+            <span class="color-emph">Reduction in standard deviation</span> of seafloor displacement field as sensors
+            are placed according to the
+            standard D-optimal algorithm. Computed on 16 A100 GPUs.
+        </p>
+    </section>
+    <section data-auto-animate>
+        <h4>Numerical Results: Uncertainty Reduction</h4>
+        <video data-src="SIAM_PP_26/images/oed/qoi_spatial_bubbles.mp4" alt="Standard Deviation Reduction animation"
+            class="r-stretch" data-autoplay loop data-preview-video></video>
+        <p class="caption">
+            <span class="color-emph">Reduction in RMSE (in time) of QoI</span> as sensors are placed according to the
+            goal-oriented D-optimal algorithm. Computed on 1 A100 GPU.
+        </p>
+    </section>
+</section>
