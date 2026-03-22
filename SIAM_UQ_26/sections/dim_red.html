@@ -57,6 +57,19 @@
                     <li>Used to parameterize surrogate for SWE</li>
                 </ul>
             </li>
+            <li>Relevant prior work: <a
+                    href="https://dspace.mit.edu/bitstream/handle/1721.1/77905/Lieberman-2012-GOAL-ORIENTED%20INFERENCE.pdf?sequence=1&isAllowed=y"
+                    target="_blank" rel="noopener noreferrer">Lieberman and Willcox (2012). Goal-Oriented Inference:
+                    Approach, Linear Theory, and Application to Advection Diffusion. SIAM Journal on Scientific
+                    Computing. </a>
+                <ul>
+                    <li>Similar motivation and purpose, but <span class="color-emph">different methodology</span></li>
+                    <li>This work uses the <span class="color-emph">infinite-dimensional setting</span> to derive the
+                        reduced basis</li>
+                    <li>The reduced space inverse problem is solved in the <span class="color-emph">QoI space</span>
+                        instead of the data space</li>
+                </ul>
+            </li>
         </ul>
 
     </section>
@@ -215,10 +228,11 @@
             <b class="color-emph" style="font-size: 0.95em;">Reduced Space Solution</b>
             <div class="small-pad-math" style="margin-top: 5px;">
                 \[\footnotesize
-                \begin{align*}
-                q_{\text{red}} &= V_K V_K^* q_{\text{map}}\ \\
-                \Gamma_{q, \text{post, red}} &= V_K D_K V_K^*\
-                \end{align*}
+                \begin{gather*}
+                q_{\text{red}} = V_K V_K^* q_{\text{map}},
+                m_{\text{map, red}} = D_K^{-1} V_K^* q_{\text{map}}, \\
+                \Gamma_{q, \text{post, red}} = V_K D_K V_K^*\
+                \end{gather*}
                 \]
             </div>
         </div>
