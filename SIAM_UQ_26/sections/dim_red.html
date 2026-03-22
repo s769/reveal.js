@@ -1,0 +1,288 @@
+<section>
+    <section data-auto-animate>
+        <h4>Goal-Oriented Dimension Reduction: Motivation</h4>
+        <ul>
+            <li>The preceding inversion framework relies on the <span class="color-emph">linear acoustic-gravity
+                    equations</span>
+                <ul>
+                    <li>Can't propagate tsunami all the way to shore (inundation)</li>
+                </ul>
+            </li>
+            <li><b class="color-emph">Idea:</b> use <span class="color-emph">inferred seafloor motion</span> from
+                acoustic-gravity-based
+                framework as <span class="color-emph">input to nonlinear shallow-water equations (SWE)</span>
+                <ul>
+                    <li>Solving the SWE in real-time is <span class="color-emph">computationally difficult
+                            at large scale</span></li>
+                    <li>Instead, train a surrogate (e.g., neural network) to <span class="color-emph">learn mapping from
+                            seafloor motion to coastal QoIs</span></li>
+                </ul>
+            </li>
+            <li>Parameterizing a neural network with 1-billion parameters is <span class="color-emph">computationally
+                    infeasible</span>
+                <ul>
+                    <li>Traditional low-rank decompositions using SVDs of $\mathbf{F}$ have <span
+                            class="color-emph">slow spectral decay</span></li>
+                    <li>Autoencoders also face the dimensionality issue</li>
+                </ul>
+            </li>
+        </ul>
+
+    </section>
+    <section data-auto-animate>
+        <h4>Goal-Oriented Dimension Reduction: Motivation</h4>
+        <img data-src="SIAM_UQ_26/images/K_spectrum.png" alt="Spectrum of \(\mathbf{F} \mathbf{F}^*\)"
+            class="r-stretch">
+        <p class="caption">Eigenvalues of the "inside-out" prior-preconditioned Hessian of the data misfit
+            (\(\mathbf{F}\Gamma_{\text{prior}}\mathbf{F}^*\)) <span class="color-emph">do not
+                decay fast enough</span> for traditional dimension reduction techniques.</p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Goal-Oriented Dimension Reduction: Motivation</h4>
+        <ul>
+            <li>Parameterizing a neural network with 1-billion parameters is <span class="color-emph">computationally
+                    infeasible</span>
+                <ul>
+                    <li>Traditional low-rank decompositions using SVDs of $\mathbf{F}$ have <span
+                            class="color-emph">slow spectral decay</span></li>
+                    <li>Autoencoders also face the dimensionality issue</li>
+                </ul>
+            </li>
+            <li><b class="color-emph">Idea:</b> create a <span class="color-emph">goal-oriented reduced basis</span>
+                for
+                the parameter field
+                <ul>
+                    <li>Captures parameter modes that are <span class="color-emph">informative for the QoI</span></li>
+                    <li>Used to parameterize surrogate for SWE</li>
+                </ul>
+            </li>
+        </ul>
+
+    </section>
+    <section data-auto-animate>
+        <h4>Problem Formulation</h4>
+        <ul>
+            <li><b class="color-emph">Banach Spaces:</b> $\mathcal{X}$ (parameter $m$), $\mathcal{Y}$ (data $d$),
+                $\mathcal{Z}$ (QoI $q$).
+            </li>
+            <li><b class="color-emph">Bounded Linear Maps:</b>
+                <ul>
+                    <li>Parameter-to-Observable (p2o): $F: \mathcal{X} \to \mathcal{Y}$</li>
+                    <li>Parameter-to-QoI (p2q): $F_q: \mathcal{X} \to \mathcal{Z}$</li>
+                </ul>
+            </li>
+            <li>Assuming Gaussian prior $\mathcal{N}(m_0,\Gamma_{\!\text{prior}})$ and likelihood, the posterior is
+                $\mathcal{N}(m_{\text{map}}, \Gamma_{\!\text{post}})$:</li>
+        </ul>
+        <div class="small-pad-math">
+            \[\footnotesize
+            \begin{align*}
+            \Gamma_{\!\text{post}} &= \left(F^*\Gamma_{\!\text{noise}}^{-1} F +
+            \Gamma_{\!\text{prior}}^{-1}\right)^{-1}\\
+            m_{\text{map}} &= \Gamma_{\!\text{post}} F^*\Gamma_{\!\text{noise}}^{-1} d
+            \end{align*}
+            \]
+        </div>
+        <ul>
+            <li>The <b class="color-emph">posterior predictive measure</b> on the QoI is the pushforward through
+                $F_q$, yielding
+                $\mathcal{N}(q_{\text{map}}, \Gamma_{\!\text{post}(q)})$:</li>
+        </ul>
+        <div class="small-pad-math">
+            \[\footnotesize
+            \begin{align*}
+            q_{\text{map}} &= F_qm_{\text{map}} \eqqcolon Qd \\
+            \Gamma_{\!\text{post}(q)} &= F_q \Gamma_{\!\text{post}} F_q^*
+            \end{align*}
+            \]
+        </div>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Spectral Analysis of the QoI Space</h4>
+        <ul>
+            <li class="small-pad-math">Let $\mathcal{H}_q$ be the <span class="color-emph">Cameron-Martin space</span>
+                associated with the posterior
+                predictive measure.</li>
+            <li class="small-pad-math">The covariance $\Gamma_{\!\text{post}(q)}$ maps $\mathcal{Z}^* \to \mathcal{Z}$
+                by:
+                \[\footnotesize \langle \Gamma_{\!\text{post}(q)} \ell_1 ,\ell_2\rangle = \int_{\mathcal{Z}} \langle
+                z-q_{\text{map}}, \ell_1\rangle \langle z-q_{\text{map}}, \ell_2\rangle d\mu_{\text{post}(q)} \]
+            </li>
+            <li class="small-pad-math">Restricted to $\mathcal{H}_q$, $\Gamma_{\!\text{post}(q)}$ is a <span
+                    class="color-emph">compact, positive, self-adjoint, nuclear (trace-class) operator</span>.</li>
+            <li>Thus, we have an <b class="color-emph">orthonormal eigenbasis</b> $\{v_k\}_{k=1}^\infty$ for
+                $\mathcal{H}_q$:</li>
+        </ul>
+        <div class="small-pad-math">
+            \[\footnotesize \Gamma_{\!\text{post}(q)} v_k = \lambda_k v_k, \quad \text{with} \quad \sum_k \lambda_k <
+                \infty \] </div>
+    </section>
+
+    <section data-auto-animate>
+        <h4>QoI-Informative Subspace</h4>
+        <ul>
+            <li class="small-pad-math">Define modes $u_k \in \mathcal{X}$ as $u_k \coloneqq \Gamma_{\!\text{post}} F_q^*
+                v_k$.</li>
+            <li class="small-pad-math">These are <span class="color-emph">generalized eigenvectors</span> of the pair
+                $(F_q^*F_q,\Gamma_{\!\text{post}}^{-1})$:
+                \[\footnotesize F_q^*F_q u_k = F_q^*F_q \Gamma_{\!\text{post}} F_q^* v_k =
+                F_q^*\Gamma_{\!\text{post}(q)} v_k = \lambda_k F_q^* v_k = \lambda_k \Gamma_{\!\text{post}}^{-1} u_k \]
+            </li>
+            <li class="small-pad-math">The modes $\{u_k\}_{k=1}^\infty$ are <span class="color-emph">orthonormal</span>
+                in
+                $\mathcal{H}_{\text{post}}$:
+                \[\footnotesize \langle u_i, u_j \rangle_{\mathcal{H}_{\text{post}}} = \langle v_i,
+                \Gamma_{\!\text{post}(q)} v_j \rangle = \lambda_j \delta_{ij} \]
+            </li>
+        </ul>
+        <div class="box"
+            style="background-color: blanchedalmond; border: 1px solid black; border-radius: 20px; padding:15px; margin-top: 20px;">
+            <b class="color-emph">Goal-Oriented Subspace</b>
+            <p class="small-pad-math">\[ \text{span}\{u_k\} = \mathcal{N}(F_q)^\perp \cap \mathcal{H}_{\text{post}} \]
+            </p>
+            <p style="font-size: 0.8em; margin: 0;">The $\{u_k\}$ form a basis for the exact subspace of
+                $\mathcal{H}_{\text{post}}$ that is informative for the QoI.</p>
+        </div>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Reduced Space Inverse Problem</h4>
+        <ul>
+            <li>Now that we have a basis for the QoI-informative subspace, how do we <span class="color-emph">use it to
+                    solve the inverse
+                    problem?</span></li>
+            <li><span class="color-emph">Projection operators:</span> $U_K \xi = \sum_{k=1}^K \xi_k u_k$ and
+                $V_K \xi = \sum_{k=1}^K \xi_k v_k$.</li>
+            <li class="small-pad-math">Now, we can <span class="color-emph">project</span> \(F, F_q,
+                \Gamma_{\text{\!prior}}^{-1}\) to the
+                reduced space:
+                \[\small
+                \begin{align*}
+                F_{\text{proj}} &= F U_K \\
+                F_{q,\text{proj}} &= F_q U_K \\
+                \Gamma_{\text{\!prior},\text{proj}}^{-1} &= U_K^* \Gamma_{\text{\!prior}}^{-1} U_K
+                \end{align*}
+                \]
+            </li>
+            <li class="small-pad-math">Then, the <span class="color-emph">reduced-space Hessian</span> is given by:
+                \[
+                \small
+                \begin{align*}
+                H_{\text{red}} &= (FU_K)^*\Gamma_{\text{\!noise}}^{-1}(FU_K) + U_K^*\Gamma_{\text{\!prior}}^{-1}U_K =
+                U_K^* \Gamma_{\!\text{post}}^{-1} U_K = H_{\text{proj}}\\
+                m_{\text{map, red}} &= H_{\text{red}}^{-1} (FU_K)^*\Gamma_{\text{\!noise}}^{-1} d
+                \end{align*}
+                \]
+            </li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Reduced Space Inverse Problem</h4>
+        <ul>
+            <li class="small-pad-math">But we know $U_K = \Gamma_{\!\text{post}} F_q^* V_K$:
+                \[\small
+                \begin{align*}
+                \textcolor{bf5700}{H_{\text{red}}} &= V_K^* F_q \Gamma_{\!\text{post}} \left[
+                \Gamma_{\!\text{post}}^{-1}
+                \right]
+                \Gamma_{\!\text{post}} F_q^* V_K
+                = V_K^* \Gamma_{\!\text{post}(q)} V_K = \textcolor{bf5700}{D_K} \\
+                \textcolor{bf5700}{m_{\text{map, red}}} &= H_{\text{red}}^{-1} (FU_K)^*\Gamma_{\!\text{noise}}^{-1} d
+                = D_K^{-1} (V_K^* F_q
+                \Gamma_{\!\text{post}} F^*) \Gamma_{\!\text{noise}}^{-1} d
+                = \textcolor{bf5700}{D_K^{-1} V_K^* \underbrace{Q d}_{q_{\text{map}}}}
+                \end{align*}
+                \]
+            </li>
+            <li class="small-pad-math">
+                This is <span class="color-emph">equivalent</span> to the following optimization problem:
+                \[
+                \small
+                \begin{align*}
+                m_{\text{map, red}} &= \arg\min_{\tilde{m} \in \mathbb{R}^K} \frac{1}{2}\|F_{q, \text{proj}} \tilde{m} -
+                q_{\text{map}}\|_{\Gamma_{\text{\!post}(q)}^{-1}}^2
+                \end{align*}
+                \]
+                where <span class="color-emph">the "data" is the QoI \(q_{\text{map}}\),</span> with <span
+                    class="color-emph">"noise covariance" $\Gamma_{\text{\!post}(q)}$</span>
+            </li>
+        </ul>
+        <div class="box"
+            style="background-color: blanchedalmond; border: 1px solid black; border-radius: 10px; padding: 15px; width: 100%; box-sizing: border-box; margin-top: 10px;">
+            <b class="color-emph" style="font-size: 0.95em;">Reduced Space Solution</b>
+            <div class="small-pad-math" style="margin-top: 5px;">
+                \[\footnotesize
+                \begin{align*}
+                q_{\text{red}} &= V_K V_K^* q_{\text{map}}\ \\
+                \Gamma_{q, \text{post, red}} &= V_K D_K V_K^*\
+                \end{align*}
+                \]
+            </div>
+        </div>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Error Analysis</h4>
+        <ul>
+            <li>The full-space vs. reduced-space QoI error is bounded by the truncated spectral tail</li>
+            <li>Mean error: $\|q_{\text{map}} - q_{\text{red}}\| \leq \sum_{k=K+1}^\infty |\langle q_{\text{map}},
+                v_k\rangle_{\mathcal{H}_q}|^2$</li>
+            <li>Covariance error: $\text{Tr}(\Gamma_{\!\text{post}(q)} - \Gamma_{q,\, \text{post, red}}) =
+                \sum_{k=K+1}^\infty \lambda_k$</li>
+            <li><span class="color-emph">Total Error: 2-Wasserstein Distance</span>
+                \[\small
+                W_2^2 \leq \sum_{k=K+1}^\infty \lambda_k + |\langle q_{\text{map}},
+                v_k\rangle_{\mathcal{H}_q}|^2
+                \]
+            </li>
+        </ul>
+
+        <p class="footnote">
+            <i>Note: This analysis holds generally and does not assume $F$ or $F_q$ arise from autonomous dynamical
+                systems.</i>
+        </p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Computational Framework</h4>
+        <ul>
+            <li>Options: solve <span class="color-emph">generalized eigenvalue problem for </span>\((\mathbf{F}
+                _q^*\mathbf{F}_q,
+                \mathbf{\Gamma}_{\text{\!post}}^{-1})\)
+                <br>or
+                <span class="color-emph">standard eigenvalue problem</span> for \(\mathbf{\Gamma}_{\text{\!post}(q)}\)
+                <ul>
+                    <li>First option may be suitable for some problems using, e.g., LOBPCG</li>
+                    <li>For problems governed by autonomous dynamical systems, the <span class="color-emph">second
+                            option</span> is more efficient</li>
+                </ul>
+            </li>
+            <li class="small-pad-math">Computing the dense operators $\mathbf{Q}$ and
+                $\mathbf{\Gamma}_{\text{\!post}(q)}$
+                requires solving the full-space inverse problem many times <br>\(\to\) <span class="color-emph">fast
+                    inversion framework</span> and <span class="color-emph">FFT-based matvecs</span> for $\mathbf{F},
+                \mathbf{F}_q$</li>
+            <li class="small-pad-math">For $\mathcal{O}(10^2)$ sensors and $\mathcal{O}(10^1)$ QoI locations, the dense
+                operators fit onto a single GPU
+                <ul>
+                    <li>The reduced-space inverse problem can be <span class="color-emph">solved directly via the
+                            dense discrete operators</span></li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Spectrum of $\mathbf{\Gamma}_{\!\text{post}(q)}$</h4>
+        <img data-src="SIAM_UQ_26/images/Gamma_q_evals.png" alt="Eigenvalues of QoI Posterior Covariance"
+            data-preview-image class="r-stretch">
+    </section>
+    <section data-auto-animate>
+        <h4>Reduced Space Inversion Results</h4>
+        <img data-src="SIAM_UQ_26/images/qoi_comparison_evecs.svg" alt="Reduced Space Inversion Results"
+            data-preview-image class="r-stretch">
+    </section>
+</section>

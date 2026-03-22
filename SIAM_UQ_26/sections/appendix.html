@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate data-visibility="uncounted">
+        <h4>Informative Subspace: Proof Sketch</h4>
+        <p class="leftalign">To show $\text{span}\{u_k\} = \mathcal{N}(F_q)^\perp \cap \mathcal{H}_{\text{post}}$:</p>
+        <div class="small-pad-math">
+            \[\footnotesize
+            \begin{align*}
+            \langle x, u_k \rangle_{\mathcal{H}_{\text{post}}} &= \langle x, \Gamma_{\!\text{post}} F_q^* v_k
+            \rangle_{\mathcal{H}_{\text{post}}}\\
+            &= \langle \Gamma_{\!\text{post}}^{-1} x, \Gamma_{\!\text{post}} F_q^* v_k \rangle \\
+            &= \langle x, F_q^* v_k \rangle\\
+            &= \langle F_q x, v_k\rangle
+            \end{align*}
+            \]
+        </div>
+        <ul style="font-size: 0.9em;">
+            <li class="small-pad-math">If $\langle x, u_k \rangle_{\mathcal{H}_{\text{post}}} = 0$ for all $u_k$, then
+                $\langle F_q x, v_k\rangle = 0$ for all $v_k$.</li>
+            <li class="small-pad-math">Since $\{v_k\}$ is a basis for $\mathcal{H}_q$, $F_q x = 0$, meaning $x \in
+                \mathcal{N}(F_q)$.</li>
+            <li class="small-pad-math">Thus, $\text{span}(u_k) \subseteq \mathcal{N}(F_q)^\perp$.</li>
+            <li class="small-pad-math">By Hermitian symmetry, $\langle u_k, x \rangle = 0$ for $x \in \mathcal{N}(F_q)
+                \cap \mathcal{H}_{\text{post}}$</li>
+        </ul>
+    </section>
+</section>

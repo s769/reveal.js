@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Cascadia Subduction Zone</h4>
+        <img data-src="NUG/images/CSZ-lat-lon-4k-locked-plate.png" alt="CSZ GEBCO data" class="r-stretch"
+            data-preview-image>
+        <p class="caption"><a href="https://www.gebco.net/data_and_products/gridded_bathymetry_data/" target="_blank"
+                rel="noopener noreferrer">GEBCO</a>
+            bathymetry data of the Cascadia Subduction Zone (CSZ) with ~250m resolution</p>
+    </section>
+    <section data-auto-animate>
+        <h4>Cascadia Subduction Zone Tsunami</h4>
+        <video data-src="siam_pp_24/tsunami-clip-75speed.mp4" id="tsunami-clip" style="width: 95%;" data-autoplay
+            loop></video>
+        <p class="footnote"> <a href="https://www.youtube.com/watch?v=e5PJQW_6k6M" target="_blank"
+                rel="noopener noreferrer">Source: Washington State
+                Dept. of
+                Natural Resources</a> </p>
+    </section>
+    <!-- <section data-auto-animate>
+        <h4>Cascadia Subduction Zone</h4>
+        <div class="r-hstack">
+            <img data-src="proposal/images/intro/ghost-forest.jpeg" alt="Neskowin Ghost Forest"
+                style="width: 40%; padding-right: 40px;" data-preview-image>
+            <img data-src="proposal/images/intro/soil-layers.jpeg " alt="Soil Layers"
+                style="width: 30%; padding-left: 10px;" data-preview-image>
+        </div>
+        <p class="caption"><b class="color-emph">Left:</b> Neskowin Ghost Forest; <b class="color-emph">Right:</b> Soil
+            layers
+            in pit (Tofino, BC)</p>
+        <ul>
+            <aside class="notes" aria-label="ghost-forest">
+                <li>Ghost forests are remnants of coastal forests that have been submerged by a tsunami</li>
+                <li>Soil layers in pits can be used to identify past tsunamis</li>
+            </aside>
+            <li>Cascadia subduction zone has seen major ruptures in 1700 AD,
+                1310 AD, 810 AD, 400 AD, 170 BC and 600 BC</li>
+            <li>Current estimate: 37% probability of M8.2+ event within 50
+                years; 10-15% probability that entire Cascadia subduction zone
+                will rupture with an M9+ event</li>
+        </ul>
+    </section> -->
+    <section data-auto-animate>
+        <h4>Proposed Sensor Network</h4>
+        <img data-src="siam_pp_24/sensor-network.png" alt="Proposed Sensor Network" style="width: 75%;"
+            data-preview-image>
+        <p class="footnote"> <a href="http://cascadiaoffshore.org/story/White_Paper.html" target="_blank"
+                rel="noopener noreferrer">Source: Cascadia
+                Offshore
+                White Paper</a> </p>
+    </section>
+    <section data-auto-animate>
+        <h4>Digital Twin for Tsunami Early Warning</h4>
+        <ul>
+            <li>Use near-field pressure observations to <b class="color-emph">infer</b> the <span
+                    class="color-emph">seafloor motion</span> and <b class="color-emph">forward predict</b> the
+                <span class="color-emph">tsunami propagation</span>
+            </li>
+            <li>Employ <span class="color-emph">high-fidelity, <b>full-physics</b> model</span> (acoustic&ndash;gravity
+                eqns.)</li>
+            <li><b class="color-emph">Quantify uncertainty</b> via Bayesian inference</li>
+            <li>Solve inverse problem in <b class="color-emph">real time</b> (order of seconds)</li>
+            <li>Challenges</li>
+            <ul>
+                <li>Forward problem is <span class="color-emph">3D space + time</span>; parameter is
+                    <span class="color-emph">2D space + time</span>
+                </li>
+                <li>Hyperbolic forward PDEs <span class="color-emph">don't easily lend themselves to surrogates</span>
+                </li>
+                <li>Inverse problem is <span class="color-emph">ill-posed</span>: have to infer <span
+                        class="color-emph">high-dimensional</span> parameter field from <span class="color-emph">sparse,
+                        noisy data</span></li>
+            </ul>
+            <li>Additional problems</li>
+            <ul>
+                <li>Optimal sensor placement</li>
+                <li>Data-driven prior modeling</li>
+                <li>Coupling to elastic/shallow-water models</li>
+            </ul>
+        </ul>
+    </section>
+
+</section>

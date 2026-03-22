@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Forward Problem</h4>
+        <ul>
+            <!-- p = \rho g \eta,
+                
+                
+                \boldsymbol{u} \cdot \hat{\boldsymbol{n}} = Z^{-1} p, & \Gamma_a \times (0,T)\nonumber -->
+            <li class="small-pad-math"> Mixed formulation for velocity and pressure unknowns<a
+                    href="https://link.springer.com/content/pdf/10.1007/s10596-015-9472-0.pdf" target="_blank"
+                    rel="noopener noreferrer"><sup>1</sup></a>:
+                \[\footnotesize
+                \rho \frac{ \partial\vec{u}}{\partial t} + \nabla p = \vec{0} \quad \text{and} \quad
+                \frac{1}{K} \frac{ \partial p}{\partial t} + \nabla \cdot \vec{u} = 0 \quad \text{in }\Omega \times
+                (0,T)
+                \]
+            </li>
+            <li>Boundary conditions:
+                <ul>
+                    <li class="small-pad-math">ODE type BC (sea surface):
+                        \[\small
+                        p = \rho g \eta,
+                        \frac{ \partial\eta}{\partial t} = \vec{u} \cdot \vec{n} \text{ on }
+                        \Gamma_\text{surface} \times (0,T)
+                        \]
+                    </li>
+                    <li class="small-pad-math">Seafloor velocity (boundary source):
+                        \[\small
+                        \vec{u} \cdot \vec{n} = -\frac{\partial b}{\partial t} \text{ on }
+                        \Gamma_{\text{bottom}}
+                        \times (0,T) \]
+                    </li>
+                    <li class="small-pad-math">First order absorbing BC (outgoing waves):
+                        \[\small
+                        \vec{u} \cdot \vec{n} = -\frac{1}{\rho c} p \text{ on
+                        }\Gamma_\text{lateral} \times (0,T), c = \sqrt{K/\rho}
+                        \]
+                    </li>
+                </ul>
+            </li>
+            <li> Homogeneous initial conditions</li>
+        </ul>
+
+
+        <p class="footnote">Implemented in <a href="https://mfem.org/" target="_blank"
+                rel="noopener noreferrer">MFEM</a>
+            with high-order finite elements and RK4 time-stepping. <a
+                href="https://link.springer.com/content/pdf/10.1007/s10596-015-9472-0.pdf" target="_blank"
+                rel="noopener noreferrer"><sup>1</sup>Lotto and Dunham (2015)</a></p>
+        <aside class="notes" aria-label="physparams">
+            absorbing BCs on Gamma_a: 1st order, PML
+            <br>
+            Z is acoustic wave impedance; c is sound speed in seawater
+            <br>
+            bathymetry related to seafloor motion is the parameter
+        </aside>
+    </section>
+    <section data-auto-animate>
+        <h4>Inverse Problem</h4>
+        <ul>
+            <li>Given observations <span class="color-emph">\(d\)</span> and forward model <span
+                    class="color-emph">\(\mathcal{F}\)</span>,<br>infer
+                model parameters <span class="color-emph">\(m\)</span> &mdash; here:</li>
+            <ul>
+                <li>
+                    Model parameters \(m\): spatiotemporal seafloor motion \(\frac{\partial b}{\partial t} (x,t)\)
+                </li>
+                <li>
+                    Observations \(d\): pressure sensor readings \(\left\{p(x_i, t)\right\}_{i=1}^{N_d}\)
+                </li>
+                <li>
+                    Parameter-to-Observable (p2o) Map: \(\mathcal{F}: m(x,t) \mapsto d(x_i,t)\)
+                </li>
+            </ul>
+            </li>
+            <li><b class="color-emph">Inverse problem is ill-posed</b>
+                <ul>
+                    <li>Observations are usually sparse and noisy</li>
+                    <li>Many different parameters may be consistent with the data</li>
+                </ul>
+            </li>
+            <li>Bayesian approach to ill-posedness</li>
+            <ul>
+                <li>Characterize the <span class="color-emph">probability</span> that <span class="color-emph">any
+                        parameter
+                        field</span> is consistent with the data and prior knowledge
+                </li>
+                <li>The <span class="color-emph">uncertain parameter</span> is treated as a random field, and the
+                    solution
+                    of the inverse problem becomes a
+                    probability density, the <span class="color-emph">posterior distribution</span></li>
+                <li>Bayes' theorem: <span class="color-emph">\( \pi_{\text{post}} (m|d) \propto \pi_{\text{prior}} (m)
+                        \pi_{\text{like}} (d|m) \)</span>
+                </li>
+            </ul>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Bayesian Framework, Linear Inverse Problem</h4>
+        <p class="leftalign small-pad-math">
+            <b class="color-emph">Gaussian Prior with Mat&eacute;rn Covariance:</b>\[m \sim
+            \mathcal{N}(m_{\text{prior}},
+            \Gamma_{\!\text{prior}}), \quad \Gamma_{\!\text{prior}} \coloneqq \left(
+            \alpha_1 I -
+            \alpha_2 \Delta_{\text{2D}}
+            \right)^{-2}\]
+
+        </p>
+        <p class="leftalign small-pad-math">
+            <b class="color-emph">Likelihood: </b>\(\pi_{\text{like}}(d|m) \propto \exp\left(-\frac{1}{2}
+            \|\mathcal{F}m - d\|_{\Gamma_{\!\text{noise}}^{-1}}^2\right)\)
+        </p>
+
+        <p class="leftalign small-pad-math">
+            <b class="color-emph">Observations: </b>\(d = \mathcal{F}m + \nu, \quad \nu \sim
+            \mathcal{N}(0,
+            \Gamma_{\!\text{noise}})\)
+        </p>
+
+        <p>
+
+
+        <div class="r-hstack">
+            <div class="r-vstack">
+                <b class="color-emph">Posterior</b>
+
+                <div class="box" ,
+                    style="background-color: blanchedalmond; border: 1px solid black; border-radius: 25px; margin-right: 5px; padding:10px;">
+                    <p>
+                        \[\begin{align*}
+                        \mu_{\text{post}} &= \mathcal{N}(m_{\text{map}},
+                        \Gamma_{\!\text{post}}) \\
+                        \Gamma_{\!\text{post}}&=\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} \mathcal{F} +
+                        \Gamma_{\!\text{prior}}^{-1}\right)^{-1}\\
+                        m_{\text{map}}&=\Gamma_{\!\text{post}}\left(\mathcal{F}^* \Gamma_{\!\text{noise}}^{-1} d +
+                        \Gamma_{\!\text{prior}}^{-1} m_{\text{prior}}\right)
+                        \end{align*}\]
+                    </p>
+                </div>
+            </div>
+            <div class="r-vstack">
+                <b class="color-emph">Predictive</b>
+                <div class="box" ,
+                    style="background-color: blanchedalmond; border: 1px solid black; border-radius: 25px; margin-left: 5px; padding:10px;">
+                    <p>
+                        \[\begin{align*}
+                        \mu_{\text{post}(q)} &= \mathcal{N}(q_{\text{map}}, \Gamma_{\!\text{post}(q)}) \\
+                        \Gamma_{\!\text{post}(q)} &= \mathcal{F}_q \Gamma_{\!\text{post}} \mathcal{F}_q^*\\
+                        q_{\text{map}} &= \mathcal{F}_q m_{\text{map}} \coloneqq Q d
+                        \end{align*}\]
+                    </p>
+                </div>
+            </div>
+
+        </div>
+        </p>
+        <!-- <p class="leftalign">
+            Want to find \(m_{\text{map}}\) and \(\Gamma_{\!\text{post}}\) in <b class="color-emph">real
+                time</b>
+        </p> -->
+
+        <!-- <p class="footnote">
+            <a
+                href="https://www.cambridge.org/core/journals/acta-numerica/article/inverse-problems-a-bayesian-perspective/587A3A0D480A1A7C2B1B284BCEDF7E23?utm_campaign=shareaholic&utm_medium=copy_link&utm_source=bookmark">
+                Stuart, Andrew M. "Inverse problems: a Bayesian perspective." Acta numerica 19 (2010):
+                451-559.
+            </a>
+        </p> -->
+        <!-- <p class="footnote"><a
+            href="https://www.cambridge.org/core/journals/acta-numerica/article/inverse-problems-a-bayesian-perspective/587A3A0D480A1A7C2B1B284BCEDF7E23"
+            target="_blank" rel="noopener noreferrer">Stuart, A. M. (2010). Inverse problems: a Bayesian
+            perspective. Acta numerica, 19, 451-559.</a></p> -->
+
+        <aside class="notes" aria-label="postcov">
+            Posterior covariance does not depend on data.
+            subset of the Matern family of covariance operators can be written as the inverse of an elliptic different
+            operator, with the coefficients \(\alpha_i\) chosen to impose the desired correlation and variance structure
+            <br>
+            \(\gamma \gt 3/2\) for bounded pointwise variance since parameter is a 2+1D field
+        </aside>
+        <!-- <p class="footnote">Script = infinite-dimensional; boldface = discrete in space and time</p> -->
+    </section>
+    <section data-auto-animate>
+        <h4>Real-Time Inference and Prediction Framework</h4>
+        <img src="NUG/images/results/workflow.svg" alt="Real-Time Inference and Prediction Workflow" class="r-stretch"
+            data-preview-image>
+        <ul>
+            <li>
+                <b>Offline&ndash;Online Decomposition</b>
+                phases:
+            </li>
+            <ul>
+                <li>
+                    <b class="color-emph">Phase 1</b> (Offline): Construct p2o map from adjoint PDE solves
+                </li>
+
+                <li>
+                    <b class="color-emph">Phase 2</b> (Offline): Compute compact representation of
+                    \(\Gamma_{\!\text{post}}\)
+                </li>
+                <li>
+                    <b class="color-emph">Phase 3</b> (Offline): Compute QoI Uncertainty and Data-to-QoI map
+                </li>
+                <li>
+                    <b style="color: #5d9648;">Phase 4</b> (Online): Compute MAP point and QoI in real time
+                </li>
+            </ul>
+            <li>Enables real-time, high-fidelity inference/prediction for problems governed by linear autonomous
+                dynamical systems<a href="https://www.sciencedirect.com/science/article/abs/pii/S002199912600032X"
+                    target="_blank" rel="noopener noreferrer"><sup>1</sup></a>
+            </li>
+        </ul>
+        <p class="caption"><a href="https://www.sciencedirect.com/science/article/abs/pii/S002199912600032X"
+                target="_blank" rel="noopener noreferrer"><sup>1</sup>Goal-Oriented Real-Time Bayesian Inference for
+                Linear Autonomous Dynamical Systems
+                With Application to Digital Twins for Tsunami Early Warning (Henneking, V., Ghattas, JCP, 2026)</a></p>
+    </section>
+    <section data-auto-animate>
+        <h4>CSZ Margin-Wide Rupture Scenario</h4>
+        <video data-src="NUG/images/videos/CSZ-mw-source-latlon-10fps.mp4" class="r-stretch" data-autoplay loop
+            data-preview-video></video>
+        <p class="caption">Rendering of data obtained from 3D Cascadia dynamic rupture simulation (<a
+                href="https://eartharxiv.org/repository/view/7544/" target="_blank" rel="noopener noreferrer">Glehman et
+                al.,
+                2025</a>). Special thanks to Alice Gabriel (UCSD) for providing the source data.</p>
+    </section>
+    <section data-auto-animate>
+        <h4>CSZ Margin-Wide Rupture Scenario</h4>
+        <video data-src="NUG/images/videos/CSZ-mw-bottom-pressure-and-surface-wave-ecef-10fps.mp4" class="r-stretch"
+            data-autoplay loop data-preview-video></video>
+        <p class="caption">Rendering of the <em class="color-emph">seafloor pressure transients</em> and the <em
+                class="color-emph">surface wave heights</em> obtained from the coupled acoustic-gravity PDE forward
+            model.</p>
+    </section>
+    <section data-auto-animate>
+        <h4>CSZ Margin-Wide Rupture Inversion Configuration</h4>
+
+        <ul>
+            <li><span class="color-emph">Spatial resolution:</span> 300 m</li>
+            <li><span class="color-emph">Simulation time:</span> 420 s</li>
+            <li><span class="color-emph">Temporal parameter/data/QoI dim.:</span> 420 (1 Hz frequency)</li>
+            <li><span class="color-emph">Spatial parameter dim.:</span> 2,416,530</li>
+            <li><span class="color-emph">Number of sensors:</span> 600</li>
+            <li><span class="color-emph">Number of QoI spatial locations:</span> 21</li>
+            <li><span class="color-emph">Total parameter dim.:</span> 1,014,942,600</li>
+            <li><span class="color-emph">Total data dim.:</span> 252,000</li>
+            <li><span class="color-emph">Total QoI dim.:</span> 8,820</li>
+            <li><span class="color-emph">State dim.:</span> 3,744,141,189 spatial DOFs; 336,000 RK4 timesteps
+            </li>
+        </ul>
+    </section>
+    <section data-auto-animate>
+        <h4>Compute Time Usage</h4>
+        <img data-src="NUG/images/results/workflow_table.svg" alt="Compute Time Usage" class="r-stretch"
+            data-preview-image>
+        <p class="caption"> Compute time report for each phase of the inversion using NVIDIA A100 GPUs on <a
+                href="https://docs.nersc.gov/systems/perlmutter/architecture/" target="_blank"
+                rel="noopener noreferrer">Perlmutter</a>.</p>
+    </section>
+
+
+    <section data-auto-animate>
+        <h4>CSZ Partial Rupture: Inferred Parameter Field</h4>
+        <video data-src="NUG/images/videos/CSZ-mw-true-un-vs-inferred-un.mp4" class="r-stretch" data-autoplay loop
+            data-preview-video></video>
+        <p class="caption">Normal seafloor displacement (time-integrated parameter field). <br><b
+                class="color-emph">Left:</b> True field; <b class="color-emph">Right:</b>
+            Inferred mean from synthetic observations.</p>
+    </section>
+    <!-- <section data-auto-animate>
+        <h4>CSZ Margin-Wide Rupture: Parameter Inference</h4>
+        <div class="r-hstack r-stretch">
+            <img data-src="NUG/images/results/CSZ-mw-udotn-600-vecs-true-ecef-420s.jpeg" alt="True seafloor uplift"
+                style="padding-right:10px;" data-preview-image>
+            <img data-src="NUG/images/results/CSZ-mw-udotn-600-vecs-inferred-ecef-420s.jpeg"
+                alt="Inferred seafloor uplift" style="padding-left:10px;" data-preview-image>
+        </div>
+        <p class="caption">Total (normal) seafloor displacement field at \(t = 420\) s. <br><b class="color-emph
+            ">Left:</b> True field; <b class="color-emph">Right:</b> Inferred field.</p>
+    </section> -->
+    <section data-auto-animate>
+        <h4>CSZ Margin-Wide Rupture: Parameter Inference</h4>
+        <div class="r-hstack r-stretch">
+            <img data-src="NUG/images/results/mw_pressure_true_120s_sensor_labels.jpeg"
+                alt="True seafloor pressure field" style="padding-right:10px;" data-preview-image>
+            <img data-src="NUG/images/results/mw_udotn_UQ_var4_420s.jpeg" alt="Standard deviation in seafloor uplift"
+                style="padding-left:10px;" data-preview-image>
+        </div>
+        <p class="caption"><b class="color-emph
+            ">Left:</b> True seafloor pressure field with 600 sensor locations; <b class="color-emph">Right:</b>
+            Standard deviation in total (normal) seafloor displacement field.</p>
+    </section>
+    <section data-auto-animate>
+        <h4>CSZ Margin-Wide Rupture: Tsunami Wave Prediction</h4>
+        <div class="r-hstack r-stretch">
+            <img data-src="NUG/images/results/mw_ssha_inferred_420s_cs2_QoI_labels.jpeg"
+                alt="Inferred sea surface height anomaly" style="padding-right:10px;" data-preview-image>
+            <img data-src="NUG/images/qoi_results/q_map.svg " alt="QoI Prediction" style="padding-left:10px;"
+                data-preview-image>
+        </div>
+        <p class="caption">QoI: Sea surface wave height. <br><b class="color-emph
+            ">Left:</b> Inferred field at \(t = 420\) s with QoI locations; <b class="color-emph">Right:</b> Predicted
+            surface wave
+            heights (QoIs) with uncertainties at target locations.</p>
+    </section>
+    <section data-auto-animate>
+        <h4>Anatomy of the CSZ Digital Twin</h4>
+        <img data-src="SIAM_PP_26/images/outer_loop_flowchart.png" alt="Digital Twin Flowchart" class="r-stretch"
+            data-preview-image>
+    </section>
+</section>

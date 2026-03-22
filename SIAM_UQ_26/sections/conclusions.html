@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<section>
+    <section>
+        <h4>Conclusions</h4>
+        <ul>
+            <li>Presented theoretical and numerical framework for <b class="color-emph">goal-oriented dimension
+                    reduction</b> for Bayesian inverse problems
+                <ul>
+                    <li>Readily applicable for <span class="color-emph">linear autonomous dynamical systems</span></li>
+                    <li><span class="color-emph">Can be extended</span> to other classes of problems</li>
+                </ul>
+            </li>
+            <li>Reduced space inverse problem cast in the <b class="color-emph">QoI space</b> rather than the data space
+            </li>
+            <li>Large-scale application to <span class="color-emph">tsunami early warning system</span></li>
+            <li>Next steps: use basis to train a <b class="color-emph">surrogate model</b> SWE to propagate tsunami
+                waves
+            </li>
+            <li>Acknowledgements
+                <ul>
+                    <li><a href="https://docs.nersc.gov/systems/perlmutter/architecture/" target="_blank"
+                            rel="noopener noreferrer">NERSC Perlmutter</a></li>
+                </ul>
+            </li>
+        </ul>
+        <div class="r-hstack">
+            <p><b class="color-emph"><a href="https://github.com/s769/FFTMatvec" target="_blank"
+                        rel="noopener noreferrer">FFTMatvec Code: </a></b></p>
+            <img src="SIAM_PP_26/images/paper_qrs/qr-FFTMatvec.svg" alt="QR Code to Code"
+                style="width: 100px; text-align: right; margin: 0px;">
+            <p class="color-emph">(Now with Python bindings!)</p>
+        </div>
+    </section>
+    <section data-auto-animate>
+        <h4>Relevant Works</h4>
+        <!-- make a 2 column table one for the paper and one for the qr code -->
+        <div class="r-vstack">
+            <div class="r-hstack" style="margin-bottom: 10px;">
+                <p style="font-size: large; text-align: left; width: 800px">Henneking,
+                    Venkat, Dobrev, Camier, Kolev, Fernando, Gabriel, &amp; Ghattas
+                    (2025). <em class="color-emph">Real-Time
+                        Bayesian Inference at Extreme Scale: A Digital Twin for Tsunami Early Warning Applied to the
+                        Cascadia Subduction Zone.</em> 2025 ACM Gordon Bell Winner &mdash; Proceedings of SC25 (<a
+                        href="https://dl.acm.org/doi/full/10.1145/3712285.3771787" target="_blank"
+                        rel="noopener noreferrer">Paper</a>).
+                </p>
+                <img src="SIAM_PP_26/images/paper_qrs/gb_acm.svg" alt="QR Code to Paper"
+                    style="width: 100px; text-align: right; margin: 0px;">
+            </div>
+            <div class="r-hstack" style="margin-bottom: 10px; margin-top: 10px;">
+                <p style="font-size: large; text-align: left; width: 800px">Henneking,
+                    Venkat, &amp; Ghattas (2026). <em class="color-emph">Goal-Oriented Real-Time Bayesian Inference for
+                        Linear
+                        Autonomous
+                        Dynamical Systems With Application to Digital Twins for Tsunami Early Warning.</em>
+                    Journal of Computational Physics (<a
+                        href="https://www.sciencedirect.com/science/article/abs/pii/S002199912600032X" target="_blank"
+                        rel="noopener noreferrer">Paper</a>).</p>
+                <img src="SIAM_PP_26/images/paper_qrs/jcp_goal.svg" alt="QR Code to Paper"
+                    style="width: 100px; text-align: right; margin: 0px;">
+            </div>
+            <div class="r-hstack" style="margin-bottom: 10px; margin-top: 10px;">
+                <p style="font-size: large; text-align: left; width: 800px">Venkat,
+                    Fernando, Henneking, &amp; Ghattas (2025). <em class="color-emph">Fast and Scalable FFT-Based
+                        GPU-Accelerated
+                        Algorithms for Hessian Actions Arising in Linear Inverse Problems Governed by Autonomous
+                        Dynamical
+                        Systems.</em> SIAM Journal on Scientific Computing (<a href="https://doi.org/10.1137/24M1683172"
+                        target="_blank" rel="noopener noreferrer">Paper</a>).
+                </p>
+                <img src="SIAM_PP_26/images/paper_qrs/fft_matvec_algorithm.svg" alt="QR Code to Paper"
+                    style="width: 100px; text-align: right; margin: 0px;">
+            </div>
+            <div class="r-hstack" style="margin-top: 10px;">
+                <p style="font-size: large; text-align: left; width: 800px"> Venkat,
+                    Świrydowicz, Wolfe, &amp; Ghattas (2025). <em class="color-emph">Mixed-Precision Performance
+                        Portability of
+                        FFT-Based GPU-Accelerated Algorithms for Block-Triangular Toeplitz Matrices.</em>
+                    Proceedings of SC25 Workshops (<a href="https://dl.acm.org/doi/full/10.1145/3731599.3767490"
+                        target="_blank" rel="noopener noreferrer">Paper</a>).</p>
+                <img src="SIAM_PP_26/images/paper_qrs/fft_matvec_mixedp.svg" alt="QR Code to Paper"
+                    style="width: 100px; text-align: right; margin: 0px;">
+            </div>
+            <div class="r-hstack" style="margin-top: 10px;">
+                <p style="font-size: large; text-align: left; width: 800px">Henneking,
+                    Kutschera, Venkat, Gabriel, &amp; Ghattas (2026). <em class="color-emph">Real-time probabilistic
+                        tsunami forecasting in Cascadia from sparse offshore pressure observations.</em>
+                    arXiv preprint arXiv:2603.14966 (<a href="https://arxiv.org/abs/2603.14966" target="_blank"
+                        rel="noopener noreferrer">Paper</a>).</p>
+                <img src="SIAM_UQ_26/images/qr-grl.svg" alt="QR Code to Paper"
+                    style="width: 100px; text-align: right; margin: 0px;">
+            </div>
+
+        </div>
+    </section>
+    <section>
+        <h4>Related Talks at SIAM UQ26</h4>
+        <ul>
+            <li><b class="color-emph">Monday, March 23 @ 9:30 AM</b> &mdash; Goal-Oriented OED for Bayesian Inverse
+                Problems Governed by
+                Autonomous Dynamical Systems (MS 60) &mdash; <span class="color-emph">Stefan Henneking</span> &mdash;
+                <em>Greenway E: 2<sup>nd</sup> Level</em>
+            </li>
+            <li><b class="color-emph">Monday, March 23 @ 2:30 PM</b> &mdash; Scalable Computation for Bayesian Design
+                of Experiments (MS 71) <br>&mdash; <span class="color-emph">Omar Ghattas</span> &mdash; <em>Skyway:
+                    2<sup>nd</sup>
+                    Level</em>
+            </li>
+            <li><b class="color-emph">Tuesday, March 24 @ 10:00 AM</b> &mdash; Extreme Scale Bayesian Inference and
+                Optimal
+                Experimental Design for Wave Propagation-based Source Inversion (MS 110) <br>&mdash; <span
+                    class="color-emph">Omar Ghattas</span> &mdash; <em>Greenway E: 2<sup>nd</sup>
+                    Level</em>
+            </li>
+        </ul>
+    </section>
+</section>
