@@ -337,11 +337,13 @@
         // - https://revealjs.com/config/
         Reveal.initialize({
             hash: true,
+            autoSlide: 5000,
 
             // Learn about plugins: https://revealjs.com/plugins/
-            plugins: [RevealMarkdown, RevealHighlight, RevealMath.KaTeX, RevealNotes, RevealSearch, RevealZoom, RevealMenu, PdfExport],
-            slideNumber: true,
+            plugins: [RevealMarkdown, RevealHighlight, RevealMath.KaTeX, RevealNotes, RevealSearch, RevealZoom, PdfExport],
+            slideNumber: false,
             totalTime: 3000,
+            progress: false,
 
             // multiplex: {
             // 	// Example values. To generate your own, see the socket.io server instructions.

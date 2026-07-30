@@ -1,0 +1,153 @@
+<section>
+    <section data-auto-animate>
+        <h4>Summary</h4>
+        <ul class="r-fit-text">
+            <li><span class="color-emph">Bayesian inverse model to infer tsunamigenic seafloor motion directly from
+                    near-field pressure data</span> using an acoustic&ndash;gravity model in the deep ocean</li>
+            <li><span class="color-emph">Large-scale real-time inversion algorithms for linear autonomous dynamical
+                    systems</span>, exploiting block Toeplitz structure of the p2o map $F$, enabling fast
+                construction and compact storage of $F$ and fast FFT-based $F$ and $F^*$ matvecs</li>
+            <li><span class="color-emph">MAP point computed exactly in &lt;0.2 s</span> on 512 A100s, for an inverse
+                problem with 1B parameters and 3.7B spatial DOFs</li>
+            <li><span class="color-emph">Wave heights at critical locations and their uncertainties computed in a
+                    fraction of a second</span> by exploiting the structure of the pushforward of the posterior to
+                the QoI</li>
+            <li><span class="color-emph">Optimal sensor selection</span> for inverse problems governed by autonomous
+                dynamical systems via <span class="color-emph">standard and goal-oriented D-optimal design
+                    criteria</span></li>
+            <li style="opacity: 0.67;"><span class="color-emph">Data-driven prior</span> for the Cascadia Subduction Zone from many
+                plausible rupture scenarios on the fault system</li>
+            <li style="opacity: 0.67;"><span class="color-emph">Goal-oriented dimension reduction</span> that can be used to efficiently
+                propagate uncertainties through the nonlinear shallow-water equations for tsunami wave propagation
+                near the coast</li>
+            <li style="opacity: 0.67;"><span class="color-emph">Latent dynamics surrogate model</span> for propagating inferred seafloor
+                motion through the shallow water equations to yield wave height forecasts along the coastline</li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Ongoing Work: Japan Trench</h4>
+        <img data-src="ANL_LANS_26/images/japan/japan-plates.jpg" alt="Japan Trench tectonic setting" class="r-stretch"
+            data-preview-image>
+        <p class="caption">
+            The Japan Trench lies near one of the world's most active tectonic zones. The 2011 M9.0
+            Tohoku earthquake resulted in &gt;20,000 deaths, $0.5T in damages, and partial meltdown of the Fukushima
+            nuclear reactor.
+        </p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Ongoing Work: Japan Trench</h4>
+        <img data-src="ANL_LANS_26/images/japan/japan-snet.jpg" alt="Japan cabled ocean bottom sensor network"
+            class="r-stretch" data-preview-image>
+        <p class="caption">
+            Japan's cabled ocean bottom sensor networks, built after the 2011 earthquake. If those networks were
+            available in 2011, could the proposed methodology have predicted the wave heights?
+        </p>
+    </section>
+    <section data-auto-animate>
+        <h4>Publications &amp; Code</h4>
+
+        <div
+            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 20px; font-size: 0.6em;">
+
+            <!-- Paper 1 -->
+            <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+                <img src="SIAM_PP_26/images/paper_qrs/gb_acm.svg" alt="QR Code to Paper"
+                    style="width: 90px; margin-bottom: 8px;">
+                <p style="margin: 0; font-size: 0.85em;"
+                    title="Henneking, Venkat, Dobrev, Camier, Kolev, Fernando, Gabriel, &amp; Ghattas (2025). Real-Time Bayesian Inference at Extreme Scale: A Digital Twin for Tsunami Early Warning Applied to the Cascadia Subduction Zone. 2025 ACM Gordon Bell Winner &mdash; Proceedings of SC25.">
+                    <a href="https://dl.acm.org/doi/full/10.1145/3712285.3771787" target="_blank"
+                        rel="noopener noreferrer">
+                        <em class="color-emph">Real-Time Bayesian Inference at Extreme Scale</em>
+                    </a>
+                </p>
+                <p style="margin: 4px 0 0; font-size: 0.7em; color: #555;">Henneking et al. (2025) &middot; SC25, ACM
+                    Gordon Bell Winner</p>
+            </div>
+
+            <!-- Paper 2 -->
+            <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+                <img src="SIAM_PP_26/images/paper_qrs/jcp_goal.svg" alt="QR Code to Paper"
+                    style="width: 90px; margin-bottom: 8px;">
+                <p style="margin: 0; font-size: 0.85em;"
+                    title="Henneking, Venkat, &amp; Ghattas (2026). Goal-Oriented Real-Time Bayesian Inference for Linear Autonomous Dynamical Systems With Application to Digital Twins for Tsunami Early Warning. Journal of Computational Physics.">
+                    <a href="https://www.sciencedirect.com/science/article/abs/pii/S002199912600032X" target="_blank"
+                        rel="noopener noreferrer">
+                        <em class="color-emph">Goal-Oriented Real-Time Bayesian Inference</em>
+                    </a>
+                </p>
+                <p style="margin: 4px 0 0; font-size: 0.7em; color: #555;">Henneking, Venkat, &amp; Ghattas (2026)
+                    &middot; J. Comp. Phys.</p>
+            </div>
+
+            <!-- Paper 3 -->
+            <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+                <img src="SIAM_PP_26/images/paper_qrs/fft_matvec_algorithm.svg" alt="QR Code to Paper"
+                    style="width: 90px; margin-bottom: 8px;">
+                <p style="margin: 0; font-size: 0.85em;"
+                    title="Venkat, Fernando, Henneking, &amp; Ghattas (2025). Fast and Scalable FFT-Based GPU-Accelerated Algorithms for Hessian Actions Arising in Linear Inverse Problems Governed by Autonomous Dynamical Systems. SIAM Journal on Scientific Computing.">
+                    <a href="https://doi.org/10.1137/24M1683172" target="_blank" rel="noopener noreferrer">
+                        <em class="color-emph">FFT-Based GPU-Accelerated Hessian Actions</em>
+                    </a>
+                </p>
+                <p style="margin: 4px 0 0; font-size: 0.7em; color: #555;">Venkat et al. (2025) &middot; SIAM J. Sci.
+                    Comput.</p>
+            </div>
+
+            <!-- Paper 4 -->
+            <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+                <img src="SIAM_PP_26/images/paper_qrs/fft_matvec_mixedp.svg" alt="QR Code to Paper"
+                    style="width: 90px; margin-bottom: 8px;">
+                <p style="margin: 0; font-size: 0.85em;"
+                    title="Venkat, Świrydowicz, Wolfe, &amp; Ghattas (2025). Mixed-Precision Performance Portability of FFT-Based GPU-Accelerated Algorithms for Block-Triangular Toeplitz Matrices. Proceedings of SC25 Workshops.">
+                    <a href="https://dl.acm.org/doi/full/10.1145/3731599.3767490" target="_blank"
+                        rel="noopener noreferrer">
+                        <em class="color-emph">Mixed-Precision Performance Portability</em>
+                    </a>
+                </p>
+                <p style="margin: 4px 0 0; font-size: 0.7em; color: #555;">Venkat et al. (2025) &middot; SC25 Workshops
+                </p>
+            </div>
+
+            <!-- Paper 5 -->
+            <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+                <img src="SIAM_UQ_26/images/qr-grl.svg" alt="QR Code to Paper" style="width: 90px; margin-bottom: 8px;">
+                <p style="margin: 0; font-size: 0.85em;"
+                    title="Henneking, Kutschera, Venkat, Gabriel, &amp; Ghattas (2026). Real-time probabilistic tsunami forecasting in Cascadia from sparse offshore pressure observations. arXiv preprint arXiv:2603.14966.">
+                    <a href="https://arxiv.org/abs/2603.14966" target="_blank" rel="noopener noreferrer">
+                        <em class="color-emph">Real-Time Probabilistic Tsunami Forecasting</em>
+                    </a>
+                </p>
+                <p style="margin: 4px 0 0; font-size: 0.7em; color: #555;">Henneking et al. (2026) &middot;
+                    arXiv:2603.14966, submitted to GRL</p>
+            </div>
+
+            <!-- PLACEHOLDER: new paper -->
+            <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+                <img src="ANL_LANS_26/images/qr-codes/sc26_oed.svg" alt="QR Code to Paper"
+                    style="width: 90px; margin-bottom: 8px;">
+                <p style="margin: 0; font-size: 0.85em;" title="Venkat, S., Henneking, S., & Ghattas, O. (2026). Sensor
+                    Placement for Tsunami Early Warning via Large-Scale Bayesian Optimal Experimental Design. arXiv
+                preprint arXiv:2604.08812. Proceedings of SC'26 (to appear).">
+                    <a href="https://arxiv.org/abs/2604.08812" target="_blank" rel="noopener noreferrer">
+                        <em class="color-emph">Large-Scale Bayesian OED</em>
+                    </a>
+                </p>
+                <p style="margin: 4px 0 0; font-size: 0.7em; color: #555;">Venkat, Henneking, &amp; Ghattas (2026)
+                    &middot; SC26 (to appear)</p>
+            </div>
+
+        </div>
+
+        <div class="r-hstack" style="margin-top: 24px; justify-content: center; font-size: 0.6em;">
+            <img src="SIAM_PP_26/images/paper_qrs/qr-FFTMatvec.svg" alt="QR Code to Code"
+                style="width: 90px; margin-right: 12px;">
+            <div>
+                <p style="margin: 0;"><b class="color-emph"><a href="https://github.com/s769/FFTMatvec" target="_blank"
+                            rel="noopener noreferrer">FFTMatvec Code</a></b></p>
+                <p class="color-emph" style="margin: 2px 0 0;">(Now with Python bindings!)</p>
+            </div>
+        </div>
+    </section>
+</section>

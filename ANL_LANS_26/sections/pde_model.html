@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<section>
+    <section data-auto-animate>
+        <h4>Forward Problem</h4>
+        <img data-src="siam_pp_24/pde-domain-cropped.svg" alt="PDE Domain" class="r-stretch">
+        <p class="caption">Illustration of the PDE domain with boundary conditions</p>
+        <ul>
+            <li>Linearization of the conservation of mass and momentum around hydrostatic pressure in the compressible
+                ocean<sup><a href="https://link.springer.com/content/pdf/10.1007/s10596-015-9472-0.pdf" target="_blank"
+                        rel="noopener noreferrer">1</a></sup></li>
+            <li>Assumptions:
+                <ul>
+                    <li>Surface gravity wave height \(\eta \ll\) ocean depth \(\ll\) surface gravity wave length</li>
+                </ul>
+            </li>
+        </ul>
+        <p class="footnote"><a href="https://link.springer.com/content/pdf/10.1007/s10596-015-9472-0.pdf"
+                target="_blank" rel="noopener noreferrer"><sup>1</sup>Lotto and Dunham (2015)</a></p>
+    </section>
+    <section data-auto-animate>
+        <h4>Forward Problem</h4>
+        <ul>
+            <!-- p = \rho g \eta,
+                
+                
+                \boldsymbol{u} \cdot \hat{\boldsymbol{n}} = Z^{-1} p, & \Gamma_a \times (0,T)\nonumber -->
+            <li class="small-pad-math"> Mixed formulation for velocity and pressure unknowns<a
+                    href="https://link.springer.com/content/pdf/10.1007/s10596-015-9472-0.pdf" target="_blank"
+                    rel="noopener noreferrer"><sup>1</sup></a>:
+                \[\footnotesize
+                \rho \frac{ \partial\vec{u}}{\partial t} + \nabla p = \vec{0} \quad \text{and} \quad
+                \frac{1}{K} \frac{ \partial p}{\partial t} + \nabla \cdot \vec{u} = 0 \quad \text{in }\Omega \times
+                (0,T)
+                \]
+            </li>
+            <li>Boundary conditions:
+                <ul>
+                    <li class="small-pad-math">ODE type BC (sea surface):
+                        \[\small
+                        p = \rho g \eta,
+                        \frac{ \partial\eta}{\partial t} = \vec{u} \cdot \vec{n} \text{ on }
+                        \Gamma_\text{surface} \times (0,T)
+                        \]
+                    </li>
+                    <li class="small-pad-math">Seafloor velocity (boundary source):
+                        \[\small
+                        \vec{u} \cdot \vec{n} = -\frac{\partial b}{\partial t} \text{ on }
+                        \Gamma_{\text{bottom}}
+                        \times (0,T) \]
+                    </li>
+                    <li class="small-pad-math">First order absorbing BC (outgoing waves):
+                        \[\small
+                        \vec{u} \cdot \vec{n} = -\frac{1}{\rho c} p \text{ on
+                        }\Gamma_\text{lateral} \times (0,T), c = \sqrt{K/\rho}
+                        \]
+                    </li>
+                </ul>
+            </li>
+            <li> Homogeneous initial conditions</li>
+        </ul>
+
+
+        <p class="footnote">Implemented in <a href="https://mfem.org/" target="_blank"
+                rel="noopener noreferrer">MFEM</a>
+            with high-order finite elements and RK4 time-stepping. <a
+                href="https://link.springer.com/content/pdf/10.1007/s10596-015-9472-0.pdf" target="_blank"
+                rel="noopener noreferrer"><sup>1</sup>Lotto and Dunham (2015)</a></p>
+        <aside class="notes" aria-label="physparams">
+            absorbing BCs on Gamma_a: 1st order, PML
+            <br>
+            Z is acoustic wave impedance; c is sound speed in seawater
+            <br>
+            bathymetry related to seafloor motion is the parameter
+        </aside>
+    </section>
+    <section data-auto-animate>
+        <h4>Weak Formulation</h4>
+        <p>
+            \[
+            \begin{aligned}
+            &\text{Find }
+            \boldsymbol{u} \in \mathcal{U},\, p \in \mathcal{V}, \text{such that} \\
+            &\int_0^T \! \! \! \int_\Omega
+            \left[ \rho\frac{\partial \boldsymbol{u}}{\partial{t}} \cdot \boldsymbol{v} +
+            \nabla p \cdot \boldsymbol{v} \right] \text{d} x \text{d} t
+            = 0 \, , \quad
+            \boldsymbol{v} \in \mathcal{U}, \\
+            &\int_0^T \! \! \! \int_\Omega
+            \left[ \frac{1}{K}\frac{\partial p}{\partial t} q - \boldsymbol{u} \cdot \nabla{q} \right] \text{d}
+            x \text{d} t \,
+            +\int_0^T \! \! \! \int_{\Gamma_s}
+            \frac{1}{\rho g} \frac{\partial p}{\partial t} q
+            \text{d} x \text{d} t
+            \\
+            +&\int_0^T \! \! \! \int_{\Gamma_a}
+            \frac{1}{\rho c} p q
+            \text{d} x \text{d} t
+            =
+            \int_0^T \! \! \! \int_{\Gamma_b}
+            \frac{\partial b}{\partial t} q
+            \text{d} x \text{d} t
+            \, , \quad
+            q \in \mathcal{V},
+            \end{aligned}
+            \]
+        </p>
+        <ul>
+            <li>Function spaces: \(\mathcal{U} = \boldsymbol{L^2}(\Omega) \times L^2(0,T)\), \(\mathcal{V} = H^1(\Omega)
+                \times
+                L^2(0,T)\) (+ homogeneous ICs)</li>
+            <li>Surface gravity wave height \(\eta\) recovered from surface BCs</li>
+        </ul>
+        <aside class="notes" aria-label="weakform">
+            <p>Nonstandard weak form allows traces of pressure to be taken on boundaries</p>
+        </aside>
+    </section>
+    <section data-auto-animate>
+        <h4>Scalable PDE Solver</h4>
+        <div class="r-vstack">
+        <img data-src="NUG/images/scaling/weak_scaling_MFEM.svg" alt="Weak Scaling" 
+            style="margin: 0; padding: 0; width: 50%;" data-preview-image>
+        <img data-src="NUG/images/scaling/strong_scaling_MFEM.svg" alt="Strong Scaling"
+            style="margin: 0; padding: 0; width: 50%;" data-preview-image>
+        </div>
+        <p class="footnote">Weak and strong scaling on <a href="https://docs.nersc.gov/systems/perlmutter/architecture/"
+                target="_blank" rel="noopener noreferrer">Perlmutter</a>, <a href="https://www.cscs.ch/computers/alps"
+                target="_blank" rel="noopener noreferrer">Alps</a>, and <a
+                href="https://hpc.llnl.gov/documentation/user-guides/using-el-capitan-systems/hardware-overview"
+                target="_blank" rel="noopener noreferrer">El Capitan</a>. </p>
+    </section>
+</section>

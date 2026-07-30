@@ -1,0 +1,362 @@
+<section>
+    <section data-auto-animate>
+        <h4>Mesh Creation</h4>
+        <ul class="r-fit-text">
+            <li><b class="color-emph">Computational region</b>
+                <ul>
+                    <li>The coastline boundary is cut approximately along the bathymetric contour $z=-10\,\mathrm{m}$.
+                        The coastline consists of 119 line segments.</li>
+                    <li>The quantities of interest (QoIs) are the free-surface elevations at the observation gauges,
+                        which are located along the contour $z=-15\,\mathrm{m}$. We have 50 locations.</li>
+                    <li>Each QoI is recorded <span class="color-emph">every 5 seconds</span>. Since we simulate the
+                        tsunami for 45 minutes, we have a total of <span class="color-emph">540</span> observations.
+                        The total QoI dimension is $50\times540=27{,}000$.</li>
+                </ul>
+            </li>
+            <li><b class="color-emph">Coastline refinement</b>
+                <ul>
+                    <li>Along the coastline, the boundary is partitioned so that the average segment length is
+                        around $50\,\mathrm{m}$.</li>
+                    <li>The mesh partition is guided by the estimated local wave speed $\sqrt{gH}$.</li>
+                </ul>
+            </li>
+            <li><b class="color-emph">Spatial discretization</b>
+                <ul>
+                    <li>We use a discontinuous Galerkin spatial discretization with polynomial order $p=2$.</li>
+                    <li>For each field in $H, Hu, Hv$, each element has 6 degrees of freedom. The DoF for one scalar
+                        field is $928{,}858\times6=5{,}573{,}148$.</li>
+                    <li>The total number of degrees of freedom is $928{,}858\times6\times3=$ <span
+                            class="color-emph">16,719,444</span>.</li>
+                    <li>A total variation bounded limiter is applied.</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Numerical Solver</h4>
+        <ul class="r-fit-text">
+            <li><b class="color-emph">Seafloor Uplift</b>
+                <ul>
+                    <li>The seafloor motion is only happening in the first 3 minutes.</li>
+                    <li>Spatially, seafloor ruptures are saved at $367 \times 422 = 154874$ points. Temporally, it
+                        was stored at $10\text{s}, 20\text{s}, \dots, 180\text{s}$. The total number of seafloor
+                        motion data is $154874\times18=2{,}787{,}732$.</li>
+                    <li>During computation, the seafloor motion is <span class="color-emph">linearly interpolated in
+                            space and time</span>.</li>
+                    <li>We do POD on 10,000 seafloor motion data and keep the first 150 POD modes.</li>
+                </ul>
+            </li>
+            <li><b class="color-emph">Time stepping</b>
+                <ul>
+                    <li>The time integration uses SSPRK33.</li>
+                    <li class="small-pad-math">For each element $K\in\mathcal{T}_h$, the time step is determined by
+                        the local CFL condition:
+                        <p class="small-pad-math">
+                            \[
+                                \Delta t_K
+                                =
+                                \mathrm{CFL}\,
+                                \frac{h_K}
+                                {(2p+1)\left(\sqrt{u_K^2+v_K^2}+\sqrt{gH_K}\right)},
+                                \qquad \color{BF5700}{\mathrm{CFL}=0.4}.
+                            \]
+                        </p>
+                    </li>
+                    <li>After the first 3 minutes, we use <span class="color-emph">local time stepping</span>, with
+                        $\Delta t_{\mathrm{L2}}=2\Delta t_{\mathrm{L1}}=4\Delta t_{\mathrm{L0}}$.</li>
+                    <li>We have three levels of cells: $109{,}759$ cells at level 0, $485{,}594$ cells at level 1,
+                        and $333{,}505$ cells at level 2. Here level 0 is the finest level and level 2 is the
+                        coarsest level.</li>
+                </ul>
+            </li>
+            <li>A typical 45-minute simulation uses about <span class="color-emph">7,500 L2 steps</span> ($\Delta
+                t_{\mathrm{L2}}\approx0.4\,\mathrm{s}$) and takes around <span class="color-emph">120
+                    seconds</span> on a single NVIDIA A100 GPU.</li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Local Time-Stepping Partition</h4>
+        <img data-src="ANL_LANS_26/images/swe//coast10m_h50_current_cfl_ratio_lts_levels.png"
+            alt="Local time-stepping partition" class="r-stretch">
+        <p class="caption">
+            Three-level local time-stepping partition on the Cascadia subdomain. Level 0 uses $\Delta t_0$, level 1
+            uses $2\Delta t_0$, and level 2 uses $4\Delta t_0$.
+        </p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Optimization Setup</h4>
+        <ul class="r-fit-text">
+            <li><b class="color-emph">Model assumptions</b>
+                <ul>
+                    <li class="small-pad-math">We impose a low-rank structure on the linear dynamics:
+                        <p class="small-pad-math">
+                            \[
+                                A=\operatorname{diag}(1-\sigma_i^2)+PQ^\top-QP^\top,
+                                \qquad
+                                P,Q\in\mathbb{R}^{120\times\color{BF5700}{20}}.
+                            \]
+                        </p>
+                    </li>
+                    <li>The quadratic tensor $H$ is represented as a <span class="color-emph">rank-40</span> Tucker
+                        tensor, with an energy constraint imposed on $H$.</li>
+                    <li>We use Frobenius-norm regularization with weight $10^{-7}$ on the dynamics and weight
+                        $10^{-5}$ on the decoder.</li>
+                    <li class="small-pad-math">The dynamics parameters have:
+                        <p class="small-pad-math">
+                            \[
+                                \#(A,H,B,c)=4920+72000+18000+120=\color{BF5700}{95040}.
+                            \]
+                        </p>
+                    </li>
+                </ul>
+            </li>
+            <li><b class="color-emph">Decoder and training setup</b>
+                <ul>
+                    <li>We train on <span class="color-emph">16,384</span> rupture cases and test on <span
+                            class="color-emph">5,000</span> cases.</li>
+                    <li>In the decoder, we use <span class="color-emph">2,000</span> randomly selected entries of
+                        $u\otimes u$, instead of the full quadratic feature vector.</li>
+                    <li class="small-pad-math">The decoder contains:
+                        <p class="small-pad-math">
+                            \[
+                                V_2\in\mathbb{R}^{50\times2000},\qquad
+                                V_1\in\mathbb{R}^{50\times120},\qquad
+                                v_0\in\mathbb{R}^{50\times1},
+                            \]
+                        </p>
+                        giving $100000+6000+50=$ <span class="color-emph">106,050</span> parameters.
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Optimization Results</h4>
+        <ul class="r-fit-text">
+            <li><b class="color-emph">Reduced-order model size</b>
+                <ul>
+                    <li>The dynamics and decoder contain $95040$ and $106050$ parameters, respectively, giving a
+                        total of <span class="color-emph">201,090</span> trainable degrees of freedom.</li>
+                </ul>
+            </li>
+            <li><b class="color-emph">Time discretization</b>
+                <ul>
+                    <li>The reduced-order model is integrated using the <span class="color-emph">implicit midpoint
+                            method</span> with a fixed time-step size <span class="color-emph">$\Delta
+                            t=1/540$</span>.</li>
+                </ul>
+            </li>
+            <li><b class="color-emph">Distributed training</b>
+                <ul>
+                    <li>Training is performed on <span class="color-emph">4</span> GPUs with a per-GPU batch size
+                        of <span class="color-emph">4,096</span>.</li>
+                    <li>The Adam optimizer terminates after <span class="color-emph">300</span> iterations.</li>
+                    <li>The complete optimization takes approximately <span class="color-emph">1 hour</span>.</li>
+                </ul>
+            </li>
+            <li><b class="color-emph">Computational cost per gradient update</b>
+                <ul>
+                    <li>The batched forward rollout takes <span class="color-emph">4.34 s</span> on average.</li>
+                    <li>The batched adjoint solve takes <span class="color-emph">5.96 s</span> on average.</li>
+                    <li>One complete gradient update takes approximately <span class="color-emph">12 s</span> on
+                        average.</li>
+                    <li>For reference, an unbatched forward rollout for a single trajectory takes approximately
+                        <span class="color-emph">0.9 s</span>.</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Cascadia Subduction Zone Tsunami</h4>
+        <video data-src="ANL_LANS_26/images/swe//CSZ_rupture_027933_video_displacement.mp4"
+            alt="Seafloor vertical displacement animation" class="r-stretch" data-autoplay loop
+            data-preview-video></video>
+        <p class="caption">
+            Seafloor vertical displacement for a Cascadia rupture scenario generated by FakeQuakes.
+        </p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Cascadia Subduction Zone Tsunami</h4>
+        <video data-src="ANL_LANS_26/images/swe//CSZ_rupture_027933_video_tsunami.mp4"
+            alt="Tsunami propagation animation" class="r-stretch" data-autoplay loop data-preview-video></video>
+        <p class="caption">
+            Tsunami propagation for a Cascadia rupture scenario generated by FakeQuakes.
+        </p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Predicting QoIs with Goal-Oriented Reduced Order Model</h4>
+        <ul class="r-fit-text">
+            <li>For near-shore QoIs, the linear acoustic-gravity model is inaccurate</li>
+            <li>The nonlinear shallow water equations (SWE) are more accurate:
+                <p class="small-pad-math">
+                    \[
+                        \frac{\partial}{\partial t}
+                        \begin{pmatrix} H\\ Hu\\ Hv \end{pmatrix}
+                        +
+                        \frac{\partial}{\partial x}
+                        \begin{pmatrix} Hu\\ Hu^2+\dfrac{1}{2}gH^2\\ Huv \end{pmatrix}
+                        +
+                        \frac{\partial}{\partial y}
+                        \begin{pmatrix} Hv\\ Huv\\ Hv^2+\dfrac{1}{2}gH^2 \end{pmatrix}
+                        =
+                        \begin{pmatrix} 0\\ -gH\frac{\partial b}{\partial x}\\ -gH\frac{\partial b}{\partial y}
+                        \end{pmatrix}
+                    \]
+                </p>
+            </li>
+            <li>For posterior predictions, we cannot precompute the QoI covariance nor exploit shift-invariance; we
+                need a <span class="color-emph">surrogate</span> for the map from seafloor motion to QoI:
+                <p class="small-pad-math">
+                    \[ q_i(t) = H(\mathbf{x}_i,t)+b(\mathbf{x}_i,t), \qquad i=1,\ldots,d_q. \]
+                </p>
+            </li>
+            <li>Initially we focus on <span class="color-emph">one subdomain of Cascadia</span></li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Pipeline for Goal-Oriented Surrogate Modelling</h4>
+        <img data-src="ANL_LANS_26/images/swe//pipeline.svg" alt="Goal-oriented surrogate pipeline"
+            class="r-stretch">
+        <ul class="r-fit-text">
+            <li><b class="color-emph">Linear Reduction</b>
+                <ul>
+                    <li>Currently we use POD of FakeQuakes-induced seafloor motion; seafloor displacement $b(t)$ is
+                        reduced to its POD coordinates:
+                        <p class="small-pad-math">
+                            \[ \hat b(t) = \Phi^\top b(t) \]
+                        </p>
+                    </li>
+                    <li>For the full Cascadia problem, we will employ goal-oriented dimension reduction</li>
+                </ul>
+            </li>
+            <li><b class="color-emph">Latent Dynamics</b>
+                <ul>
+                    <li>Assume the existence of a low-dimensional <span class="color-emph">latent variable</span>
+                        $u(t)$ that carries the information needed to predict the QoI trajectory</li>
+                    <li>The latent variable $u(t) \in \mathbb{R}^r$ evolves in a latent space according to dynamics
+                        that are <span class="color-emph">learned from training data</span></li>
+                    <li>The goal is not to reconstruct the full solution field, but to <span
+                            class="color-emph">predict the QoIs directly</span>, which enables a much
+                        lower-dimensional representation</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Quadratic Latent Dynamics</h4>
+        <ul class="r-fit-text">
+            <li>The parameters $\Theta$ for the encoder and decoder are learned by solving the <span
+                    class="color-emph">ODE-constrained optimization problem</span>:</li>
+        </ul>
+        <div class="box r-fit-text"
+            style="background-color: blanchedalmond; border: 1px solid black; border-radius: 20px; padding:15px; margin: 15px 0;">
+            <p class="small-pad-math">
+                \[\small
+                    \begin{aligned}
+                        \min_{\Theta,\,\{u^{i}\}}
+                        \quad
+                         & \frac{1}{N_{\mathrm{train}}}
+                        \sum_{i=1}^{N_{\mathrm{train}}}
+                        \int_0^T
+                        \left\| q^{i}(t)-\tilde q^{i}(t) \right\|_2^2\,dt
+                        +
+                        \mathcal{R}(\Theta)                                                                                \\
+                        \mathrm{s.t.}\quad
+                         & \dot u^{i}(t)=\mathcal{F}_{\Theta}\big(u^{i}(t),\color{BF5700}{\mathcal{E}(b^{i}(t))}\big),
+                        \qquad
+                        \tilde q^{i}(t)=\color{BF5700}{\mathcal{D}_{\Theta}}\big(u^{i}(t)\big),                          \\
+                         & u^{i}(0)=0,
+                        \qquad
+                        i=1,\ldots,N_{\mathrm{train}} .
+                    \end{aligned}
+                \]
+            </p>
+        </div>
+        <ul class="r-fit-text">
+            <li class="small-pad-math">For each input trajectory $b^{i}(t)$, we evolve a latent variable
+                $u^{i}(t)\in\mathbb{R}^r$:
+                <p class="small-pad-math">
+                    \[
+                        \frac{d}{dt}u^{i}
+                        =
+                        \mathcal{F}_\Theta\big(u^{i},\color{BF5700}{\mathcal{E}(b^{i})}\big)
+                        :=
+                        A u^{i}(t)
+                        +
+                        H\big(u^{i}\otimes u^{i}\big)
+                        +
+                        \color{BF5700}{B\Phi^\top b^{i}}
+                        +
+                        c .
+                    \]
+                </p>
+            </li>
+            <li class="small-pad-math">The QoIs are <span class="color-emph">decoded</span> from the latent
+                variable:
+                <p class="small-pad-math">
+                    \[
+                        \tilde q^{i}
+                        =
+                        \color{BF5700}{\mathcal{D}_\Theta}\big(u^{i}\big)
+                        :=
+                        V_1u^{i}
+                        +
+                        V_2\big(u^{i}\otimes u^{i}\big)
+                        +
+                        v_0 .
+                    \]
+                </p>
+            </li>
+            <li>Operator Inference<sup>1</sup> provides successful examples of learned reduced models;
+                theoretically, quadratization<sup><a href="https://arxiv.org/abs/2502.10005" target="_blank"
+                        rel="noopener noreferrer">2</a></sup> supports the use of quadratic latent dynamics.</li>
+        </ul>
+        <p class="footnote">
+            <sup>1</sup>Kramer et al., Annu. Rev. Fluid Mech., 2024. 
+            <a href="https://arxiv.org/abs/2502.10005" target="_blank" rel="noopener noreferrer"><sup>2</sup>Kramer
+                and Pogudin, arXiv:2502.10005, 2025.</a>
+        </p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Problem Setup</h4>
+        <ul class="r-fit-text">
+            <li>The high-fidelity model uses 928,858 triangular cells (466,819 mesh nodes) and 16,719,444 state
+                DoFs.</li>
+            <li>Each rupture input contains 154,874 spatial values at 18 time instances, giving 2,787,732 space-time
+                parameter values. The POD basis is constructed from 10,000 FakeQuake scenarios.</li>
+            <li>A typical high-fidelity simulation requires about 7,500 L2 steps and 120 seconds on one NVIDIA A100
+                GPU.</li>
+            <li>One reduced-model trajectory takes about 0.9 seconds, and training the reduced model takes about
+                one hour on four GPUs.</li>
+        </ul>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Proper Orthogonal Decomposition</h4>
+        <img data-src="ANL_LANS_26/images/swe//increment_pod_singular_values_train10000_rank500_uncentered_vector.svg"
+            alt="POD singular value spectrum" class="r-stretch">
+        <p class="caption">
+            The seafloor displacement fields are sampled from 10,000 FakeQuake simulations. The plot shows that a
+            <span class="color-emph">150-dimensional subspace</span> is able to capture the spatial field.
+        </p>
+    </section>
+
+    <section data-auto-animate>
+        <h4>Learning Result</h4>
+        <img data-src="ANL_LANS_26/images/swe//r120_diverse_six_cases_qoi_2x3.svg" alt="QoI prediction results" class="r-stretch">
+        <p class="caption">
+            QoI predictions on representative trajectories. Training on 16,384 cases and test on 5,000 cases. The
+            latent dimension is $d_u=120$. The Adam optimizer terminates after 300 iterations.
+        </p>
+    </section>
+</section>
