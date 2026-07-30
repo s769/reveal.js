@@ -93,7 +93,7 @@
 		"runtime": {
 			"name": "node",
 			"version": ">=20.19.0",
-			"onFail": "error"
+			"onFail": "warn"
 		}
 	},
 	"keywords": [
