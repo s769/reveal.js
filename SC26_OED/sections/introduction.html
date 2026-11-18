@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<section>
+    <!-- 2 · Cascadia Subduction Zone -->
+    <section>
+        <h2>Cascadia Subduction Zone</h2>
+        <div class="cols" style="grid-template-columns: 548px 1fr; gap: 48px;">
+            <!-- zoom from the whole Earth into this map (canvas, drawn by js/sc26.js),
+                 then the locked zone of the megathrust fades in over the plain bathymetry -->
+            <div class="plot mapfade" style="height: 524px;">
+                <img data-src="SC26_OED/images/csz_map.jpg" alt="Bathymetry of the Cascadia Subduction Zone">
+                <img class="top" data-src="SC26_OED/images/csz_map_locked.jpg" alt="Locked zone of the Cascadia megathrust">
+                <canvas class="globe" data-globe data-earth="SC26_OED/images/earth-blue-marble.jpg"
+                    data-map="SC26_OED/images/csz_map.jpg" data-land="SC26_OED/data/land-110m.json"
+                    data-land-near="SC26_OED/data/land-pnw.json"></canvas>
+            </div>
+            <div>
+                <ul class="loose">
+                    <li>Last major earthquake and orphan tsunami: <span class="a">January 26, 1700</span></li>
+                    <li>Paleoseismic evidence indicates a <span class="a">250–500 years recurrence</span> interval</li>
+                </ul>
+                <div class="photo" style="width: 428px; height: 321px; margin: 30px 0 10px 30px;">
+                    <video data-src="proposal/images/intro/CSZ_eq.mp4" poster="SC26_OED/images/CSZ_eq_poster.jpg"
+                        data-autoplay loop muted playsinline></video>
+                </div>
+                <p class="credit" style="margin-left: 30px;">Video credit: Alaska Earthquake Center</p>
+            </div>
+        </div>
+        <aside class="notes">37% chance of mag. 8.7+ eq in next 50 years</aside>
+    </section>
+
+    <!-- 3 · Proposed sensor network -->
+    <section>
+        <h2>Proposed sensor network</h2>
+        <div style="display: flex; align-items: flex-end; gap: 26px;">
+            <div class="photo" style="width: 774px; height: 524px; margin-left: 96px;">
+                <img data-src="SC26_OED/images/sensor-network.jpg" alt="Proposed offshore sensor network for Cascadia">
+                <!-- seismic waves spreading from the epicentre -->
+                <div class="quake" style="left: 50.6%; top: 53.4%;"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i></div>
+            </div>
+            <p class="credit">Image credit: <br>D. Schmidt et al., 2019</p>
+        </div>
+        <aside class="notes">Cost of placing sensors is several million per sensor; very important to design the
+            network optimally. Use network to build digital twin</aside>
+    </section>
+
+    <!-- 4 · Layers of the Bayesian digital twin (one slide, four clicks) -->
+    <section data-layer="all">
+        <h2>Layers of the Bayesian digital twin</h2>
+        <!-- clicks: 1 forward cost · 2 inverse problem lights up · 3 inverse cost · 4 OED lights up · 5 live demo · 6 back to this slide -->
+        <div class="twin">
+            <div class="layer oed fragment lit" data-fragment-index="3">
+                <h3>Optimal experimental design</h3>
+                <p>Select sensors to maximize expected information gain</p>
+                <p>Many inverse problems across candidate sensor sets <span class="thiswork fragment" data-fragment-index="3">→ This work</span></p>
+                <div class="layer inv fragment lit" data-fragment-index="1">
+                    <h3>Inverse problem</h3>
+                    <p>Reconstruct seafloor motion from pressure observations</p>
+                    <p class="swap"><span class="fragment swap-out" data-fragment-index="2">Many (≈10<sup>5</sup>) forward/adjoint PDE solves required</span><span class="fragment swap-in cost" data-fragment-index="2">≈0.2 s on 512 A100 GPUs (Henneking et. al., SC25 – <u>Gordon Bell Winner</u>)</span></p>
+                    <div class="layer fwd">
+                        <h3>Forward problem: acoustic–gravity wave PDE model</h3>
+                        <p>Map seafloor motion to pressure observations</p>
+                        <p class="swap"><span class="fragment swap-out" data-fragment-index="0">≈1 hour on 512 A100 GPUs</span><span class="fragment swap-in cost" data-fragment-index="0">≈10 ms on 512 A100 GPUs (Venkat et. al., SISC, 2025)</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span class="fragment" data-demo data-fragment-index="4"></span><span class="fragment" data-fragment-index="5"></span>
+        <aside class="notes">
+            Say you’re going to outline some previous foundational work briefly that sets up the OED<br><br>
+            OPEN DEMO (click 5 shows it, click 6 comes back here)<br>
+            Outer loop – mention difficulty of oed (np hard prob around inv)<br>
+            Fwd prob – acceleration due to probl strutrue exploit
+        </aside>
+    </section>
+</section>

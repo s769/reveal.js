@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<section>
+    <!-- 21 · The digital twin revisited (one slide, four clicks) -->
+    <section data-layer="all">
+        <h2>The Bayesian digital twin revisited</h2>
+        <!-- clicks: 1 forward cost · 2 inverse cost · 3 OED cost · 4 speedups -->
+        <div class="twin">
+            <div class="layer oed">
+                <h3>Optimal experimental design</h3>
+                <p>Select sensors to maximize expected information gain</p>
+                <p class="swap"><span class="fragment swap-out" data-fragment-index="2">Many inverse problems across candidate sensor sets</span><span class="fragment swap-out" data-fragment-index="3"><span class="fragment swap-in cost" data-fragment-index="2">≈5 minutes on 16 GB200 GPUs (Venkat et. al., SC26)</span></span><span class="fragment swap-in cost" data-fragment-index="3"><span class="chip">≫10<sup>10</sup>× faster</span><sup style="color:var(--ink)">*</sup> (Venkat et. al., SC26)</span></p>
+                <div class="layer inv">
+                    <h3>Inverse problem</h3>
+                    <p>Reconstruct seafloor motion from pressure observations</p>
+                    <p class="swap"><span class="fragment swap-out" data-fragment-index="1">Many (≈10<sup>5</sup>) forward/adjoint PDE solves required</span><span class="fragment swap-out" data-fragment-index="3"><span class="fragment swap-in cost" data-fragment-index="1">≈0.2 s on 512 A100 GPUs (Henneking et. al., SC25 – <u>Gordon Bell Winner</u>)</span></span><span class="fragment swap-in cost" data-fragment-index="3"><span class="chip">≈10<sup>10</sup>× faster</span> (Henneking et. al., SC25 – <u>Gordon Bell Winner</u>)</span></p>
+                    <div class="layer fwd">
+                        <h3>Forward problem: acoustic–gravity wave PDE model</h3>
+                        <p>Map seafloor motion to pressure observations</p>
+                        <p class="swap"><span class="fragment swap-out" data-fragment-index="0">≈1 hour on 512 A100 GPUs</span><span class="fragment swap-out" data-fragment-index="3"><span class="fragment swap-in cost" data-fragment-index="0">≈10 ms on 512 A100 GPUs (Venkat et. al., SISC, 2025)</span></span><span class="fragment swap-in cost" data-fragment-index="3"><span class="chip">≈10<sup>5</sup>× faster</span> (Venkat et. al., SISC, 2025)</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="twin-note fragment" data-fragment-index="3"><sup>*</sup>under a conservative assumption of \(\mathcal{O}(10^5)\) PDE solves per
+            optimization iteration and \(\mathcal{O}(10^2)\) iterations</p>
+    </section>
+
+    <!-- 22 · Relevant publications -->
+    <section>
+        <h2>Relevant publications</h2>
+        <div class="pubs">
+            <p><span class="au">S. Venkat, S. Henneking, O. Ghattas.</span> “<span class="ti">Sensor placement for
+                    tsunami early warning via large-scale Bayesian optimal experimental design.</span>” In:
+                Proceedings of SC26. <span class="tag">This work.</span></p>
+            <p><span class="au">B. Shi, S. Venkat, S. Henneking, O. Ghattas.</span> “<span class="ti">Rapid
+                    Earthquake-to-Tsunami Waveform Generation via Large-Scale Multi-GPU FFT Convolution Applied to
+                    the Cascadia Subduction Zone.</span>” In: Proceedings of SC26 Workshops.</p>
+            <p><span class="au">S. Henneking, S. Venkat, V. Dobrev, J. Camier, T. Kolev, M. Fernando, A.-A. Gabriel,
+                    and O. Ghattas.</span> “<span class="ti">Real-time Bayesian inference at extreme scale: A digital
+                    twin for tsunami early warning applied to the Cascadia subduction zone.</span>” In: Proceedings
+                of SC25. <span class="tag">2025 ACM Gordon Bell Prize Winner.</span></p>
+            <p><span class="au">J. Tu, I. Karlin, J. Camier, V. Dobrev, T. Kolev, S. Henneking, O. Ghattas.</span>
+                “<span class="ti">Accelerating high-order finite element simulations at extreme scale with FP64
+                    tensor cores.</span>” In: Proceedings of ISC’26.</p>
+            <p><span class="au">S. Venkat, M. Fernando, S. Henneking, and O. Ghattas.</span> “<span class="ti">Fast
+                    and scalable FFT-based GPU-accelerated algorithms for block-triangular Toeplitz matrices with
+                    application to linear inverse problems governed by autonomous dynamical systems.</span>” In: SIAM
+                Journal on Scientific Computing 2025.</p>
+            <p><span class="au">S. Henneking, F. Kutschera, S. Venkat, A.-A. Gabriel, O. Ghattas.</span> “<span
+                    class="ti">Real-time probabilistic tsunami forecasting in Cascadia from sparse offshore pressure
+                    observations.</span>” In review at Journal of Geophysical Research: Solid Earth.</p>
+            <p><span class="au">S. Henneking, S. Venkat, and O. Ghattas.</span> “<span class="ti">Goal-oriented
+                    real-time Bayesian inference for linear autonomous dynamical systems with application to digital
+                    twins for tsunami early warning.</span>” In: Journal of Computational Physics 2026.</p>
+            <p><span class="au">S. Venkat, K. Świrydowicz, N. Wolfe, O. Ghattas.</span> “<span
+                    class="ti">Mixed-Precision Performance Portability of FFT-Based GPU-Accelerated Algorithms for
+                    Block-Triangular Toeplitz Matrices.</span>” In: Proceedings of SC25 Workshops.</p>
+        </div>
+    </section>
+
+    <!-- 23 · Software and acknowledgements -->
+    <section>
+        <h2>Software and acknowledgements</h2>
+        <div class="cols acks">
+            <div>
+                <div class="blk">
+                    <p class="hd">Open-source software</p>
+                    <p class="repo a">AutonomousOED: <a href="https://github.com/s769/AutonomousOED" target="_blank"
+                            rel="noopener noreferrer">github.com/s769/AutonomousOED</a></p>
+                    <p class="repo b">FFTMatvec: <a href="https://github.com/s769/FFTMatvec" target="_blank"
+                            rel="noopener noreferrer">github.com/s769/FFTMatvec</a></p>
+                    <p class="thanks">Special thanks to the reproducibility reviewers</p>
+                </div>
+                <div class="blk">
+                    <p class="hd">Research support</p>
+                    <p>DARPA COMPASS • DOD MURI • DOE ASCR</p>
+                </div>
+                <div class="blk">
+                    <p class="hd">Computational resources</p>
+                    <p>NERSC • OLCF • TACC</p>
+                </div>
+            </div>
+            <div style="margin-top: -30px;">
+                <div class="qrs">
+                    <img data-src="SC26_OED/images/qr_autonomousoed.svg" alt="QR code: github.com/s769/AutonomousOED">
+                    <img data-src="SC26_OED/images/qr_fftmatvec.svg" alt="QR code: github.com/s769/FFTMatvec">
+                </div>
+                <div class="badges">
+                    <img data-src="SC26_OED/images/badges/artifacts_available.svg" alt="ACM badge">
+                    <span>Artifacts Available</span>
+                    <img data-src="SC26_OED/images/badges/artifacts_functional.svg" alt="ACM badge">
+                    <span>Artifacts Evaluated-Functional</span>
+                    <img data-src="SC26_OED/images/badges/results_reproduced.svg" alt="ACM badge">
+                    <span>Results Reproduced</span>
+                </div>
+            </div>
+        </div>
+        <aside class="notes">Thanks to repro reviewers and TACC for reservation</aside>
+    </section>
+
+    <!-- 24 · Summary and future work -->
+    <section data-layer="all">
+        <h2>Summary and future work</h2>
+        <ul class="summary">
+            <li><span class="a">High-fidelity physics-based</span> Bayesian OED at <span class="g">billion-parameter
+                    scale</span></li>
+            <li><span class="a">Data-space formulation</span> of OED objective</li>
+            <li><span class="a">Pipelined, double-buffered I/O</span> to overlap with GPU compute</li>
+            <li><span class="a">Performance-portable, multi-GPU</span> implementation <span class="g">scales
+                    excellently to 1,024 GPUs</span> of varying architectures</li>
+            <li>Cascadia: <span class="g">175 sensors selected from 600 in &lt; 5 minutes</span> on 16 GB200 GPUs</li>
+            <li><span class="a">Verified solution</span> vs. 10,000 random networks</li>
+            <li><span class="a">Optimality bounds based on submodularity</span> <span class="g">(63% → 87%)</span></li>
+            <li><span class="a">Algorithms are extensible</span> to more general OED problems</li>
+            <li><span class="b">Next steps:</span> goal-oriented and A-optimal design</li>
+        </ul>
+    </section>
+</section>

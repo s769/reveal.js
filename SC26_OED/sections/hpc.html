@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<section>
+    <!-- 14 · HPC systems -->
+    <section data-layer="oed">
+        <div class="cols hpc">
+            <div>
+                <h2>HPC Systems</h2>
+                <ul style="margin-top: 40px;">
+                    <li>TACC: <span class="a">Vista</span> (GH200), <span class="a">Horizon</span> (GB200)</li>
+                    <li>MI300X: AMD Developer Cloud</li>
+                    <li>NERSC: <span class="a">Perlmutter-GPU</span> (A100)
+                        <ul>
+                            <li>4 GPUs/Node; 44 PB all-flash Lustre scratch</li>
+                        </ul>
+                    </li>
+                    <li>OLCF: <span class="a">Frontier</span> (MI250X)
+                        <ul>
+                            <li>4 GPUs/Node; Orion Lustre: 679 PB HDD + 11.5 PB flash</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="hpc-photos">
+                <figure style="--i:0">
+                    <img data-src="SC26_OED/images/hpc/horizon.jpg" alt="Horizon">
+                    <figcaption>Horizon image credits: TACC</figcaption>
+                </figure>
+                <figure style="--i:1">
+                    <img data-src="SC26_OED/images/hpc/vista.jpg" alt="Vista">
+                    <figcaption>Vista image credits: TACC</figcaption>
+                </figure>
+                <figure style="--i:2">
+                    <img data-src="SC26_OED/images/hpc/perlmutter.jpg" alt="Perlmutter" style="object-position: left center;">
+                    <figcaption>Perlmutter image credits: NERSC</figcaption>
+                </figure>
+                <figure style="--i:3">
+                    <img data-src="SC26_OED/images/hpc/frontier.jpg" alt="Frontier">
+                    <figcaption>Frontier image credits: OLCF</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <!-- 15 · Single-GPU performance -->
+    <section data-layer="oed">
+        <h2>Single-GPU performance</h2>
+        <div class="pair">
+            <figure>
+                <div class="plot" style="aspect-ratio: 346.26 / 275.25;">
+                    <img data-src="SC26_OED/images/plots/single_gpu_naive.svg" alt="Time per iteration, naïve formulation">
+                    <span class="mark o" style="left: 5.1%; top: 4.6%; width: 6.8%; height: 8.5%; --i:0"></span>
+                    <span class="mark" style="left: 79.8%; top: 84.5%; width: 6.8%; height: 8.5%; --i:1"></span>
+                </div>
+                <figcaption>Naïve formulation \(\mathcal{O}(k^3)\)</figcaption>
+            </figure>
+            <figure>
+                <div class="plot" style="aspect-ratio: 346.26 / 275.25;">
+                    <img data-src="SC26_OED/images/plots/single_gpu_schur.svg" alt="Time per iteration, Schur formulation">
+                    <span class="mark o" style="left: 5.4%; top: 9.6%; width: 6.8%; height: 8.5%; --i:2"></span>
+                    <span class="mark" style="left: 76.2%; top: 84.5%; width: 6.8%; height: 8.5%; --i:3"></span>
+                </div>
+                <figcaption>Schur formulation \(\mathcal{O}(k^2)\)</figcaption>
+            </figure>
+        </div>
+        <p class="note">Schur formulation gives quadratic cost in \(k\); smaller memory footprint supports larger
+            budgets.</p>
+        <aside class="notes">Focus on perf port and perf across gpus; mem bound or compute bound</aside>
+    </section>
+
+    <!-- 16 · Parallel candidate evaluation and pipelining -->
+    <section data-layer="oed">
+        <h2 style="margin-bottom: 16px;">Parallel candidate evaluation and pipelining</h2>
+        <div class="pipe" data-pipeline>
+            <!-- row 1: one greedy iteration -->
+            <p class="hd" style="left: 0; top: 0;"><span class="a">Greedy iteration:</span> one MPI rank per device</p>
+            <p class="cap" style="right: 0; top: 10px; text-transform: none; letter-spacing: .02em; font-size: 17px;">
+                repeat for \(k\) = 1, …, \(B\)</p>
+
+            <div class="box stage" style="left: 0; top: 62px; width: 254px; height: 98px; --i:0">
+                <b><span class="n">1</span>Partition</b><br>remaining candidates over ranks
+            </div>
+            <div class="box stage on" style="left: 294px; top: 62px; width: 254px; height: 98px; --i:1">
+                <b><span class="n">2</span>Evaluate</b><br>candidate gains with local copy of Cholesky factor
+            </div>
+            <div class="box stage" style="left: 588px; top: 62px; width: 254px; height: 98px; --i:2">
+                <b><span class="n">3</span>Reduce</b><br>MPI_Allreduce: winning candidate \(s^*\) and score
+            </div>
+            <div class="box stage" style="left: 882px; top: 62px; width: 254px; height: 98px; --i:3">
+                <b><span class="n">4</span>Update</b><br>Extend Cholesky factor with \(s^*\)
+            </div>
+
+            <!-- row 2: what happens inside each rank.
+                 js/sc26.js animates this panel while the slide is shown: each buffer/stream pair
+                 reads a candidate, transfers it, evaluates it, and the two pairs run half a cycle apart.
+                 The markup below is the static snapshot (also used for print). -->
+            <div class="rank"></div>
+            <p class="hd" style="left: 24px; top: 210px;"><span class="a">Inside each rank:</span> double-buffered
+                pipeline</p>
+            <p class="lbl m" style="right: 24px; top: 216px; font-size: 17px;"><span class="a">orange
+                    active</span>,&ensp;gray next</p>
+
+            <p class="cap" style="left: 24px; top: 260px;">Parallel file system</p>
+            <p class="cap" style="left: 400px; top: 260px;">Pinned host memory</p>
+            <p class="cap" style="left: 840px; top: 260px;">GPU</p>
+
+            <div class="box mid" style="left: 24px; top: 286px; width: 200px; height: 142px;">
+                <span>\(\mathbf{K}\) on disk<br>HDF5, 2D-chunked</span>
+            </div>
+            <div class="box mid buf" data-buf="0" style="left: 400px; top: 286px; width: 300px; height: 60px;">
+                <span><b>Buffer 0</b>:&ensp;<span class="what">candidate \(s\)</span></span><i class="bar"></i>
+            </div>
+            <div class="box mid buf" data-buf="1" style="left: 400px; top: 368px; width: 300px; height: 60px;">
+                <span><b>Buffer 1</b>:&ensp;<span class="what">candidate \(s+1\)</span></span><i class="bar"></i>
+            </div>
+            <div class="box mid str on" data-str="0" style="left: 840px; top: 286px; width: 272px; height: 60px;">
+                <span><b>Stream 0</b>:&ensp;<span class="what">evaluating \(s\)</span></span><i class="bar"></i>
+            </div>
+            <div class="box mid str off" data-str="1" style="left: 840px; top: 368px; width: 272px; height: 60px;">
+                <span><b>Stream 1</b>:&ensp;<span class="what">next, \(s+1\)</span></span><i class="bar"></i>
+            </div>
+
+            <p class="lbl" style="left: 224px; width: 176px; top: 334px;"><b class="a">POSIX read</b><br>\(k\) blocks,
+                \(N_t \times N_t\)</p>
+            <p class="lbl" style="left: 700px; width: 140px; top: 345px;">async H2D</p>
+
+            <p class="hd" style="left: 24px; top: 458px; font-size: 22px;">Buffers and streams alternate: reading and
+                transferring \(s+1\) overlaps with evaluating \(s\).</p>
+
+            <!-- arrows (drawn last so they sit above the panels) -->
+            <svg viewBox="0 0 1136 548" aria-hidden="true">
+                <path class="s-loop" d="M1009 62 V44 H127 V58 M121 51 l6 8 6 -8" />
+                <path class="s-blue" d="M262 111 H286 M279 104 l7 7 -7 7" />
+                <path class="s-blue" d="M556 111 H580 M573 104 l7 7 -7 7" />
+                <path class="s-blue" d="M850 111 H874 M867 104 l7 7 -7 7" />
+                <path class="s-amber" d="M421 160 V192 M415 185 l6 8 6 -8" />
+                <!-- disk -> buffers (POSIX read) -->
+                <g class="arrow amber" data-read="0"><path class="ln" d="M224 316 H390" /><path d="M385 309 l8 7 -8 7" /></g>
+                <g class="arrow amber act" data-read="1"><path class="ln" d="M224 398 H390" /><path d="M385 391 l8 7 -8 7" /></g>
+                <!-- buffers -> streams (async host-to-device copy) -->
+                <g class="arrow blue act" data-h2d="0"><path class="ln" d="M700 316 H830" /><path d="M825 309 l8 7 -8 7" /></g>
+                <g class="arrow blue next" data-h2d="1"><path class="ln" d="M700 398 H830" /><path d="M825 391 l8 7 -8 7" /></g>
+            </svg>
+        </div>
+        <aside class="notes">Make the slide better</aside>
+    </section>
+
+    <!-- 17 · Execution timeline trace -->
+    <section data-layer="oed">
+        <h2>Execution timeline trace</h2>
+        <div class="plot" style="height: 344px;">
+            <img data-src="SC26_OED/images/plots/timeline_trace.svg" alt="Execution timeline trace and GPU runtime breakdown">
+        </div>
+        <ul class="tight" style="margin-top: 24px;">
+            <li><span class="a">3.5× speedup</span> over the non-pipelined implementation</li>
+            <li>Several stream/buffer schemes were tested; double buffer gives best perf.</li>
+            <li><span class="a">Triangular solves</span> account for 94% of GPU compute time</li>
+        </ul>
+        <p class="ref" style="margin-top: 12px;">A100 timeline from a 16-GPU run, k = 175 on NERSC Perlmutter.</p>
+        <aside class="notes">More – overhead; less – not overlap</aside>
+    </section>
+
+    <!-- 18 · Parallel scalability -->
+    <section data-layer="oed">
+        <h2>Parallel scalability</h2>
+        <div class="pair" style="width: 1010px; margin: -8px auto 0;">
+            <figure>
+                <div class="plot" style="aspect-ratio: 346.8 / 274.14;">
+                    <img data-src="SC26_OED/images/plots/strong_scaling.svg" alt="Strong scaling">
+                </div>
+                <figcaption>Strong scaling</figcaption>
+            </figure>
+            <figure>
+                <div class="plot" style="aspect-ratio: 346.8 / 274.14;">
+                    <img data-src="SC26_OED/images/plots/weak_scaling.svg" alt="Weak scaling">
+                </div>
+                <figcaption>Weak scaling</figcaption>
+            </figure>
+        </div>
+        <p class="note" style="margin-top: 8px;">Pipelined I/O scheme enables near-ideal scaling.</p>
+        <p class="note small"><span class="a">Perlmutter (NERSC)</span>: NVIDIA A100 &ensp;<span class="a">Frontier
+                (OLCF)</span>: AMD MI250X; Each GPU on Frontier consists of 2 GCDs (2 MPI ranks/GPU)</p>
+    </section>
+</section>

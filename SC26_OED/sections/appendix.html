@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!-- Backup slides (hidden in the PowerPoint version) -->
+<section>
+    <!-- 25 -->
+    <section class="appx" data-visibility="uncounted" data-layer="oed">
+        <h2>Appendix: determinant identity</h2>
+        <div class="eq">\[ \Gamma_{\!\text{post}}(S) = \left( \Gamma_{\!\text{prior}}^{-1} + F_S^{*}\,
+            \Gamma_{\!\text{noise},S}^{-1}\, F_S \right)^{-1} \]</div>
+        <div class="eq">\[ \det \Gamma_{\!\text{post}}(S) = \det \Gamma_{\!\text{prior}}\;
+            \frac{\det \Gamma_{\!\text{noise},S}}{\det K_S} \]</div>
+        <div class="eq">\[ f(S) = \frac{1}{2} \left[ \log\det K_S - \log\det\, (\Gamma_{\!\text{noise}})_S \right] \]</div>
+        <p class="a" style="margin-top: 34px;">No assumption of time invariance is needed for this identity.</p>
+    </section>
+
+    <!-- 26 -->
+    <section class="appx" data-visibility="uncounted" data-layer="oed">
+        <h2>Appendix: diminishing returns</h2>
+        <div class="eq">\[ \Delta_s(S) = I(m;\, d_s \mid d_S) = H(d_s \mid d_S) - H(\eta_s) \]</div>
+        <div class="eq">\[ \Delta_s(A) \ge \Delta_s(B) \quad \text{for} \quad A \subseteq B,\; s \notin B \]</div>
+        <p style="margin-top: 30px;">Conditioning on more sensors reduces the remaining information.</p>
+        <p>Noise entropy is unchanged for independent sensor noise.</p>
+        <div class="eq" style="margin-top: 34px;">\[ f(S_B) \ge \left[ 1 - (1 - 1/B)^B \right] f(S^*) \ge (1 - 1/e)\,
+            f(S^*) \]</div>
+    </section>
+
+    <!-- 27 -->
+    <section class="appx" data-visibility="uncounted" data-layer="oed">
+        <h2>Appendix: a posteriori optimality bound</h2>
+        <p>Sort the remaining marginal gains at each visited set \(S_t\).</p>
+        <div class="eq" style="margin: 14px 0;">\[ U_t = f(S_t) + \sum_{j=1}^{B} \Delta_{(j)}(S_t), \qquad U =
+            \min_t U_t \]</div>
+        <div class="eq" style="margin: 14px 0;">\[ f(S^*) \le f(S_t \cup S^*) \le f(S_t) + \sum_{s \in S^* \setminus
+            S_t} \Delta_s(S_t) \le U_t \]</div>
+        <div class="eq" style="margin: 14px 0;">\[ \frac{f(S_B)}{f(S^*)} \ge \frac{f(S_B)}{U} \]</div>
+        <p class="a" style="margin-top: 20px;">Sum the largest B gains. Use normalized information gain.</p>
+    </section>
+
+    <!-- 28 -->
+    <section class="appx" data-visibility="uncounted" data-layer="oed">
+        <h2>Appendix: normalization and objective variants</h2>
+        <div class="eq" style="margin: 10px 0 14px;">\[ f(S) = \frac{1}{2} \log\det \overline{K}_S, \qquad
+            f(\varnothing) = 0 \]</div>
+        <p class="b">\(\overline{K}\) denotes the noise-whitened data covariance.</p>
+        <p class="a" style="margin-top: 14px;">Normalize by the selected noise covariance before forming ratios.</p>
+        <div class="eq" style="margin: 30px 0;">\[ \widetilde{K} = \Gamma_{\!\text{noise}} + F\, W_m\,
+            \Gamma_{\!\text{prior}}\, W_m^{*}\, F^{*} \]</div>
+        <p>Parameter weights modify the prior-induced observation covariance.</p>
+        <p>Noise weights and candidate exclusions provide other design variants.</p>
+    </section>
+
+    <!-- 29 -->
+    <section class="appx" data-visibility="uncounted" data-layer="oed">
+        <h2>Appendix: scaling methodology</h2>
+        <ul style="margin-top: 10px;">
+            <li style="margin-bottom: 34px;">Fixed iterate: <span class="a">k = 175</span>, with 420 samples per sensor</li>
+            <li style="margin-bottom: 34px;">Strong scaling: <span class="a">8,192 candidate evaluations</span></li>
+            <li style="margin-bottom: 34px;">Weak scaling: <span class="a">256 candidates per MPI rank</span></li>
+            <li style="margin-bottom: 34px;">Frontier: <span class="a">two GCD ranks per physical GPU</span></li>
+            <li style="margin-bottom: 34px;">Randomized modulo indexing reuses the <span class="a">600-sensor
+                    matrix</span>.</li>
+        </ul>
+        <p class="a" style="font-size: 22px;">Replicated Cholesky storage grows quadratically with the sensor budget.</p>
+    </section>
+
+    <!-- 30 -->
+    <section class="appx" data-visibility="uncounted" data-layer="oed">
+        <h2>Appendix: hardware and precision</h2>
+        <div class="two" style="margin-top: 50px;">
+            <div>
+                <p style="margin-bottom: 20px;"><u>NVIDIA</u></p>
+                <p>A100 (80 GB)</p>
+                <p>GH200 (96 GB)</p>
+                <p>GB200 (192 GB)</p>
+            </div>
+            <div>
+                <p style="margin-bottom: 20px;"><u>AMD</u></p>
+                <p>MI250X GCD (64 GB)</p>
+                <p>MI300X (192 GB)</p>
+            </div>
+            <div style="margin-top: 50px;">
+                <p class="a">FP64 K on disk</p>
+                <p class="a">FP32 candidate evaluations</p>
+            </div>
+            <div style="margin-top: 50px; font-size: 24px;">
+                <p>Same sensor selections in the</p>
+                <p>reported FP32 / FP64 comparison</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 31 -->
+    <section class="appx" data-visibility="uncounted" data-layer="inverse">
+        <h2>Appendix: Data misfit Hessian is not low rank!</h2>
+        <div class="plot" style="width: 640px; height: 330px; margin: -6px auto 0;">
+            <img data-src="SC26_OED/images/plots/hessian_spectrum.png" alt="Eigenvalue spectrum of the data misfit Hessian">
+        </div>
+        <p style="text-align: center; margin-top: 14px; font-size: 24px;">Eigenvalues of the "inside-out"
+            prior-preconditioned Hessian of the data misfit <span class="a">\(\mathbf{F}\,\Gamma_{\!\text{prior}}\mathbf{F}^*\)</span></p>
+        <p style="margin-top: 18px; font-size: 25px;">Hessian <u>does not</u> readily <u>admit</u> efficient/accurate <u>low
+                rank approximation</u>, resulting in a <span class="a">prohibitive cost of computing inverse solution
+                the "usual way"</span></p>
+    </section>
+</section>

@@ -1,0 +1,672 @@
+/* ==========================================================================
+   SC26 — Sensor Placement for Tsunami Early Warning
+   Stand-alone reveal.js theme (no dist/theme/*.css needed).
+
+   Colour is semantic throughout the talk:
+     amber  = optimal experimental design (this work)
+     blue   = inverse problem
+     green  = forward problem
+
+   Looping diagrams: an element with data-loop="ms,ms,..." is stepped through
+   phases by js/sc26.js, which adds the classes .anim and .p1 … .pN (pK is
+   present once phase K has been reached). Without .anim (print / PDF) every
+   diagram shows a sensible static state.
+   ========================================================================== */
+
+@font-face { font-family: "IBM Plex Sans"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("../fonts/ibm-plex-sans-latin-400-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("../fonts/ibm-plex-sans-latin-ext-400-normal.woff2") format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 400; font-style: italic; font-display: swap;
+  src: url("../fonts/ibm-plex-sans-latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 500; font-style: normal; font-display: swap;
+  src: url("../fonts/ibm-plex-sans-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 600; font-style: normal; font-display: swap;
+  src: url("../fonts/ibm-plex-sans-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("../fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: swap;
+  src: url("../fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2"); }
+
+:root {
+  --bg:      #0b1114;
+  --bg-2:    #10181c;
+  --panel:   #131c21;
+  --line:    #27353c;
+  --line-2:  #4a5b63;
+  --ink:     #eef2f3;
+  --mute:    #b3bfc4;      /* secondary text: kept light enough for a projector */
+  --dim:     #7f8f96;      /* bullets, rules, index labels */
+
+  --amber:   #f6b93b;
+  --blue:    #6aaee8;
+  --green:   #86c65a;
+  --red:     #e5534b;
+
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", "Cascadia Mono", Consolas, "SF Mono", Menlo, monospace;
+
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --ease-io: cubic-bezier(.65, 0, .25, 1);
+
+  /* reveal.js core variables */
+  --r-background-color: var(--bg);
+  --r-main-font: var(--sans);
+  --r-main-font-size: 27px;
+  --r-main-color: var(--ink);
+  --r-heading-color: var(--ink);
+  --r-link-color: var(--blue);
+  --r-link-color-hover: #9cc9f2;
+  --r-selection-background-color: rgba(246, 185, 59, .35);
+  --r-selection-color: #fff;
+  --r-overlay-element-bg-color: 240, 240, 240;
+  --r-overlay-element-fg-color: 0, 0, 0;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+html, body, .reveal-viewport { background: var(--bg); }
+
+.reveal {
+  font-family: var(--sans);
+  font-size: 27px;
+  font-weight: 400;
+  line-height: 1.32;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+.reveal ::selection { background: var(--r-selection-background-color); color: #fff; }
+
+.reveal .slides { text-align: left; }
+.reveal .slides section {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 44px 72px 62px;
+}
+.reveal .slides > section.stack { padding: 0; }
+
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+  font-family: var(--sans);
+  color: var(--ink);
+  text-transform: none;
+  margin: 0;
+}
+.reveal h2 {
+  font-size: 44px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.018em;
+  margin-bottom: 26px;
+}
+.reveal h3 { font-size: 28px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
+
+.reveal p { margin: 0; }
+.reveal strong, .reveal b { font-weight: 600; }
+.reveal em, .reveal i { font-style: italic; }
+.reveal sup { font-size: .62em; vertical-align: super; line-height: 0; }
+.reveal sub { font-size: .62em; vertical-align: sub; line-height: 0; }
+.reveal u { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em; }
+.reveal a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
+.reveal a:hover { color: var(--r-link-color-hover); }
+.reveal img, .reveal video { max-width: 100%; max-height: 100%; margin: 0; display: block; }
+
+/* lists */
+.reveal ul, .reveal ol { display: block; margin: 0; padding: 0; list-style: none; }
+.reveal ul > li { position: relative; padding-left: 30px; margin: 0 0 13px; }
+.reveal ul > li::before {
+  content: ""; position: absolute; left: 4px; top: .56em;
+  width: 7px; height: 7px; background: var(--dim);
+}
+.reveal ul ul { margin-top: 9px; }
+.reveal ul ul > li { font-size: .88em; padding-left: 26px; margin-bottom: 7px; }
+.reveal ul ul > li::before { width: 9px; height: 1.5px; top: .66em; left: 3px; }
+.reveal ul.tight > li { margin-bottom: 7px; }
+.reveal ul.loose > li { margin-bottom: 20px; }
+
+/* semantic colour + small utilities */
+.reveal .a { color: var(--amber); }
+.reveal .b { color: var(--blue); }
+.reveal .g { color: var(--green); }
+.reveal .m { color: var(--mute); }
+.reveal .mono { font-family: var(--mono); font-size: .9em; letter-spacing: -0.01em; }
+.reveal .credit, .reveal .ref { font-size: 18px; line-height: 1.35; color: var(--mute); }
+.reveal .cols { display: grid; gap: 40px; }
+
+/* KaTeX */
+.reveal .katex { font-size: 1.04em; }
+.reveal .katex-display { margin: 0; }
+.reveal .eq { margin: 6px 0 10px; }
+.reveal .eq.big .katex { font-size: 1.22em; }
+
+/* figures: white-background plots sit on a quiet card */
+.reveal .plot {
+  background: #fff; border-radius: 5px; overflow: hidden; position: relative;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 18px 40px -22px rgba(0,0,0,.9);
+}
+.reveal .plot > img { width: 100%; height: 100%; object-fit: contain; }
+.reveal .photo { border-radius: 4px; overflow: hidden; position: relative; background: #000; }
+.reveal .photo > img, .reveal .photo > video { width: 100%; height: 100%; object-fit: cover; }
+
+/* red call-outs drawn on top of a plot (positions in % of the plot box) */
+.reveal .mark { position: absolute; border: 3px solid var(--red); box-sizing: border-box; }
+.reveal .mark.o { border-radius: 50%; }
+.reveal .slides > .present > .present .mark { animation: mark-in .5s var(--ease) both; animation-delay: calc(.5s + var(--i, 0) * .18s); }
+@keyframes mark-in { from { opacity: 0; transform: scale(1.9); } to { opacity: 1; transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* reveal chrome */
+.reveal .controls { color: var(--line-2); }
+.reveal .progress { background: transparent; color: var(--amber); height: 2px; }
+.reveal .slide-number { display: none; }
+
+/* --------------------------------------------------------------------------
+   Footer (injected into every slide by js/sc26.js)
+   -------------------------------------------------------------------------- */
+.reveal .ft {
+  position: absolute; left: 72px; right: 72px; bottom: 15px; height: 26px;
+  display: flex; align-items: center; gap: 14px;
+  font-size: 15px; line-height: 1; color: #93a2a9; white-space: nowrap;
+}
+.reveal .ft .ft-tag { font-family: var(--mono); font-weight: 500; letter-spacing: .08em; color: var(--mute); }
+.reveal .ft .ft-who { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.reveal .ft .ft-logo { height: 24px; width: auto; opacity: .85; }
+.reveal .ft .ft-num { font-family: var(--mono); font-weight: 500; font-size: 16px; color: var(--mute); min-width: 24px; text-align: right; }
+
+/* nested-squares glyph: which layer of the digital twin are we in? */
+.reveal .ft .glyph { position: relative; width: 20px; height: 20px; flex: none; }
+.reveal .ft .glyph i { position: absolute; box-sizing: border-box; border: 1.5px solid var(--line-2); }
+.reveal .ft .glyph i:nth-child(1) { inset: 0; }
+.reveal .ft .glyph i:nth-child(2) { inset: 4px 3px 2px 3px; }
+.reveal .ft .glyph i:nth-child(3) { inset: 8px 6px 4px 6px; }
+.reveal section[data-layer="oed"]     .glyph i:nth-child(1),
+.reveal section[data-layer="all"]     .glyph i:nth-child(1) { border-color: var(--amber); }
+.reveal section[data-layer="inverse"] .glyph i:nth-child(2),
+.reveal section[data-layer="all"]     .glyph i:nth-child(2) { border-color: var(--blue); }
+.reveal section[data-layer="forward"] .glyph i:nth-child(3),
+.reveal section[data-layer="all"]     .glyph i:nth-child(3) { border-color: var(--green); background: var(--green); }
+
+/* --------------------------------------------------------------------------
+   Title slide
+   -------------------------------------------------------------------------- */
+.reveal section.title { padding: 0; overflow: hidden; }
+.reveal .title .chart {
+  position: absolute; inset: 0;
+  background: url("../images/contours.svg") center / cover no-repeat;
+  -webkit-mask-image: linear-gradient(100deg, rgba(0,0,0,.28) 0%, rgba(0,0,0,.45) 45%, #000 78%);
+          mask-image: linear-gradient(100deg, rgba(0,0,0,.28) 0%, rgba(0,0,0,.45) 45%, #000 78%);
+}
+.reveal .title svg.net { position: absolute; inset: 0; width: 100%; height: 100%; }
+.reveal .title .net .cand { fill: #63757d; }
+.reveal .title .net .dot  { fill: var(--amber); }
+.reveal .title .net .ring { fill: none; stroke: var(--amber); stroke-width: 1.2; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.reveal .title.present .net .pick .dot  { animation: pick-dot .5s var(--ease) both; animation-delay: calc(.9s + var(--i) * .26s); }
+.reveal .title.present .net .pick .ring { animation: pick-ring 1.5s ease-out both; animation-delay: calc(.9s + var(--i) * .26s); }
+@keyframes pick-dot  { from { fill: #63757d; r: 2px; } to { fill: var(--amber); r: 3.4px; } }
+@keyframes pick-ring { 0% { opacity: .9; transform: scale(.6); } 100% { opacity: 0; transform: scale(5.5); } }
+
+.reveal .title .inner { position: absolute; inset: 0; padding: 78px 72px 0; }
+.reveal .title .logos { position: absolute; top: 48px; right: 72px; display: flex; align-items: center; gap: 30px; }
+.reveal .title .logos img { height: 58px; width: auto; }
+.reveal .title .logos img.optimus { height: 31px; }
+.reveal .title .logos img.oden { height: 62px; }
+.reveal .title .venue { font-family: var(--mono); font-weight: 500; font-size: 24px; letter-spacing: .14em; color: var(--blue); }
+.reveal .title h1 {
+  font-size: 47px; font-weight: 600; line-height: 1.16; letter-spacing: -0.02em;
+  color: var(--amber); margin: 42px 0 0; max-width: 1120px;
+}
+.reveal .title .rule { width: 96px; height: 2px; background: var(--ink); margin: 30px 0 26px; opacity: .85; }
+.reveal .title .authors { font-size: 30px; font-weight: 500; }
+.reveal .title .affil { font-size: 25px; font-style: italic; color: var(--blue); margin-top: 6px; }
+.reveal .title .faces { display: flex; gap: 22px; margin-top: 38px; }
+.reveal .title .faces img { width: 168px; height: 168px; object-fit: cover; border-radius: 3px; filter: saturate(.9); }
+
+/* --------------------------------------------------------------------------
+   Intro slides
+   -------------------------------------------------------------------------- */
+/* map: the locked zone of the megathrust fades in over the plain bathymetry */
+.reveal .mapfade img.top { position: absolute; inset: 0; }
+.reveal .slides > .present > .present .mapfade img.top { animation: fade-in 1.8s ease 1.2s both; }
+/* with the globe zoom (js/sc26.js) the script decides when the locked zone appears */
+.reveal .slides .mapfade.js img.top { animation: none; opacity: 0; transition: opacity 1.8s ease; }
+.reveal .slides .mapfade.js.locked img.top { opacity: 1; }
+.reveal canvas.globe {                 /* covers the whole slide; js/sc26.js clips it down onto the card */
+  position: absolute; left: 0; top: 0; width: 1280px; height: 720px; max-width: none; max-height: none; z-index: 5;
+  opacity: 0; pointer-events: none; transition: opacity 1s ease;
+}
+.reveal canvas.globe.on { opacity: 1; transition: none; }
+
+/* seismic waves spreading from the epicentre of the sensor-network illustration */
+.reveal .quake { position: absolute; width: 0; height: 0; pointer-events: none; }
+.reveal .quake i {
+  position: absolute; width: 900px; height: 548px; margin: -274px 0 0 -450px;
+  border: 5px solid rgba(255, 150, 80, .95); border-radius: 50%; opacity: 0;
+}
+.reveal .slides > .present > .present .quake i { animation: quake 5.4s cubic-bezier(.2, .6, .4, 1) infinite; animation-delay: calc(.8s + var(--i) * 1.8s); }
+@keyframes quake { 0% { opacity: 0; transform: scale(.03); } 8% { opacity: .95; } 100% { opacity: 0; transform: scale(1); } }
+
+/* --------------------------------------------------------------------------
+   The Bayesian digital twin: three nested layers
+   -------------------------------------------------------------------------- */
+.reveal .twin { margin-top: 4px; }
+.reveal .layer {
+  --c: var(--ink);
+  border: 1.5px solid var(--c);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--c) 4.5%, var(--bg));
+  padding: 22px 30px 26px;
+}
+.reveal .layer.oed { --c: var(--amber); }
+.reveal .layer.inv { --c: var(--blue);  margin: 18px 44px 0 34px; padding: 18px 28px 22px; }
+.reveal .layer.fwd { --c: var(--green); margin: 16px 44px 0 34px; padding: 16px 26px 18px;
+                     background: color-mix(in srgb, var(--c) 9%, var(--bg)); }
+.reveal .layer > h3 { color: var(--c); margin-bottom: 5px; font-size: 30px; }
+.reveal .layer > p  { font-size: 25px; line-height: 1.38; color: var(--ink); }
+.reveal .layer .cost { font-family: var(--mono); font-size: 21.5px; letter-spacing: -0.015em; color: var(--c); }
+.reveal .layer .cost u { text-decoration-color: color-mix(in srgb, var(--c) 60%, transparent); }
+
+/* A layer that is not yet "in play":  .dim (static)  or  .fragment.lit before its click */
+.reveal .slides section .layer.fragment.lit {
+  opacity: 1; visibility: inherit;
+  transition: border-color .7s ease, background-color .7s ease;
+}
+.reveal .layer.lit > h3, .reveal .layer.lit > p { transition: color .7s ease; }
+.reveal .layer.dim,
+.reveal .layer.lit:not(.visible) { border-color: color-mix(in srgb, var(--c) 40%, var(--bg)); background-color: var(--bg); }
+.reveal .layer.dim > h3,
+.reveal .layer.lit:not(.visible) > h3 { color: color-mix(in srgb, var(--c) 50%, var(--bg)); }
+.reveal .layer.dim > p,
+.reveal .layer.lit:not(.visible) > p  { color: #74838a; }
+
+/* A line whose text is replaced on click: the old text is struck through and
+   fades, the new text settles in. Each direction has its own timing so that
+   stepping backwards is as clean as stepping forwards. */
+.reveal .swap { display: grid; }
+.reveal .swap > * { grid-area: 1 / 1; justify-self: start; }
+.reveal .slides section .fragment.swap-out {
+  position: relative; opacity: 1; visibility: inherit;
+  transition: opacity .3s ease .12s, visibility 0s;                          /* coming back */
+}
+.reveal .slides section .fragment.swap-out.visible {
+  opacity: 0; visibility: hidden;
+  transition: opacity .3s ease .4s, visibility 0s linear .7s;                /* leaving */
+}
+.reveal .slides section .fragment.swap-out::after {
+  content: ""; position: absolute; left: -2px; right: -2px; top: 54%; height: 2px;
+  background: currentColor; transform: scaleX(0); transform-origin: left; transition: none;
+}
+.reveal .slides section .fragment.swap-out.visible::after { transform: scaleX(1); transition: transform .34s var(--ease-io); }
+.reveal .slides section .fragment.swap-in {
+  opacity: 0; visibility: hidden; transform: translateY(8px);
+  transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;   /* leaving */
+}
+.reveal .slides section .fragment.swap-in.visible {
+  opacity: 1; visibility: inherit; transform: none;
+  transition: opacity .45s ease .62s, transform .6s var(--ease) .62s, visibility 0s linear .62s;   /* arriving */
+}
+
+.reveal .thiswork { color: var(--amber); font-weight: 500; white-space: nowrap; }
+.reveal .slides section .fragment.thiswork { transform: translateX(-12px); transition: opacity .5s ease .25s, transform .6s var(--ease) .25s, visibility 0s linear .25s; }
+.reveal .slides section .fragment.thiswork.visible { transform: none; }
+
+.reveal .chip {
+  display: inline-block; background: var(--c); color: var(--bg);
+  font-weight: 500; padding: 1px 10px 2px; border-radius: 3px; margin-right: 2px;
+}
+.reveal .twin-note { font-size: 19px; color: var(--mute); margin-top: 12px; }
+.reveal .twin-note .katex { font-size: 1em; }
+.reveal .slides section .fragment.twin-note { transition: opacity .5s ease .7s, visibility 0s linear .7s; }
+
+/* --------------------------------------------------------------------------
+   Block matrices
+   -------------------------------------------------------------------------- */
+.reveal .blocks { position: absolute; --cell: 46px; --gap: 5px; --step: calc(var(--cell) + var(--gap)); }
+.reveal .blocks i {
+  position: absolute; box-sizing: border-box; width: var(--cell); height: var(--cell); border-radius: 2px;
+  left: calc(var(--c, 0) * var(--step)); top: calc(var(--r) * var(--step));
+  background: var(--col, #1c262b);
+}
+
+/* ---- FFTMatvec: d = F m, first in the time domain (block-triangular Toeplitz),
+        then in the Fourier domain (block-diagonal) ------------------------------ */
+.reveal .fft-grid { grid-template-columns: 1fr 400px; gap: 36px; align-items: start; margin-top: 22px; }
+.reveal .fftm { position: relative; width: 400px; height: 322px; margin-top: 2px; transform: scale(1.12); transform-origin: top right; }
+.reveal .fftm .blocks { top: 46px; }
+.reveal .fftm .lab { position: absolute; top: 0; width: 60px; margin-left: -30px; text-align: center; font-size: 26px; display: grid; }
+.reveal .fftm .lab > * { grid-area: 1 / 1; transition: opacity .5s ease; }
+.reveal .fftm .lab .f { opacity: 0; }
+.reveal .fftm .eqs { position: absolute; left: 76px; top: 128px; width: 22px; text-align: center; font-size: 28px; color: var(--mute); }
+.reveal .fftm .mat i.z { background: #1b252a; }
+.reveal .fftm .mat i::after,
+.reveal .fftm .mv i::after,
+.reveal .fftm .tok i::after { content: ""; position: absolute; inset: 0; border-radius: 2px; opacity: 0; transition: opacity .5s ease; }
+/* Fourier-domain look: every diagonal block mixes all time blocks; vectors are hatched */
+.reveal .fftm .mat i.dg::after {
+  background: linear-gradient(var(--ang), var(--blue) 0 25%, #f08a4b 25% 50%, var(--green) 50% 75%, var(--amber) 75%);
+}
+.reveal .fftm .mv i::after,
+.reveal .fftm .tok i::after { background: repeating-linear-gradient(135deg, transparent 0 5px, var(--bg) 5px 9px); }
+.reveal .fftm .mv i { background: var(--blue); }
+.reveal .fftm .dv i { background: #dfe6e9; }
+.reveal .fftm .tok i { background: var(--blue); opacity: 0; }
+.reveal .fftm .chain { position: absolute; left: -30px; right: -30px; top: 266px; text-align: center; font-size: 23px; white-space: nowrap; }
+.reveal .fftm .chain > span { transition: color .5s ease; }
+
+/* animated version */
+.reveal .fftm.anim .dv i { background: transparent; border: 1.5px solid var(--line-2); }
+.reveal .fftm.anim .lab, .reveal .fftm.anim .eqs, .reveal .fftm.anim .blocks i { transition: opacity .4s ease, transform 0s linear .45s, background-color .5s ease; }
+.reveal .fftm.anim .chain > span { color: #84949b; }
+/* phase 0: clear the stage */
+.reveal .fftm.anim:not(.p1) .lab, .reveal .fftm.anim:not(.p1) .eqs,
+.reveal .fftm.anim:not(.p1) .mat i, .reveal .fftm.anim:not(.p1) .mv i, .reveal .fftm.anim:not(.p1) .dv i { opacity: 0; }
+/* phase 1: the first block column of F */
+.reveal .fftm.anim.p1 .mat i.c0 { transition: opacity .5s ease calc(var(--r) * .1s); }
+.reveal .fftm.anim:not(.p2) .mat i.sh { opacity: 0; transform: translate(calc(var(--c) * var(--step) * -1), calc(var(--c) * var(--step) * -1)); }
+.reveal .fftm.anim:not(.p2) .mat i.z { opacity: 0; }
+/* phase 2: time-shift invariance, the column is copied down the block diagonals */
+.reveal .fftm.anim.p2 .mat i.sh { transition: transform .55s var(--ease-io) calc((var(--c) - 1) * .38s), opacity .2s ease calc((var(--c) - 1) * .38s); }
+.reveal .fftm.anim.p2 .mat i.z  { transition: opacity .45s ease 1.25s; }
+.reveal .fftm.anim.p3 .chain .c1 { color: var(--ink); }
+/* phase 4: FFT in time, F becomes block-diagonal */
+.reveal .fftm.anim.p4 .mat i.lo { background: #1b252a; transition: background-color .6s ease; }
+.reveal .fftm.anim.p4 .mat i.dg::after, .reveal .fftm.anim.p4 .mv i::after, .reveal .fftm.anim.p4 .tok i::after { opacity: 1; }
+.reveal .fftm.anim.p4 .lab.lF .t, .reveal .fftm.anim.p4 .lab.lm .t, .reveal .fftm.anim.p4 .lab.ld .t { opacity: 0; }
+.reveal .fftm.anim.p4 .lab.lF .f, .reveal .fftm.anim.p4 .lab.lm .f, .reveal .fftm.anim.p4 .lab.ld .f { opacity: 1; }
+.reveal .fftm.anim.p4 .chain .c2, .reveal .fftm.anim.p4 .chain .c3 { color: var(--ink); }
+/* phase 5: one small, independent matvec per frequency */
+.reveal .fftm.anim.p5 .tok i {
+  opacity: 1; background: #dfe6e9; transform: translateX(-318px);
+  transition: transform 1s var(--ease-io) calc(var(--r) * .09s), background-color .4s ease calc(.42s + var(--r) * .09s), opacity .2s ease calc(var(--r) * .09s);
+}
+.reveal .fftm.anim.p5 .mat i.dg { animation: fft-hit .5s ease calc(.36s + var(--r) * .09s); }
+@keyframes fft-hit { 50% { transform: scale(1.16); filter: brightness(1.25); } }
+.reveal .fftm.anim.p5 .chain .c4, .reveal .fftm.anim.p5 .chain .c5 { color: var(--ink); }
+/* phase 6: inverse FFT */
+.reveal .fftm.anim.p6 .tok i::after { opacity: 0; }
+.reveal .fftm.anim.p6 .lab.ld .t { opacity: 1; }
+.reveal .fftm.anim.p6 .lab.ld .f { opacity: 0; }
+.reveal .fftm.anim.p6 .chain .c6, .reveal .fftm.anim.p6 .chain .c7 { color: var(--amber); }
+
+/* ---- K -> K_S (loops: pick rows/columns in S, then the blocks travel into K_S) ---- */
+.reveal .ksel-stage { position: relative; height: 292px; }
+.reveal .ksel-stage .blocks { --cell: 42px; --gap: 5px; --step: 47px; }
+.reveal .ksel-stage .ex { position: absolute; left: 0; top: 104px; width: 150px; text-align: center; font-size: 24px; line-height: 1.5; }
+.reveal .ksel-stage .lab { position: absolute; font-size: 25px; color: var(--amber); transform: translateX(-50%); }
+.reveal .ksel-stage .K  { left: 196px; top: 54px; width: 230px; height: 230px; }
+.reveal .ksel-stage .KS { left: 520px; top: 101px; width: 136px; height: 136px; }
+.reveal .ksel-stage .idx {
+  position: absolute; font-family: var(--mono); font-size: 15px; color: var(--dim);
+  width: var(--cell); text-align: center; line-height: 1; transition: color .4s ease;
+}
+.reveal .ksel-stage .idx.top  { top: -21px; left: calc(var(--c) * var(--step)); }
+.reveal .ksel-stage .idx.side { left: -34px; width: 24px; text-align: right; top: calc(var(--r) * var(--step) + 14px); }
+.reveal .ksel-stage .idx.s { color: var(--amber); }
+.reveal .ksel-stage .K i { background: #2a373e; opacity: .38; transition: background-color .5s ease, opacity .5s ease; }
+.reveal .ksel-stage .K i.s { background: var(--col); opacity: 1; }
+.reveal .ksel-stage .arrow { position: absolute; left: 446px; top: 152px; width: 54px; height: 34px; }
+.reveal .ksel-stage .arrow path { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+/* phase 0: plain K */
+.reveal .ksel-stage.anim:not(.p1) .K i { background: #2f3d45; opacity: 1; }
+.reveal .ksel-stage.anim:not(.p1) .idx.s { color: var(--dim); }
+/* phase 1: rows / columns in S light up */
+.reveal .ksel-stage.anim.p1 .K i.s { transition-delay: calc(var(--k) * 45ms); }
+/* phase 2: the selected blocks travel into K_S */
+.reveal .ksel-stage.anim:not(.p2) .kfly i {
+  opacity: 0; transform: translate(calc(-324px + var(--c) * var(--step)), calc(-47px + var(--r) * var(--step)));
+  transition: opacity .35s ease, transform 0s linear .4s;
+}
+.reveal .ksel-stage.anim.p2 .kfly i { transition: transform .95s var(--ease-io) calc(var(--k) * 55ms), opacity .2s linear calc(var(--k) * 55ms); }
+.reveal .ksel-stage.anim:not(.p2) .kfly .lab, .reveal .ksel-stage.anim:not(.p2) .kfly .arrow { opacity: 0; transition: opacity .3s ease; }
+.reveal .ksel-stage.anim.p2 .kfly .lab, .reveal .ksel-stage.anim.p2 .kfly .arrow { transition: opacity .5s ease .9s; }
+
+/* --------------------------------------------------------------------------
+   Slide-specific layouts
+   -------------------------------------------------------------------------- */
+
+/* forward model */
+.reveal .fwd-grid { grid-template-columns: 1fr 318px; gap: 40px; align-items: start; }
+.reveal .fwd-grid ul > li { margin-bottom: 9px; }
+.reveal .fwd-grid .eq { margin: 4px 0 6px; }
+.reveal .ocean { width: 318px; height: 298px; margin-top: 4px; }
+.reveal .ocean .surf { fill: none; stroke: var(--ink); stroke-width: 1.6; }
+.reveal .ocean .floor { fill: #1a2327; stroke: var(--blue); stroke-width: 1.8; }
+.reveal .ocean .side { stroke: var(--line-2); stroke-width: 1.4; stroke-dasharray: 5 6; }
+.reveal .ocean text { font-family: KaTeX_Math, "Times New Roman", serif; font-style: italic; font-size: 24px; fill: var(--ink); }
+.reveal .ocean text.t { font-family: var(--mono); font-style: normal; font-size: 16px; letter-spacing: .06em; fill: var(--mute); text-transform: uppercase; }
+.reveal .ocean .up { stroke: var(--blue); stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.reveal .ocean .sensor { fill: var(--amber); }
+.reveal .ocean .lead { stroke: var(--amber); stroke-width: 1.3; stroke-dasharray: 3 4; fill: none; }
+.reveal .ocean .inset rect { fill: rgba(7, 13, 17, .9); stroke: var(--amber); stroke-width: 1.3; }
+.reveal .ocean .trace { fill: none; stroke: var(--amber); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 400; }
+.reveal .slides > .present > .present .ocean .trace { animation: trace-draw 3.6s linear infinite; }
+.reveal .ocean .ping { fill: none; stroke: var(--amber); stroke-width: 1.4; transform-box: fill-box; transform-origin: center; opacity: 0; }
+.reveal .slides > .present > .present .ocean .ping { animation: pick-ring 1.8s ease-out infinite; }
+@keyframes trace-draw { 0% { stroke-dashoffset: 400; } 70%, 100% { stroke-dashoffset: 0; } }
+.reveal .ocean .front { fill: none; stroke: var(--amber); stroke-opacity: .5; stroke-width: 1.1; transform-origin: 186px 268px; }
+.reveal .slides > .present > .present .ocean .wave  { animation: wave-drift 7s linear infinite; }
+.reveal .slides > .present > .present .ocean .front { animation: front 3.6s ease-out infinite; animation-delay: calc(var(--i) * 1.2s); opacity: 0; }
+@keyframes wave-drift { from { transform: translateX(0); } to { transform: translateX(-120px); } }
+@keyframes front { 0% { opacity: 0; transform: scale(.25); } 15% { opacity: 1; } 100% { opacity: 0; transform: scale(1.35); } }
+
+/* Bayes */
+.reveal .bayes-fig { width: 100%; height: 150px; margin-top: 4px; }
+.reveal .bayes-fig path { fill: none; stroke-width: 2.2; stroke-linecap: round; }
+.reveal .bayes-fig .prior { stroke: var(--amber); stroke-dasharray: 2 7; }
+.reveal .bayes-fig .like  { stroke: var(--amber); }
+.reveal .bayes-fig .post  { stroke: var(--blue); fill: color-mix(in srgb, var(--blue) 16%, transparent); }
+.reveal .bayes-fig .axis  { stroke: var(--line-2); stroke-width: 1; }
+.reveal .bayes-fig text { font-family: KaTeX_Main, "Times New Roman", serif; font-size: 20px; }
+.reveal .slides > .present > .present .bayes-fig .post { animation: grow-up 1s var(--ease) .9s both; transform-origin: 50% 100%; transform-box: view-box; }
+@keyframes grow-up { from { opacity: 0; transform: scaleY(.05); } to { opacity: 1; transform: none; } }
+
+/* ---- real-time framework: offline precomputation feeding the online inference ---- */
+.reveal .fw { position: relative; height: 462px; }
+.reveal .fw .panel {
+  position: absolute; left: 0; right: 0; height: 200px; box-sizing: border-box;
+  border: 1.5px solid var(--c); border-radius: 6px; background: color-mix(in srgb, var(--c) 5%, var(--bg));
+  display: grid; grid-template-columns: 1fr 56px 1fr 56px 1fr; align-items: start; padding: 22px 18px 0;
+}
+.reveal .fw .panel.off { --c: var(--blue); top: 12px; }
+.reveal .fw .panel.on  { --c: var(--green); top: 258px; }
+.reveal .fw .tag {
+  position: absolute; top: -13px; left: 50%; transform: translateX(-50%); padding: 0 14px; background: var(--bg);
+  font-size: 20px; font-weight: 600; color: var(--c); white-space: nowrap; line-height: 26px;
+}
+.reveal .fw .tag b { font-family: var(--mono); font-weight: 500; letter-spacing: .1em; }
+.reveal .fw .st { text-align: center; }
+.reveal .fw .st h3 { font-size: 21px; color: var(--c); margin: 0 0 4px; }
+.reveal .fw .st svg { width: 150px; height: 70px; display: block; margin: 0 auto 4px; overflow: visible; }
+.reveal .fw .st svg svg { width: 120px; height: 24px; margin: 0; overflow: hidden; }
+.reveal .fw .st p { font-size: 17.5px; line-height: 1.25; color: var(--ink); }
+.reveal .fw .st p b { color: var(--c); font-weight: 600; }
+.reveal .fw .go { align-self: center; width: 56px; height: 24px; margin-top: 30px; }
+.reveal .fw .go path, .reveal .fw .down path { fill: none; stroke: var(--c, var(--blue)); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.reveal .fw .down { position: absolute; left: 50%; top: 215px; width: 24px; height: 27px; margin-left: -12px; --c: var(--blue); }
+.reveal .fw svg .ln { fill: none; stroke: var(--c); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.reveal .fw svg .thin { fill: none; stroke: var(--mute); stroke-width: 1.2; }
+.reveal .fw svg .fillc { fill: color-mix(in srgb, var(--c) 28%, transparent); stroke: none; }
+.reveal .fw svg .dot { fill: var(--amber); }
+.reveal .fw svg .hot { fill: url(#fw-hot); transform-box: fill-box; transform-origin: center; }
+.reveal .slides > .present > .present .fw .st, .reveal .slides > .present > .present .fw .go { animation: rise .6s var(--ease) both; animation-delay: calc(.2s + var(--i) * .28s); }
+.reveal .slides > .present > .present .fw .panel.on { animation: fade-in .6s ease 1.3s both; }
+.reveal .slides > .present > .present .fw .down { animation: rise .5s var(--ease) 1.2s both; }
+.reveal .slides > .present > .present .fw .wave { animation: wave-drift 6s linear infinite; }
+.reveal .slides > .present > .present .fw .layer-in { animation: fw-drop 3.2s var(--ease) infinite; animation-delay: calc(var(--k) * .25s); }
+.reveal .slides > .present > .present .fw .sig { stroke-dasharray: 300; animation: fw-draw 3s linear infinite; }
+.reveal .slides > .present > .present .fw .hot { animation: fw-pulse 2.4s ease-in-out infinite; }
+@keyframes fw-drop { 0% { opacity: 0; transform: translateY(-14px); } 18%, 100% { opacity: 1; transform: none; } }
+@keyframes fw-draw { 0% { stroke-dashoffset: 300; } 75%, 100% { stroke-dashoffset: 0; } }
+@keyframes fw-pulse { 0%, 100% { transform: scale(.82); opacity: .75; } 50% { transform: scale(1.08); opacity: 1; } }
+
+/* definition rows (Given / Task / Bayesian approach) */
+.reveal .defs { display: grid; grid-template-columns: 250px 1fr; row-gap: 16px; align-items: baseline; }
+.reveal .defs dt { font-family: var(--mono); font-size: 17px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); padding-top: 3px; }
+.reveal .defs dd { margin: 0; }
+.reveal .defs dd p + p { margin-top: 8px; }
+
+/* the D-optimal criterion with a call-out hanging under the posterior covariance */
+.reveal .criterion { text-align: center; margin-top: 22px; font-size: 32px; white-space: nowrap; }
+.reveal .criterion .katex { font-size: 1.08em; }
+.reveal .criterion .target { position: relative; display: inline-block; }
+.reveal .criterion .callout {
+  position: absolute; left: 50%; top: 100%; transform: translateX(-50%); margin-top: -4px;
+  font-size: 24px; line-height: 1.3; color: var(--ink); text-align: center; white-space: nowrap;
+}
+.reveal .criterion .callout .katex { font-size: 1.02em; }
+
+/* algorithm listing */
+.reveal .algo { border-left: 1.5px solid var(--line-2); margin: 10px 0 14px 6px; padding: 2px 0 2px 22px; }
+.reveal .algo .step { display: grid; grid-template-columns: 34px 1fr; margin: 5px 0; }
+.reveal .algo .step > span:first-child { font-family: var(--mono); font-size: 19px; color: var(--mute); padding-top: 5px; }
+.reveal .algo .sub { margin: 4px 0 2px 34px; padding-left: 22px; position: relative; font-size: .93em; }
+.reveal .algo .sub::before { content: ""; position: absolute; left: 2px; top: .62em; width: 9px; height: 1.5px; background: var(--dim); }
+.reveal .algo .eq { margin: 2px 0 4px; }
+
+/* HPC systems */
+.reveal .hpc { grid-template-columns: 470px 1fr; gap: 44px; }
+.reveal .hpc ul > li { margin-bottom: 16px; }
+.reveal .hpc-photos { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 14px; height: 480px; margin-top: 64px; }
+.reveal .hpc-photos figure { margin: 0; position: relative; border-radius: 4px; overflow: hidden; background: #000; }
+.reveal .hpc-photos img { width: 100%; height: 100%; object-fit: cover; }
+.reveal .hpc-photos figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 12px 8px;
+  font-size: 16.5px; color: #fff; background: linear-gradient(to top, rgba(4,8,10,.9), rgba(4,8,10,0));
+}
+.reveal .slides > .present > .present .hpc-photos figure { animation: rise .7s var(--ease) both; animation-delay: calc(.15s + var(--i) * .1s); }
+
+/* two plots side by side with a label under each */
+.reveal .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; }
+.reveal .pair figure { margin: 0; }
+.reveal .pair figcaption { text-align: center; margin-top: 12px; font-size: 25px; color: var(--amber); }
+.reveal .note { text-align: center; font-size: 22px; margin-top: 12px; }
+.reveal .note.small { font-size: 19.5px; color: var(--mute); margin-top: 6px; }
+
+/* ---- pipeline slide ------------------------------------------------------- */
+.reveal .pipe { position: relative; height: 548px; font-size: 18px; line-height: 1.3; }
+.reveal .pipe .hd { position: absolute; font-size: 23px; }
+.reveal .pipe .box {
+  position: absolute; box-sizing: border-box; border: 1.5px solid var(--blue); border-radius: 3px;
+  background: #0e1519; padding: 9px 14px; overflow: hidden;
+  transition: border-color .3s ease, color .3s ease;
+}
+.reveal .pipe .box.on  { border-color: var(--amber); }
+.reveal .pipe .box.off { border-color: #7b888e; color: var(--mute); }
+.reveal .pipe .box b { font-weight: 600; font-size: 19.5px; }
+.reveal .pipe .box.mid { display: flex; align-items: center; font-size: 19.5px; }
+.reveal .pipe .box.mid b { font-size: inherit; }
+.reveal .pipe .n { color: var(--amber); font-family: var(--mono); font-weight: 500; margin-right: 8px; }
+.reveal .pipe .cap { position: absolute; font-family: var(--mono); font-size: 15px; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
+.reveal .pipe .lbl { position: absolute; font-size: 18px; line-height: 1.25; text-align: center; }
+.reveal .pipe .rank { position: absolute; left: 0; right: 0; top: 196px; height: 318px; border: 1.5px solid var(--amber); border-radius: 4px; background: color-mix(in srgb, var(--amber) 3%, var(--bg)); }
+.reveal .pipe svg { z-index: 2; position: absolute; left: 0; top: 0; width: 1136px; height: 548px; overflow: visible; pointer-events: none; }
+.reveal .pipe svg path { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.reveal .pipe .s-blue  { stroke: var(--blue); }
+.reveal .pipe .s-amber { stroke: var(--amber); }
+.reveal .pipe .s-loop  { stroke: var(--dim); stroke-width: 1.5; }
+/* data-path arrows: idle (grey), or active (coloured, dashes flowing) */
+.reveal .pipe .arrow { stroke: #56666d; transition: stroke .25s ease; }
+.reveal .pipe .arrow.next .ln { stroke-dasharray: 6 7; }
+.reveal .pipe .arrow.act.amber { stroke: var(--amber); }
+.reveal .pipe .arrow.act.blue  { stroke: var(--blue); }
+.reveal .pipe .arrow.act .ln { stroke-dasharray: 10 9; }
+.reveal .slides > .present > .present .pipe .arrow.act .ln { animation: flow .8s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -19; } }
+/* progress bars inside buffers (reading) and streams (evaluating); driven by js/sc26.js */
+.reveal .pipe .bar { position: absolute; left: 0; bottom: 0; height: 4px; width: 100%; background: var(--amber); transform: scaleX(0); transform-origin: left; }
+.reveal .pipe .mv { font-family: KaTeX_Math, "Times New Roman", serif; font-style: italic; font-size: 1.08em; }
+.reveal .pipe .mn { font-family: KaTeX_Main, "Times New Roman", serif; font-size: 1.04em; }
+.reveal .slides > .present > .present .pipe .stage { animation: rise .6s var(--ease) both; animation-delay: calc(.1s + var(--i) * .12s); }
+
+/* optimal sensor selection for Cascadia */
+.reveal .csz { grid-template-columns: 1fr 404px; gap: 36px; }
+.reveal .csz .stats { font-size: 33px; line-height: 1.34; font-weight: 500; letter-spacing: -0.01em; }
+.reveal .why { margin-top: 26px; }
+.reveal .why .q { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; margin-bottom: 8px; }
+.reveal .why-grid { display: grid; grid-template-columns: max-content max-content; column-gap: 18px; row-gap: 3px; align-items: center; font-size: 25px; }
+.reveal .why-grid .it { grid-column: 1; position: relative; padding-left: 30px; }
+.reveal .why-grid .it::before { content: ""; position: absolute; left: 4px; top: .56em; width: 7px; height: 7px; background: var(--dim); }
+.reveal .why-grid .src { grid-column: 2; font-size: 18.5px; color: var(--mute); }
+.reveal .why-grid .brace { grid-row: 3 / span 4; grid-column: 2; display: flex; align-items: center; gap: 12px; height: 100%; }
+.reveal .why-grid .brace::before { content: ""; width: 9px; align-self: stretch; margin: 7px 0; border: 1.5px solid var(--mute); border-left: 0; border-radius: 0 3px 3px 0; }
+.reveal .csz .vid-title { font-size: 20px; color: var(--amber); text-align: center; margin: 0 0 8px; }
+.reveal .csz .photo { height: 466px; }
+
+/* design quality */
+.reveal .quality { grid-template-columns: 560px 1fr; gap: 44px; }
+.reveal .quality .plot { height: 448px; }
+.reveal .quality .cap { margin-top: 12px; font-size: 22px; }
+
+/* publications */
+.reveal .pubs { display: grid; grid-template-columns: 1fr 1fr; column-gap: 44px; row-gap: 14px; font-size: 18px; line-height: 1.32; }
+.reveal .pubs p { padding-left: 17px; position: relative; }
+.reveal .pubs p::before { content: ""; position: absolute; left: 0; top: .5em; width: 6px; height: 6px; background: var(--dim); }
+.reveal .pubs .au { color: var(--blue); }
+.reveal .pubs .ti { color: var(--amber); }
+.reveal .pubs .tag { color: var(--green); }
+
+/* software + acknowledgements */
+.reveal .acks { grid-template-columns: 1fr 430px; gap: 50px; }
+.reveal .acks .hd { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; margin: 0 0 10px; }
+.reveal .acks .blk + .blk { margin-top: 26px; }
+.reveal .acks .repo { font-family: var(--mono); font-size: 22px; letter-spacing: -0.02em; margin-bottom: 6px; }
+.reveal .acks .thanks { font-size: 21px; color: var(--green); margin-top: 10px; }
+.reveal .acks .qrs { display: flex; gap: 34px; justify-content: center; }
+.reveal .acks .qrs img { width: 166px; height: 166px; }
+.reveal .acks .badges { margin-top: 20px; display: grid; grid-template-columns: 84px 1fr; row-gap: 10px; column-gap: 22px; align-items: center; font-size: 23px; }
+.reveal .acks .badges img { width: 84px; height: 84px; }
+
+/* summary */
+.reveal .summary > li { margin-bottom: 14.5px; }
+
+/* appendix */
+.reveal .appx .eq { margin: 22px 0; }
+.reveal .appx .eq .katex { font-size: 1.3em; }
+.reveal .appx p + p { margin-top: 4px; }
+.reveal .two { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+
+/* --------------------------------------------------------------------------
+   Live demo layer (created by js/sc26.js; sits on top of the deck, outside the slides).
+   It is only made transparent when hidden, never removed, so the demo keeps running.
+   -------------------------------------------------------------------------- */
+.demo-layer {
+  position: fixed; inset: 0; z-index: 60; display: flex; flex-direction: column;
+  background: var(--bg); font-family: var(--sans); color: var(--ink);
+  opacity: 0; pointer-events: none; transition: opacity .35s ease;
+}
+.demo-layer.show { opacity: 1; pointer-events: auto; }
+.demo-layer .demo-bar {
+  flex: none; height: 38px; padding: 0 14px; display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--line); font-size: 15px; color: var(--mute);
+}
+.demo-layer .demo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--dim); }
+.demo-layer.ready .demo-dot { background: var(--green); }
+.demo-layer .demo-title { font-family: var(--mono); font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
+.demo-layer .demo-url { font-family: var(--mono); font-size: 14px; flex: 1; }
+.demo-layer button {
+  font: 500 14px var(--sans); color: var(--mute); background: transparent; cursor: pointer;
+  border: 1px solid var(--line-2); border-radius: 3px; padding: 4px 12px;
+}
+.demo-layer button:hover { color: var(--ink); border-color: var(--mute); }
+.demo-layer button.demo-back { color: var(--bg); background: var(--amber); border-color: var(--amber); }
+.demo-layer .demo-body { flex: 1; position: relative; background: #fff; }
+.demo-layer iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+.demo-layer .demo-wait {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  background: var(--bg); font-size: 24px; text-align: center;
+}
+.demo-layer .demo-wait code { font-family: var(--mono); color: var(--amber); }
+.demo-layer .demo-wait small { font-size: 16px; color: var(--mute); }
+.demo-layer.ready .demo-wait { display: none; }
+
+/* --------------------------------------------------------------------------
+   Print / PDF export (?print-pdf): everything in its final state
+   -------------------------------------------------------------------------- */
+html.reveal-print .reveal .slides section:not(.stack),
+html.print-pdf .reveal .slides section:not(.stack) { height: 720px; padding: 44px 72px 62px !important; }
+html.reveal-print .reveal .slides section.title,
+html.print-pdf .reveal .slides section.title { padding: 0 !important; }
+html.reveal-print .reveal *,
+html.print-pdf .reveal * { animation: none !important; }
