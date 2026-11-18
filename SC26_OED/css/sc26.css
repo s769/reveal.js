@@ -308,6 +308,19 @@ html, body, .reveal-viewport { background: var(--bg); }
   transition: opacity .45s ease .62s, transform .6s var(--ease) .62s, visibility 0s linear .62s;   /* arriving */
 }
 
+/* same idea without the strike-through: the old text lifts away while the new text rises into place */
+.reveal .slides section .fragment.swap-away {
+  opacity: 1; visibility: inherit; transform: none;
+  transition: opacity .3s ease .1s, transform .35s var(--ease) .1s, visibility 0s;
+}
+.reveal .slides section .fragment.swap-away.visible {
+  opacity: 0; visibility: hidden; transform: translateY(-10px);
+  transition: opacity .32s ease, transform .4s ease, visibility 0s linear .4s;
+}
+.reveal .slides section .fragment.swap-in.soon.visible {
+  transition: opacity .45s ease .22s, transform .55s var(--ease) .22s, visibility 0s linear .22s;
+}
+
 .reveal .thiswork { color: var(--amber); font-weight: 500; white-space: nowrap; }
 .reveal .slides section .fragment.thiswork { transform: translateX(-12px); transition: opacity .5s ease .25s, transform .6s var(--ease) .25s, visibility 0s linear .25s; }
 .reveal .slides section .fragment.thiswork.visible { transform: none; }
