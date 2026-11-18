@@ -68,23 +68,33 @@
      *     read candidate into buffer b   (R)
      *     async H2D copy + evaluate on stream b   (the rest of the pair's cycle)
      * The pairs run half a cycle (P) apart, so reading candidate s+1 overlaps
-     * with evaluating candidate s, as in the execution timeline trace.          */
+     * with evaluating candidate s, as in the execution timeline trace.
+     *
+     * The four boxes of the greedy iteration light up in step with it:
+     * Partition, then Evaluate while this rank works through its candidates
+     * (s ... s+3 here), then Reduce, then Update, and the next iteration starts. */
     function Pipeline(el) {
-        var P = 2600;                 // ms between successive candidates
+        var P = 2200;                 // ms between successive candidates
         var R = 0.4 * P;              // read time
         var H = 0.22 * P;             // how long the H2D arrow stays lit
-        var WRAP = 6;                 // candidate labels cycle s ... s+5
+        var COUNT = 4;                // candidates this rank evaluates per greedy iteration (s ... s+3)
+        var PARTITION = 800, REDUCE = 900, UPDATE = 900;      // ms spent on the other three stages
+        var EVALUATE = (COUNT + 1) * P;                       // until the last candidate has been evaluated
+        var ITERATION = PARTITION + EVALUATE + REDUCE + UPDATE;
 
         var buf = [0, 1].map(function (b) { return el.querySelector('[data-buf="' + b + '"]'); });
         var str = [0, 1].map(function (b) { return el.querySelector('[data-str="' + b + '"]'); });
         var rd  = [0, 1].map(function (b) { return el.querySelector('[data-read="' + b + '"]'); });
         var h2d = [0, 1].map(function (b) { return el.querySelector('[data-h2d="' + b + '"]'); });
-        var nodes = buf.concat(str, rd, h2d);
-        var saved = nodes.map(function (n) { return { cls: n.getAttribute('class'), html: n.innerHTML }; });
+        var stages = Array.prototype.slice.call(el.querySelectorAll('.box.stage'));   // Partition, Evaluate, Reduce, Update
+        var nodes = buf.concat(str, rd, h2d, stages);
+        var saved = null;             // the static snapshot (classes + labels), taken the first time the animation starts
+        function snapshot() {
+            return nodes.map(function (n) { var w = n.querySelector('.what'); return { cls: n.getAttribute('class'), label: w ? w.innerHTML : null }; });
+        }
         var raf = null, t0 = 0;
 
         function name(c) {
-            c = ((c % WRAP) + WRAP) % WRAP;
             return '<span class="mv">s</span>' + (c ? '<span class="mn"> + ' + c + '</span>' : '');
         }
         function label(box, text) {
@@ -95,11 +105,16 @@
         function state(node, on, off) { node.classList.toggle('on', !!on); node.classList.toggle('off', !!off); }
 
         function frame(now) {
-            var t = now - t0 + R;                         // start with candidate s already in buffer 0
+            var u = (now - t0) % ITERATION;               // time within the current greedy iteration
+            var stage = u < PARTITION ? 0 : u < PARTITION + EVALUATE ? 1 : u < PARTITION + EVALUATE + REDUCE ? 2 : 3;
+            stages.forEach(function (s, i) { s.classList.toggle('on', i === stage); });
+
+            var t = u - PARTITION;                        // the pipeline runs during "Evaluate"
             for (var b = 0; b < 2; b++) {
                 var tb = t - b * P;                       // this pair's own clock
-                var started = tb >= 0;
-                var cycle = started ? Math.floor(tb / (2 * P)) : 0;
+                var cycle = tb >= 0 ? Math.floor(tb / (2 * P)) : 0;
+                var started = tb >= 0 && cycle < COUNT / 2;       // idle before its first and after its last candidate
+                if (!started) cycle = 0;
                 var tau = started ? tb - cycle * 2 * P : -1;
                 var c = b + 2 * cycle;                    // candidate this pair is working on
                 var reading = started && tau < R;
@@ -122,12 +137,19 @@
         return {
             start: function () {
                 cancelAnimationFrame(raf);
+                if (!saved) saved = snapshot();
                 t0 = performance.now();
                 raf = requestAnimationFrame(frame);
             },
             stop: function () {
                 cancelAnimationFrame(raf); raf = null;
-                nodes.forEach(function (n, i) { n.setAttribute('class', saved[i].cls); n.innerHTML = saved[i].html; });
+                if (!saved) return;
+                nodes.forEach(function (n, i) {
+                    n.setAttribute('class', saved[i].cls);
+                    var w = n.querySelector('.what');
+                    if (w) { w.innerHTML = saved[i].label; w.removeAttribute('data-t'); }
+                    var bar = n.querySelector('.bar'); if (bar) bar.style.transform = '';
+                });
             }
         };
     }
@@ -162,7 +184,17 @@
                     west: -132, east: -120, south: 38.46, north: 53.47,
                     crop: [388.5 / 1648, 88.5 / 1604, 1533 / 1648, 1519.5 / 1604] };   // the plot area inside csz_map.jpg (u0, v0, u1, v1)
         var FROM = { lon: -68, lat: 6, x: W / 2, y: H / 2, scale: 300 };   // whole Earth, centred on the slide
-        var TIME = { hold: 900, fly: 3800, fade: 1000, locked: 500 };       // ms
+        var TIME = { hold: 900, fly: 3800, fade: 1000, locked: 500, video: 100 };   // ms
+        // The clip next to the map starts TIME.video ms after the locked zone begins to appear,
+        // so that it is not missed while everyone is still looking at the zoom.
+        var video = slide.querySelector('video[data-after-globe]');
+        var holding = false, videoTimer = null;
+        if (video) {
+            video.removeAttribute('data-autoplay');     // this script starts it instead of reveal.js
+            video.addEventListener('play', function () { if (holding) video.pause(); });
+        }
+        function holdVideo() { if (!video) return; clearTimeout(videoTimer); holding = true; video.pause(); try { video.currentTime = 0; } catch (e) {} }
+        function playVideo() { if (!video) return; holding = false; var p = video.play(); if (p && p.catch) p.catch(function () {}); }
         var SWITCH = 0.62;                             // progress at which the close-up takes over (the limb is off screen by then)
 
         var ctx = canvas.getContext('2d');
@@ -388,6 +420,7 @@
             raf = null;
             show(false);                                // dissolve into the figure (CSS transition)
             timer = setTimeout(function () { card.classList.add('locked'); }, TIME.fade + TIME.locked);
+            videoTimer = setTimeout(playVideo, TIME.fade + TIME.locked + TIME.video);
         }
 
         // for tuning in the browser console:  document.querySelector('canvas[data-globe]').seek(0.8)
@@ -395,15 +428,16 @@
 
         return {
             start: function () {
-                if (!world) return;                     // no data (yet): leave the figure alone
+                if (!world) { playVideo(); return; }    // no data (yet): leave the figure alone, just play the clip
                 cancelAnimationFrame(raf); clearTimeout(timer);
+                holdVideo();
                 size(); draw(0);
                 card.classList.add('js'); card.classList.remove('locked');
                 show(true);
                 t0 = performance.now();
                 raf = requestAnimationFrame(tick);
             },
-            stop: function () { cancelAnimationFrame(raf); raf = null; clearTimeout(timer); rest(); }
+            stop: function () { cancelAnimationFrame(raf); raf = null; clearTimeout(timer); clearTimeout(videoTimer); holding = false; rest(); }
         };
     }
 
