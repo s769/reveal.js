@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<section>
+    <!-- Optimal sensor selection for Cascadia  (one click: time to solution; the video loops) -->
+    <section data-layer="oed">
+        <h2>Optimal sensor selection for Cascadia</h2>
+        <div class="cols csz">
+            <div>
+                <div class="stats">
+                    <p><span class="a">175 sensors</span> from 600 candidates</p>
+                    <p class="b">≈10<sup>155</sup> possible sensor networks</p>
+                    <p class="fragment"><span class="g">&lt; 5 minutes</span> on 16 GB200 GPUs</p>
+                </div>
+                <div class="why">
+                    <p class="q">What makes this possible?</p>
+                    <div class="why-grid">
+                        <span class="it">Fast <span class="b">FFT-based p2o matvecs</span></span>
+                        <span class="src">(Venkat et. al., SISC, 2025)</span>
+                        <span class="it"><span class="b">Data-space Hessian</span> formulation</span>
+                        <span class="src">(Henneking et. al., SC25)</span>
+                        <span class="it">Data-space <span class="a">computable OED objective</span></span>
+                        <span class="it"><span class="a">Schur complement</span> updates</span>
+                        <span class="it"><span class="g">Pipelined double-buffered I/O</span> scheme</span>
+                        <span class="it"><span class="g">Scalable multi-GPU</span> implementation</span>
+                        <span class="src brace">(This work)</span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <p class="vid-title">Greedy algorithm – uncertainty reduction</p>
+                <div class="photo">
+                    <video data-src="SC26_OED/images/oed_animation_with_sensor_count.mp4"
+                        poster="SC26_OED/images/oed_animation_poster.jpg" data-autoplay loop muted playsinline></video>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Goal-oriented vs. standard sensor selection -->
+    <section data-layer="oed">
+        <h2>Goal-oriented OED</h2>
+        <div class="plot" style="height: 505px;">
+            <video data-src="SC26_Doctoral_Showcase/images/sensor_selection_both.mp4" poster="SC26_Doctoral_Showcase/images/sensor_selection_both_poster.jpg"
+                data-autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: contain;"></video>
+        </div>
+    </section>
+
+    <!-- Design quality and optimality guarantees -->
+    <section data-layer="oed">
+        <h2>Design quality and optimality guarantees</h2>
+        <div class="plot" style="width: 900px; height: 360px; margin: -8px auto 0;">
+            <img data-src="SC26_Doctoral_Showcase/images/histogram_standard_vs_goal.svg"
+                alt="Histograms of the standard and goal-oriented D-optimal objectives for random sensor networks">
+        </div>
+        <p style="font-size: 22px; text-align: center; margin-top: 8px;">Histogram of <span class="a">10,000 random 175-sensor networks</span></p>
+        <p style="margin: 8px 0 6px; font-size: 22px;"><u>Submodularity</u></p>
+        <ul class="tight" style="font-size: 22px;">
+            <li>Marginal gain from adding a sensor decreases as more sensors are added, reflecting <span
+                    class="b">diminishing returns</span></li>
+            <li>Guarantees greedy solution is at least <span class="a">63%</span> as good as true optimal
+                solution <span class="ref" style="white-space: nowrap;">(Nemhauser et. al., 1978)</span></li>
+            <li><span class="a"><i>A posteriori</i> error analysis increases the bound to</span> <span
+                    class="g">87%</span> <span class="ref" style="white-space: nowrap;">(Leskovec et. al., KDD
+                    2007)</span></li>
+        </ul>
+        <aside class="notes">10k shows distribution</aside>
+    </section>
+</section>

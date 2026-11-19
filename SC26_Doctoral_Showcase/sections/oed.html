@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<section>
+    <!-- Optimal experimental design -->
+    <section data-layer="oed">
+        <h2>Optimal experimental design (OED)</h2>
+        <dl class="defs">
+            <dt>Given:</dt>
+            <dd>Set of candidate sensor locations (e.g., <span class="b">\(N_d = 600\)</span>) and fixed budget of
+                <span class="b">\(B\)</span> sensors</dd>
+            <dt>Task:</dt>
+            <dd>Select <span class="a">optimal sensor subset \(S\)</span> of size <span class="b">\(|S| \le
+                    B\)</span> that provides the <span class="a">maximum information</span> about the uncertain
+                parameters <span class="b">\(m\)</span> (seafloor motion) or the QoI <span class="b">\(q\)</span></dd>
+            <dt>Bayesian approach:</dt>
+            <dd>
+                <p>Maximize the <span class="a">expected information gain</span> from the prior to the posterior</p>
+                <p>For the linear-Gaussian case, this is equivalent to the <span class="b">D-optimal design
+                        criterion:</span></p>
+            </dd>
+        </dl>
+        <!-- the criterion, with a call-out hanging under the posterior covariance -->
+        <div class="criterion">
+            <span class="a">\(\displaystyle S_{\text{opt}} \;=\; \underset{S,\;|S|\le B}{\arg\min}\; \log\det\)</span>
+            <span class="target b">\(\displaystyle \Big( \underbrace{(\Gamma_{\!\text{post}(m)})_S}_{} \Big)\)
+                <span class="callout">\(10^9 \times 10^9\) matrix<br><span class="a">must be recomputed from scratch
+                        for each \(S\)</span></span>
+            </span>
+            <span style="font-size: 27px; margin: 0 10px;">or</span>
+            <span class="b">\(\displaystyle \Big( (\Gamma_{\!\text{post}(q)})_S \Big)\)</span>
+        </div>
+    </section>
+
+    <!-- Computable D-optimal design  (the K -> K_S picture loops: pick rows/columns in S, blocks travel into K_S) -->
+    <section data-layer="oed">
+        <h2>Computable D-optimal design</h2>
+        <ul>
+            <li>Using linear algebra techniques, we can show that
+                <div class="eq" style="margin: 8px 0;">\[
+                    \textcolor{#f6b93b}{\det}\textcolor{#6aaee8}{\big((\Gamma_{\!\text{post}})_S\big)}
+                    \;=\; \dots \;=\;
+                    \textcolor{#f6b93b}{\det(\Gamma_{\!\text{prior}})\,\det(\mathbf{K}_S^{-1})\,\det((\Gamma_{\!\text{noise}})_S)}
+                    \]</div>
+                <p>where \(\mathbf{K} = \Gamma_{\!\text{noise}} + \mathbf{F}\,\Gamma_{\!\text{prior}}\mathbf{F}^*\) is
+                    the <span class="a">data-space Hessian</span></p>
+            </li>
+            <li>D-optimal criterion reduces to maximizing <span class="g">\(\log\det(\mathbf{K}_S)\)</span></li>
+        </ul>
+        <div class="cols" style="grid-template-columns: 668px 1fr; gap: 34px; align-items: center; margin-top: 2px;">
+            <div class="ksel-stage" data-loop="800,1500,2300,3800">
+                <p class="ex"><u>Example:</u><br>\(S = \{0, 2, 4\}\)</p>
+                <span class="lab" style="left: 311px; top: 0;">\(\mathbf{K}\)</span>
+                <div class="K blocks">
+                    <span class="idx top s" style="--c:0">0</span><span class="idx top" style="--c:1">1</span><span class="idx top s" style="--c:2">2</span><span class="idx top" style="--c:3">3</span><span class="idx top s" style="--c:4">4</span>
+                    <span class="idx side s" style="--r:0">0</span><span class="idx side" style="--r:1">1</span><span class="idx side s" style="--r:2">2</span><span class="idx side" style="--r:3">3</span><span class="idx side s" style="--r:4">4</span>
+                    <i class="s" style="--r:0;--c:0;--k:0;--col:#6aaee8"></i><i style="--r:0;--c:1"></i><i class="s" style="--r:0;--c:2;--k:1;--col:#f08a4b"></i><i style="--r:0;--c:3"></i><i class="s" style="--r:0;--c:4;--k:2;--col:#86c65a"></i>
+                    <i style="--r:1;--c:0"></i><i style="--r:1;--c:1"></i><i style="--r:1;--c:2"></i><i style="--r:1;--c:3"></i><i style="--r:1;--c:4"></i>
+                    <i class="s" style="--r:2;--c:0;--k:3;--col:#f6b93b"></i><i style="--r:2;--c:1"></i><i class="s" style="--r:2;--c:2;--k:4;--col:#e5534b"></i><i style="--r:2;--c:3"></i><i class="s" style="--r:2;--c:4;--k:5;--col:#9b7fe0"></i>
+                    <i style="--r:3;--c:0"></i><i style="--r:3;--c:1"></i><i style="--r:3;--c:2"></i><i style="--r:3;--c:3"></i><i style="--r:3;--c:4"></i>
+                    <i class="s" style="--r:4;--c:0;--k:6;--col:#3fbf9f"></i><i style="--r:4;--c:1"></i><i class="s" style="--r:4;--c:2;--k:7;--col:#4f7fd9"></i><i style="--r:4;--c:3"></i><i class="s" style="--r:4;--c:4;--k:8;--col:#f1e05a"></i>
+                </div>
+                <div class="kfly">
+                    <svg class="arrow" viewBox="0 0 54 34"><path d="M3 17H49M37 5l12 12-12 12"/></svg>
+                    <span class="lab" style="left:588px;top:47px">\(\mathbf{K}_S\)</span>
+                    <div class="KS blocks">
+                        <i style="--r:0;--c:0;--k:0;--col:#6aaee8"></i><i style="--r:0;--c:1;--k:1;--col:#f08a4b"></i><i style="--r:0;--c:2;--k:2;--col:#86c65a"></i>
+                        <i style="--r:1;--c:0;--k:3;--col:#f6b93b"></i><i style="--r:1;--c:1;--k:4;--col:#e5534b"></i><i style="--r:1;--c:2;--k:5;--col:#9b7fe0"></i>
+                        <i style="--r:2;--c:0;--k:6;--col:#3fbf9f"></i><i style="--r:2;--c:1;--k:7;--col:#4f7fd9"></i><i style="--r:2;--c:2;--k:8;--col:#f1e05a"></i>
+                    </div>
+                </div>
+            </div>
+            <ul class="tight" style="font-size: 23px;">
+                <li>D-optimal design has become <span class="a">block row/column subset selection</span> on
+                    \(\mathbf{K}\)</li>
+                <li>For the Cascadia application with 600 candidate sensors and 420 time steps, \(\mathbf{K}\) is
+                    over <span class="a">500 GB</span></li>
+                <li>A similar formulation can be derived for the <span class="a">goal-oriented</span> objective</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Greedy algorithm -->
+    <section data-layer="oed" style="font-size: 24.5px;">
+        <h2>D-optimal design: Greedy algorithm</h2>
+        <ul>
+            <li>Even in computable form, finding the optimal sensor set is an <span class="a">NP-hard combinatorial
+                    optimization</span> problem → <span class="b">use greedy algorithm to find an approximate
+                    solution</span></li>
+        </ul>
+        <p><u>Greedy algorithm:</u> (<span class="a">find optimal set \(S\) iteratively</span>)</p>
+        <div class="algo">
+            <div class="step"><span>1.</span>
+                <div>Initialize <span class="a">\(S = \emptyset\)</span></div>
+            </div>
+            <div class="step"><span>2.</span>
+                <div>For <span class="a">\(k = 1\) to \(B\)</span>:</div>
+            </div>
+            <div class="sub">Find the sensor <span class="a">\(i^*\)</span> not in <span class="a">\(S\)</span> that
+                maximizes the gain
+                <div class="eq g">\[ i^* = \underset{i \,\notin\, S}{\arg\max}\; \big[\, J(S \cup \{i\}) - J(S) \,\big]
+                    \quad \text{where } J(S) \text{ is the objective function} \]</div>
+            </div>
+            <div class="sub">Add the best sensor: <span class="a">\(S \leftarrow S \cup \{i^*\}\)</span></div>
+            <div class="step"><span>3.</span>
+                <div>Return <span class="a">\(S\)</span></div>
+            </div>
+        </div>
+        <p><u>Gain calculation</u> (evaluating <span class="a">\(J(S \cup \{i\})\)</span> for each candidate <span
+                class="a">\(i\)</span>) can be done efficiently via Schur complements + Cholesky updates that avoid
+            re-factorizing <span class="a">\(\mathbf{K}_S\)</span></p>
+        <ul style="margin-top: 14px;">
+            <li><span class="a">Independent candidate evaluations</span> provide the parallelism for the GPU
+                algorithm.</li>
+        </ul>
+    </section>
+</section>

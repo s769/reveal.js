@@ -453,7 +453,13 @@
     function Demo() {
         var url = document.querySelector('.reveal').getAttribute('data-demo-url');
         var inSpeakerView = /receiver/i.test(window.location.search) || window.self !== window.top;
-        if (!url || inSpeakerView) return;
+        if (!url) {                                    // a deck without a demo: drop the demo clicks from shared sections
+            var cues = document.querySelectorAll('.reveal .slides .fragment[data-demo], .reveal .slides .fragment[data-demo-return]');
+            Array.prototype.forEach.call(cues, function (el) { el.parentNode.removeChild(el); });
+            if (cues.length) Reveal.sync();
+            return;
+        }
+        if (inSpeakerView) return;
 
         var layer = document.createElement('div');
         layer.className = 'demo-layer';

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Real-Time High-Fidelity Bayesian Inference and Forecasting of Tsunamis: A Digital Twin for Tsunami Early Warning Applied to the Cascadia Subduction Zone</title>
+
+    <link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
+    <link rel="apple_touch_icon" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="favicon/android-chrome-512x512.png">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Theme, fonts and scripts are shared with the SC26_OED deck; the introduction section is reused from it too -->
+    <link rel="stylesheet" href="SC26_OED/css/sc26.css">
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- 1 · Title -->
+            <section class="title" data-layer="all">
+                <div class="chart"></div>
+                <svg class="net" viewBox="0 0 1280 720" aria-hidden="true">
+                    <!-- candidate sensor sites; the amber ones are "selected" one at a time when the slide opens -->
+                        <circle class="cand" cx="964" cy="307" r="2"/>
+                        <circle class="cand" cx="1064" cy="316" r="2"/>
+                        <g class="pick" style="--i:1"><circle class="ring" cx="1120" cy="314" r="5"/><circle class="dot" cx="1120" cy="314" r="3.4"/></g>
+                        <g class="pick" style="--i:3"><circle class="ring" cx="895" cy="330" r="5"/><circle class="dot" cx="895" cy="330" r="3.4"/></g>
+                        <circle class="cand" cx="945" cy="346" r="2"/>
+                        <g class="pick" style="--i:11"><circle class="ring" cx="998" cy="346" r="5"/><circle class="dot" cx="998" cy="346" r="3.4"/></g>
+                        <circle class="cand" cx="1061" cy="348" r="2"/>
+                        <circle class="cand" cx="1107" cy="357" r="2"/>
+                        <circle class="cand" cx="831" cy="359" r="2"/>
+                        <circle class="cand" cx="884" cy="377" r="2"/>
+                        <circle class="cand" cx="927" cy="380" r="2"/>
+                        <circle class="cand" cx="989" cy="377" r="2"/>
+                        <circle class="cand" cx="1053" cy="390" r="2"/>
+                        <g class="pick" style="--i:8"><circle class="ring" cx="807" cy="400" r="5"/><circle class="dot" cx="807" cy="400" r="3.4"/></g>
+                        <circle class="cand" cx="870" cy="404" r="2"/>
+                        <circle class="cand" cx="924" cy="410" r="2"/>
+                        <circle class="cand" cx="976" cy="422" r="2"/>
+                        <g class="pick" style="--i:6"><circle class="ring" cx="1020" cy="422" r="5"/><circle class="dot" cx="1020" cy="422" r="3.4"/></g>
+                        <g class="pick" style="--i:16"><circle class="ring" cx="752" cy="430" r="5"/><circle class="dot" cx="752" cy="430" r="3.4"/></g>
+                        <circle class="cand" cx="800" cy="432" r="2"/>
+                        <circle class="cand" cx="859" cy="444" r="2"/>
+                        <g class="pick" style="--i:9"><circle class="ring" cx="919" cy="438" r="5"/><circle class="dot" cx="919" cy="438" r="3.4"/></g>
+                        <circle class="cand" cx="960" cy="453" r="2"/>
+                        <circle class="cand" cx="743" cy="462" r="2"/>
+                        <g class="pick" style="--i:12"><circle class="ring" cx="807" cy="475" r="5"/><circle class="dot" cx="807" cy="475" r="3.4"/></g>
+                        <circle class="cand" cx="864" cy="473" r="2"/>
+                        <circle class="cand" cx="910" cy="478" r="2"/>
+                        <g class="pick" style="--i:14"><circle class="ring" cx="974" cy="483" r="5"/><circle class="dot" cx="974" cy="483" r="3.4"/></g>
+                        <g class="pick" style="--i:4"><circle class="ring" cx="713" cy="495" r="5"/><circle class="dot" cx="713" cy="495" r="3.4"/></g>
+                        <circle class="cand" cx="766" cy="498" r="2"/>
+                        <circle class="cand" cx="813" cy="504" r="2"/>
+                        <g class="pick" style="--i:0"><circle class="ring" cx="869" cy="515" r="5"/><circle class="dot" cx="869" cy="515" r="3.4"/></g>
+                        <circle class="cand" cx="929" cy="514" r="2"/>
+                        <circle class="cand" cx="734" cy="526" r="2"/>
+                        <circle class="cand" cx="789" cy="533" r="2"/>
+                        <circle class="cand" cx="839" cy="532" r="2"/>
+                        <circle class="cand" cx="890" cy="535" r="2"/>
+                        <g class="pick" style="--i:15"><circle class="ring" cx="928" cy="548" r="5"/><circle class="dot" cx="928" cy="548" r="3.4"/></g>
+                        <circle class="cand" cx="763" cy="559" r="2"/>
+                        <circle class="cand" cx="798" cy="569" r="2"/>
+                        <circle class="cand" cx="857" cy="573" r="2"/>
+                        <circle class="cand" cx="906" cy="582" r="2"/>
+                        <circle class="cand" cx="712" cy="587" r="2"/>
+                        <g class="pick" style="--i:7"><circle class="ring" cx="761" cy="598" r="5"/><circle class="dot" cx="761" cy="598" r="3.4"/></g>
+                        <circle class="cand" cx="808" cy="604" r="2"/>
+                        <circle class="cand" cx="862" cy="613" r="2"/>
+                        <g class="pick" style="--i:10"><circle class="ring" cx="920" cy="614" r="5"/><circle class="dot" cx="920" cy="614" r="3.4"/></g>
+                        <circle class="cand" cx="707" cy="622" r="2"/>
+                        <circle class="cand" cx="773" cy="622" r="2"/>
+                        <circle class="cand" cx="829" cy="629" r="2"/>
+                        <circle class="cand" cx="881" cy="639" r="2"/>
+                        <circle class="cand" cx="713" cy="668" r="2"/>
+                        <g class="pick" style="--i:13"><circle class="ring" cx="783" cy="667" r="5"/><circle class="dot" cx="783" cy="667" r="3.4"/></g>
+                        <circle class="cand" cx="825" cy="672" r="2"/>
+                        <g class="pick" style="--i:5"><circle class="ring" cx="873" cy="683" r="5"/><circle class="dot" cx="873" cy="683" r="3.4"/></g>
+                        <g class="pick" style="--i:2"><circle class="ring" cx="720" cy="703" r="5"/><circle class="dot" cx="720" cy="703" r="3.4"/></g>
+                        <circle class="cand" cx="779" cy="707" r="2"/>
+                        <circle class="cand" cx="833" cy="704" r="2"/>
+                </svg>
+                <div class="inner">
+                    <div class="logos">
+                        <img class="optimus" src="SC26_OED/images/logos/optimus-white.svg" alt="OPTIMUS: Beyond Forward Simulation">
+                        <img class="oden" src="SC26_OED/images/logos/oden-primary-white.svg" alt="Oden Institute for Computational Engineering and Sciences">
+                        <img src="SC26_OED/images/logos/texas.png" alt="The University of Texas at Austin">
+                    </div>
+                    <p class="venue">SC26</p>
+                    <h1 style="font-size: 39px; margin-top: 34px;">Real-Time High-Fidelity Bayesian Inference and <br>Forecasting of Tsunamis: A Digital Twin for Tsunami <br>Early Warning Applied to the Cascadia Subduction Zone</h1>
+                    <div class="rule"></div>
+                    <p class="authors"><u>Sreeram Venkat</u>, Stefan Henneking, &amp; Omar Ghattas</p>
+                    <p class="affil">Oden Institute for Computational Engineering and Sciences, UT Austin</p>
+                    <div class="faces" style="margin-top: 28px;">
+                        <img src="SC26_OED/images/authors/venkat.jpg" alt="Sreeram Venkat">
+                        <img src="SC26_OED/images/authors/henneking.jpg" alt="Stefan Henneking">
+                        <img src="SC26_OED/images/authors/ghattas.jpg" alt="Omar Ghattas">
+                    </div>
+                </div>
+            </section>
+
+            <section data-external-replace="SC26_OED/sections/introduction.html"></section>
+            <section data-external-replace="SC26_Doctoral_Showcase/sections/forward.html"></section>
+            <section data-external-replace="SC26_Doctoral_Showcase/sections/inverse.html"></section>
+            <section data-external-replace="SC26_Doctoral_Showcase/sections/oed.html"></section>
+            <section data-external-replace="SC26_Doctoral_Showcase/sections/hpc.html"></section>
+            <section data-external-replace="SC26_Doctoral_Showcase/sections/results.html"></section>
+            <section data-external-replace="SC26_Doctoral_Showcase/sections/conclusions.html"></section>
+
+        </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/math.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="plugin/pdfexport/pdfexport.js"></script>
+
+    <script>
+        // More info about initialization & config:
+        // - https://revealjs.com/initialization/
+        // - https://revealjs.com/config/
+        Reveal.initialize({
+            hash: true,
+            navigationMode: 'linear',
+
+            // 16:9 canvas; the theme handles its own margins
+            width: 1280,
+            height: 720,
+            margin: 0,
+            minScale: 0.2,
+            maxScale: 3,
+            center: false,
+
+            slideNumber: false,          // drawn by the theme footer instead
+            controlsLayout: 'edges',     // keep the arrows out of the footer
+            controlsBackArrows: 'faded',
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            backgroundTransition: 'none',
+            autoAnimateDuration: 0.7,
+            autoAnimateEasing: 'cubic-bezier(.2,.7,.2,1)',
+            pdfSeparateFragments: false, // ?print-pdf gives one page per slide, in its final state
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealMath.KaTeX, RevealNotes, RevealSearch, RevealZoom, PdfExport],
+
+            notes_pointer: {
+                pointer: {
+                    size: 15,
+                    color: 'rgba(255, 0, 0, 0.8)',
+                    key: 'A'
+                },
+                notes: {
+                    key: 'S'
+                }
+            },
+
+            dependencies: [
+                {
+                    src: 'plugin/external/external.js',
+                    condition: function () {
+                        return !!document.querySelector('[data-external],[data-external-replace]');
+                    }
+                },
+                { src: 'node_modules/reveal.js-notes-pointer/notes-pointer.js', async: false }
+            ],
+        });
+    </script>
+    <!-- d3-geo + TopoJSON: only used for the Earth -> Cascadia zoom on the map slide -->
+    <script src="SC26_OED/js/vendor/d3-array.min.js"></script>
+    <script src="SC26_OED/js/vendor/d3-geo.min.js"></script>
+    <script src="SC26_OED/js/vendor/topojson-client.min.js"></script>
+    <!-- footer, looping diagrams, pipeline animation, live-demo layer, globe zoom -->
+    <script src="SC26_OED/js/sc26.js"></script>
+</body>
+
+</html>

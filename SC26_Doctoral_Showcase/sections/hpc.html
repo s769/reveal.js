@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<section>
+    <!-- HPC systems -->
+    <section data-layer="oed">
+        <div class="cols hpc">
+            <div>
+                <h2>HPC Systems</h2>
+                <ul style="margin-top: 40px;">
+                    <li>TACC: <span class="a">Vista</span> (GH200), <span class="a">Horizon</span> (GB200)</li>
+                    <li>MI300X: AMD Developer Cloud</li>
+                    <li>NERSC: <span class="a">Perlmutter-GPU</span> (A100)
+                        <ul>
+                            <li>4 GPUs/Node; 44 PB all-flash Lustre scratch</li>
+                        </ul>
+                    </li>
+                    <li>OLCF: <span class="a">Frontier</span> (MI250X)
+                        <ul>
+                            <li>4 GPUs/Node; Orion Lustre: 679 PB HDD + 11.5 PB flash</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="hpc-photos">
+                <figure style="--i:0">
+                    <img data-src="SC26_OED/images/hpc/horizon.jpg" alt="Horizon">
+                    <figcaption>Horizon image credits: TACC</figcaption>
+                </figure>
+                <figure style="--i:1">
+                    <img data-src="SC26_OED/images/hpc/vista.jpg" alt="Vista">
+                    <figcaption>Vista image credits: TACC</figcaption>
+                </figure>
+                <figure style="--i:2">
+                    <img data-src="SC26_OED/images/hpc/perlmutter.jpg" alt="Perlmutter" style="object-position: left center;">
+                    <figcaption>Perlmutter image credits: NERSC</figcaption>
+                </figure>
+                <figure style="--i:3">
+                    <img data-src="SC26_OED/images/hpc/frontier.jpg" alt="Frontier">
+                    <figcaption>Frontier image credits: OLCF</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <!-- Single-GPU performance -->
+    <section data-layer="oed">
+        <h2>Single-GPU performance</h2>
+        <div class="pair">
+            <figure>
+                <div class="plot" style="aspect-ratio: 346.26 / 275.25;">
+                    <img data-src="SC26_OED/images/plots/single_gpu_naive.svg" alt="Time per iteration, naïve formulation">
+                    <span class="mark o" style="left: 5.1%; top: 4.6%; width: 6.8%; height: 8.5%; --i:0"></span>
+                    <span class="mark" style="left: 79.8%; top: 84.5%; width: 6.8%; height: 8.5%; --i:1"></span>
+                </div>
+                <figcaption>Naïve formulation \(\mathcal{O}(k^3)\)</figcaption>
+            </figure>
+            <figure>
+                <div class="plot" style="aspect-ratio: 346.26 / 275.25;">
+                    <img data-src="SC26_OED/images/plots/single_gpu_schur.svg" alt="Time per iteration, Schur formulation">
+                    <span class="mark o" style="left: 5.4%; top: 9.6%; width: 6.8%; height: 8.5%; --i:2"></span>
+                    <span class="mark" style="left: 76.2%; top: 84.5%; width: 6.8%; height: 8.5%; --i:3"></span>
+                </div>
+                <figcaption>Schur formulation \(\mathcal{O}(k^2)\)</figcaption>
+            </figure>
+        </div>
+        <p class="note">Schur formulation gives quadratic cost in \(k\); smaller memory footprint supports larger
+            budgets.</p>
+        <aside class="notes">Focus on perf port and perf across gpus; mem bound or compute bound</aside>
+    </section>
+
+    <!-- Parallel scalability -->
+    <section data-layer="oed">
+        <h2>Parallel scalability</h2>
+        <div class="pair" style="width: 1010px; margin: -8px auto 0;">
+            <figure>
+                <div class="plot" style="aspect-ratio: 346.8 / 274.14;">
+                    <img data-src="SC26_OED/images/plots/strong_scaling.svg" alt="Strong scaling">
+                </div>
+                <figcaption>Strong scaling</figcaption>
+            </figure>
+            <figure>
+                <div class="plot" style="aspect-ratio: 346.8 / 274.14;">
+                    <img data-src="SC26_OED/images/plots/weak_scaling.svg" alt="Weak scaling">
+                </div>
+                <figcaption>Weak scaling</figcaption>
+            </figure>
+        </div>
+        <p class="note" style="margin-top: 8px;">Pipelined I/O scheme enables near-ideal scaling.</p>
+        <p class="note small"><span class="a">Perlmutter (NERSC)</span>: NVIDIA A100 &ensp;<span class="a">Frontier
+                (OLCF)</span>: AMD MI250X; Each GPU on Frontier consists of 2 GCDs (2 MPI ranks/GPU)</p>
+    </section>
+</section>

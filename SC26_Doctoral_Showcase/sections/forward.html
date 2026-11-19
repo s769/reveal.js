@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<section>
+    <!-- Acoustic–gravity forward model -->
+    <section data-layer="forward">
+        <h2>Acoustic–gravity forward model</h2>
+        <div class="cols fwd-grid" style="font-size: 25px;">
+            <ul>
+                <li>Partial differential equation (PDE) model
+                    <div class="eq a">\[ \rho\,\frac{\partial \vec{u}}{\partial t} + \nabla p = 0, \qquad
+                        \frac{1}{\kappa}\,\frac{\partial p}{\partial t} + \nabla\cdot\vec{u} = 0 \]</div>
+                </li>
+                <li>Boundary conditions
+                    <ul>
+                        <li>Sea surface (coupling with surface-gravity wave)
+                            <div class="eq a">\[ p = \rho g \eta, \qquad \partial\eta/\partial t = \vec{u}\cdot\vec{n} \]</div>
+                        </li>
+                        <li>Seafloor velocity (boundary source)
+                            <div class="eq a">\[ \vec{u}\cdot\vec{n} = \textcolor{#6aaee8}{m} \]</div>
+                        </li>
+                        <li>Lateral absorbing boundary (outgoing waves)
+                            <div class="eq a">\[ \vec{u}\cdot\vec{n} = p/\rho c \]</div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div>
+                <!-- schematic of the ocean cross-section: seafloor source m, sensors d, sea surface η -->
+                <svg class="ocean" viewBox="0 0 372 348" aria-label="Ocean cross-section: seafloor motion m, sea surface, and the pressure recorded by a seafloor sensor">
+                    <defs>
+                        <clipPath id="ocean-clip">
+                            <path d="M20,66 H352 V298 C310,300 260,294 225,270 C200,252 170,255 150,270 C120,292 80,296 20,300 Z" />
+                        </clipPath>
+                        <linearGradient id="ocean-water" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0" stop-color="#16333d" />
+                            <stop offset="1" stop-color="#0d191e" />
+                        </linearGradient>
+                    </defs>
+                    <rect x="20" y="40" width="332" height="290" fill="url(#ocean-water)" clip-path="url(#ocean-clip)" />
+                    <g clip-path="url(#ocean-clip)">
+                        <circle class="front" style="--i:0" cx="186" cy="268" r="150" />
+                        <circle class="front" style="--i:1" cx="186" cy="268" r="150" />
+                        <circle class="front" style="--i:2" cx="186" cy="268" r="150" />
+                    </g>
+                    <svg x="20" y="40" width="332" height="60" viewBox="0 0 332 60" overflow="hidden">
+                        <path class="surf wave"
+                            d="M0,28 q15,-9 30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0" />
+                    </svg>
+                    <line class="side" x1="20" y1="68" x2="20" y2="300" />
+                    <line class="side" x1="352" y1="68" x2="352" y2="298" />
+                    <path class="floor"
+                        d="M20,300 C80,296 120,292 150,270 C170,255 200,252 225,270 C260,294 310,300 352,298 V342 H20 Z" />
+                    <path class="up" d="M166,256 V226 M160,233 l6,-8 6,8  M186,250 V216 M180,223 l6,-8 6,8  M206,256 V226 M200,233 l6,-8 6,8" />
+                    <circle class="sensor" cx="62" cy="297.5" r="4.5" />
+                    <circle class="sensor" cx="268" cy="294" r="4.5" />
+                    <circle class="sensor" cx="318" cy="298.5" r="4.5" />
+                    <!-- one sensor and what it records -->
+                    <path class="lead" d="M112,284 V182" />
+                    <circle class="ping" cx="112" cy="290" r="9" />
+                    <circle class="sensor" cx="112" cy="290" r="5.5" />
+                    <g class="inset">
+                        <rect x="30" y="90" width="176" height="92" rx="4" />
+                        <text class="t" x="42" y="112">Pressure</text>
+                        <text x="186" y="113" text-anchor="middle" style="fill: var(--amber)">d</text>
+                        <path class="trace" pathLength="400" d="M42.0,150.0 L44.2,150.0 L46.3,150.0 L48.5,150.0 L50.7,150.0 L52.9,150.0 L55.0,150.0 L57.2,150.0 L59.4,150.0 L61.5,150.0 L63.7,150.0 L65.9,150.0 L68.1,150.0 L70.2,150.0 L72.4,150.0 L74.6,150.0 L76.7,149.3 L78.9,145.5 L81.1,140.1 L83.3,135.9 L85.4,135.3 L87.6,140.7 L89.8,148.9 L91.9,156.8 L94.1,162.9 L96.3,165.8 L98.5,165.3 L100.6,161.7 L102.8,155.8 L105.0,149.1 L107.1,143.0 L109.3,138.7 L111.5,137.0 L113.7,138.2 L115.8,141.7 L118.0,146.8 L120.2,152.2 L122.3,156.8 L124.5,159.8 L126.7,160.5 L128.9,159.0 L131.0,155.7 L133.2,151.4 L135.4,147.1 L137.5,143.7 L139.7,141.8 L141.9,141.7 L144.1,143.3 L146.2,146.3 L148.4,149.8 L150.6,153.2 L152.7,155.7 L154.9,156.8 L157.1,156.5 L159.3,154.8 L161.4,152.3 L163.6,149.4 L165.8,146.8 L167.9,145.0 L170.1,144.4 L172.3,145.0 L174.5,146.6 L176.6,148.8 L178.8,151.1 L181.0,153.1 L183.1,154.2 L185.3,154.5 L187.5,153.8 L189.7,152.3 L191.8,150.5 L194.0,148.6" />
+                    </g>
+                    <text x="186" y="204" text-anchor="middle" style="fill: var(--blue)">m</text>
+                    <text x="334" y="58" text-anchor="middle">η</text>
+                    <text class="t" x="20" y="30">Sea surface</text>
+                    <text class="t" x="32" y="333">Seafloor</text>
+                </svg>
+                <p class="ref" style="text-align: right; margin-top: 2px;">(Lotto &amp; Dunham, 2015)</p>
+            </div>
+        </div>
+        <ul class="tight" style="font-size: 25px; margin-top: 4px;">
+            <li>Initial conditions (homogeneous)</li>
+            <li>Implemented with <span class="a">MFEM</span> using high-order finite elements and RK4 time-stepping</li>
+            <li>PDE defines the parameter-to-observable (p2o) map <span class="a" style="white-space: nowrap;">\(F :
+                    m \mapsto d\)</span> and the parameter-to-QoI (p2q) map <span class="a"
+                    style="white-space: nowrap;">\(F_q : m \mapsto q\)</span></li>
+        </ul>
+    </section>
+
+    <!-- Weak scaling of the forward solver -->
+    <section data-layer="forward">
+        <h2>Weak scaling</h2>
+        <div class="plot" style="height: 506px; width: 907px; margin: 0 auto;">
+            <img data-src="SC26_Doctoral_Showcase/images/forward_weak_scaling.svg"
+                alt="Weak scaling of the forward solver on El Capitan, Alps and Perlmutter">
+        </div>
+    </section>
+
+    <!-- FFTMatvec -->
+    <section data-layer="forward">
+        <h2>FFTMatvec: fast forward and adjoint actions</h2>
+        <p>Time-shift invariance → discrete p2o map \(\mathbf{F}\) is <span class="a">block-triangular
+                Toeplitz</span>:</p>
+        <div class="cols fft-grid" style="grid-template-columns: 1fr 292px 340px; gap: 28px; font-size: 24px;">
+            <div>
+                <ul style="margin: 6px 0 36px;">
+                    <li>\(N_m \times N_d\) blocks (spatial param. dim. × num. sensors)</li>
+                    <li>Each block is \(N_t \times N_t\) (num. of timesteps)</li>
+                </ul>
+                <ul>
+                    <li>Precompute \(\mathbf{F}\) by solving one adjoint PDE per sensor</li>
+                    <li class="b">Block Toeplitz matrix is block-diagonalized by FFT</li>
+                    <li class="a">Full high-fidelity physics – no surrogates or reduced-order models</li>
+                </ul>
+            </div>
+            <div class="plot" style="height: 292px; margin-top: 2px;">
+                <img data-src="SC26_Doctoral_Showcase/images/fftmatvec_single_gpu.svg"
+                    alt="Single-GPU mixed-precision FFTMatvec performance on Intel, NVIDIA and AMD GPUs">
+            </div>
+            <!-- looping animation (phases are stepped by js/sc26.js; durations in ms):
+                 clear · first block column · shifted down the diagonals · hold · FFT · block-diagonal matvec · IFFT · hold -->
+            <div class="fftm" style="transform: scale(.85); margin-left: -60px;" data-loop="300,700,1800,700,1300,1700,1100,2600" aria-label="FFTMatvec: block-triangular Toeplitz matrix becomes block-diagonal in Fourier space">
+                <span class="lab ld" style="left: 41px;"><span class="t">\(\mathbf{d}\)</span><span class="f">\(\hat{\mathbf{d}}\)</span></span>
+                <span class="lab lF" style="left: 209px;"><span class="t">\(\mathbf{F}\)</span><span class="f">\(\hat{\mathbf{F}}\)</span></span>
+                <span class="lab lm" style="left: 359px;"><span class="t">\(\mathbf{m}\)</span><span class="f">\(\hat{\mathbf{m}}\)</span></span>
+                <span class="eqs">=</span>
+                <div class="blocks dv" style="left: 18px;"><i style="--r:0"></i><i style="--r:1"></i><i style="--r:2"></i><i style="--r:3"></i></div>
+                <div class="blocks mat" style="left: 110px;">
+                    <i class="dg c0" style="--r:0;--c:0;--col:var(--blue);--ang:135deg"></i><i class="z" style="--r:0;--c:1"></i><i class="z" style="--r:0;--c:2"></i><i class="z" style="--r:0;--c:3"></i>
+                    <i class="lo c0" style="--r:1;--c:0;--col:#f08a4b"></i><i class="dg sh" style="--r:1;--c:1;--col:var(--blue);--ang:45deg"></i><i class="z" style="--r:1;--c:2"></i><i class="z" style="--r:1;--c:3"></i>
+                    <i class="lo c0" style="--r:2;--c:0;--col:var(--green)"></i><i class="lo sh" style="--r:2;--c:1;--col:#f08a4b"></i><i class="dg sh" style="--r:2;--c:2;--col:var(--blue);--ang:90deg"></i><i class="z" style="--r:2;--c:3"></i>
+                    <i class="lo c0" style="--r:3;--c:0;--col:var(--amber)"></i><i class="lo sh" style="--r:3;--c:1;--col:var(--green)"></i><i class="lo sh" style="--r:3;--c:2;--col:#f08a4b"></i><i class="dg sh" style="--r:3;--c:3;--col:var(--blue);--ang:0deg"></i>
+                </div>
+                <div class="blocks mv" style="left: 336px;"><i style="--r:0"></i><i style="--r:1"></i><i style="--r:2"></i><i style="--r:3"></i></div>
+                <div class="blocks tok" style="left: 336px;"><i style="--r:0"></i><i style="--r:1"></i><i style="--r:2"></i><i style="--r:3"></i></div>
+                <p class="chain"><span class="c1">\(\mathbf{m}\)</span> <span class="c2">\(\xrightarrow{\ \text{FFT}\ }\)</span> <span class="c3">\(\hat{\mathbf{m}}\)</span>
+                    <span class="c4">\(\xrightarrow{\ \text{block-diagonal matvec}\ }\)</span> <span class="c5">\(\hat{\mathbf{d}}\)</span>
+                    <span class="c6">\(\xrightarrow{\ \text{IFFT}\ }\)</span> <span class="c7">\(\mathbf{d}\)</span></p>
+            </div>
+        </div>
+        <p class="ref" style="position: absolute; left: 72px; bottom: 56px;">Venkat et al., SIAM Journal on Scientific
+            Computing, 2025</p>
+    </section>
+
+    <!-- Layers: recap before the inverse problem -->
+    <section data-layer="inverse">
+        <h2>Layers of the Bayesian digital twin</h2>
+        <div class="twin">
+            <div class="layer oed dim" data-id="tw-oed">
+                <h3 data-id="tw-oed-h">Optimal experimental design</h3>
+                <p data-id="tw-oed-1">Select sensors to maximize expected information gain</p>
+                <p data-id="tw-oed-2">Many inverse problems across candidate sensor sets</p>
+                <div class="layer inv" data-id="tw-inv">
+                    <h3 data-id="tw-inv-h">Inverse problem</h3>
+                    <p data-id="tw-inv-1">Reconstruct seafloor motion from pressure observations</p>
+                    <p class="cost" data-id="tw-inv-2">≈0.2 s on 512 A100 GPUs (Henneking et. al., SC25 – <u>Gordon Bell Winner</u>)</p>
+                    <div class="layer fwd" data-id="tw-fwd">
+                        <h3 data-id="tw-fwd-h">Forward problem: acoustic–gravity wave PDE model</h3>
+                        <p data-id="tw-fwd-1">Map seafloor motion to pressure observations</p>
+                        <p class="cost" data-id="tw-fwd-2">≈10 ms on 512 A100 GPUs (Venkat et. al., SISC, 2025)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
